@@ -1,9 +1,9 @@
-import NxWelcome from './nx-welcome';
+import { Images } from '@lemonote/assets';
 
 export function App() {
     return (
         <div>
-            <NxWelcome title="web" />
+            <img src={Images.logo} alt="Logo" />
         </div>
     );
 }
