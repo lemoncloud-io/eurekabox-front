@@ -15,7 +15,9 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@lemonote/assets": ["assets/src/index.ts"]
+            "@lemonote/assets": ["assets/src/index.ts"],
+            "@lemonote/ui-kit": ["libs/ui-kit/src/index.ts"],
+            "@lemonote/ui-kit/*": ["libs/ui-kit/src/*"]
         }
     },
     "exclude": ["node_modules", "tmp"]
