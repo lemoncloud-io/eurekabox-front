@@ -22,16 +22,32 @@ export default defineConfig({
     //  plugins: [ nxViteTsPaths() ],
     // },
     build: {
+        sourcemap: process.env.VITE_ENV !== 'PROD',
+        minify: 'terser',
         outDir: '../../dist/apps/web',
-        emptyOutDir: true,
         reportCompressedSize: true,
         commonjsOptions: {
+            include: [/node_modules/],
+            extensions: ['.js', '.cjs'],
+            strictRequires: true,
+            // https://stackoverflow.com/questions/62770883/how-to-include-both-import-and-require-statements-in-the-bundle-using-rollup
             transformMixedEsModules: true,
         },
     },
+
+    define: {
+        'process.env': {},
+        ...(process.env.NODE_ENV === 'development' ? { global: 'window' } : {}),
+    },
+
     resolve: {
         alias: {
             '@lemonote/assets': '/assets/src/index.ts',
+            ...(process.env.NODE_ENV !== 'development'
+                ? {
+                      './runtimeConfig': './runtimeConfig.browser', // fix production build
+                  }
+                : {}),
         },
     },
 });
