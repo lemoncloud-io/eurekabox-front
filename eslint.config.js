@@ -34,6 +34,10 @@ module.exports = [
     {
         files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
         // Override or add rules here
-        rules: {},
+        rules: {
+            '@typescript-eslint/no-empty-object-type': 'off',
+            '@typescript-eslint/no-empty-interface': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+        },
     },
 ];

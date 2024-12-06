@@ -1684,6 +1684,13 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@lemoncloud/lemon-contents-api@^0.24.1202":
+  version "0.24.1202"
+  resolved "https://registry.yarnpkg.com/@lemoncloud/lemon-contents-api/-/lemon-contents-api-0.24.1202.tgz#6ac92b6ff9fcac49466f68b8b4a637e180f83030"
+  integrity sha512-xhX/EXRXb07a4Qz9rmC/CF3prgsmifUXS0HhWJSbBzAjn5o0IkPYevnDwhG3splDJ6uQFvxV5f7AVUnHxIRFOw==
+  dependencies:
+    lemon-model "^1.0.2"
+
 "@lemoncloud/lemon-web-core@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@lemoncloud/lemon-web-core/-/lemon-web-core-1.2.6.tgz#b9935c8bd7dcc7dc42b7626ec415e809d704b467"
@@ -2676,6 +2683,18 @@
   integrity sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==
   dependencies:
     defer-to-connect "^2.0.0"
+
+"@tanstack/query-core@5.62.2":
+  version "5.62.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.62.2.tgz#4eef3201422f246788fb41d01662c2dea3136d9a"
+  integrity sha512-LcwVcC5qpsDpHcqlXUUL5o9SaOBwhNkGeV+B06s0GBoyBr8FqXPuXT29XzYXR36lchhnerp6XO+CWc84/vh7Zg==
+
+"@tanstack/react-query@^5.62.2":
+  version "5.62.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.62.2.tgz#fbcb8f991ddcf484ce7968fb58bb4790d6c98cd3"
+  integrity sha512-fkTpKKfwTJtVPKVR+ag7YqFgG/7TRVVPzduPAUF9zRCiiA8Wu305u+KJl8rCrh98Qce77vzIakvtUyzWLtaPGA==
+  dependencies:
+    "@tanstack/query-core" "5.62.2"
 
 "@testing-library/dom@^10.0.0":
   version "10.4.0"
@@ -7011,6 +7030,11 @@ language-tags@^1.0.9:
   dependencies:
     language-subtag-registry "^0.3.20"
 
+lemon-model@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/lemon-model/-/lemon-model-1.0.2.tgz#4be794dc74db9e0382c0ec54b25eeb376b21dd8e"
+  integrity sha512-+54IhzbgMzTdylLiWuqikXvZ70S/VceX/htSjmgkTEpLn8/OFuk9zbeH2J0OS5Yl7yZ2eKsrnyVQ3ENQvZ7ZbQ==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -9853,3 +9877,8 @@ yocto-queue@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.1.1.tgz#fef65ce3ac9f8a32ceac5a634f74e17e5b232110"
   integrity sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==
+
+zustand@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.2.tgz#f7595ada55a565f1fd6464f002a91e701ee0cfca"
+  integrity sha512-8qNdnJVJlHlrKXi50LDqqUNmUbuBjoKLrYQBnoChIbVph7vni+sY+YpvdjXG9YLd/Bxr6scMcR+rm5H3aSqPaw==
