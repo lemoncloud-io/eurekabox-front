@@ -31,7 +31,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@lemonote/assets': '/assets/src/index.ts'
-        }
-    }
+            '@lemonote/assets': '/assets/src/index.ts',
+        },
+    },
 });

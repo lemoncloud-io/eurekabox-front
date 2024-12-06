@@ -1,4 +1,5 @@
 const nx = require('@nx/eslint-plugin');
+const unusedImports = require('eslint-plugin-unused-imports');
 
 module.exports = [
     ...nx.configs['flat/base'],
@@ -6,6 +7,11 @@ module.exports = [
     ...nx.configs['flat/javascript'],
     {
         ignores: ['**/dist'],
+    },
+    {
+        plugins: {
+            unusedImports,
+        },
     },
     {
         files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
