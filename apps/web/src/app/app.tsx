@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useInitWebCore, useRefreshToken } from '@lemonote/web-core';
 
 import { Router } from './routes';
-import { ErrorFallback, LoadingFallback } from '@lemonote/shared';
+import { ErrorFallback, LoadingFallback, GlobalLoader } from '@lemonote/shared';
 
 export function App() {
     const queryClient = new QueryClient({
@@ -33,6 +33,7 @@ export function App() {
                 <HelmetProvider>
                     <QueryClientProvider client={queryClient}>
                         <Router />
+                        <GlobalLoader />
                         <Toaster />
                         {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />}
                     </QueryClientProvider>
