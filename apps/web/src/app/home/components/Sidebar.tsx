@@ -4,8 +4,11 @@ import { ScrollArea } from '@lemonote/ui-kit/components/ui/scroll-area';
 import { useInfiniteContents } from '@lemonote/contents';
 import { useEffect, useMemo, useRef } from 'react';
 import { Loader } from '@lemonote/shared';
+import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { useNavigate } from 'react-router-dom';
 
 export const SideBar = () => {
+    const navigate = useNavigate();
     const scrollAreaRef = useRef(null);
 
     const {
@@ -51,11 +54,22 @@ export const SideBar = () => {
         };
     }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+    const handleClickContent = (content: ContentView) => {
+        navigate(`/home/${content.id}`);
+    };
+
+    const handleClickCreate = () => {
+        navigate('/home/create');
+    };
+
     return (
         <div className={`w-64 flex flex-col h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <h1 className="text-2xl font-bold mb-4 gradient-text">Lemonote</h1>
-                <Button className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground">
+                <Button
+                    className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
+                    onClick={handleClickCreate}
+                >
                     <Plus className="mr-2 h-4 w-4" />
                     New page
                 </Button>
@@ -78,9 +92,10 @@ export const SideBar = () => {
                                     key={content.id}
                                     variant="ghost"
                                     className="w-full justify-start font-normal hover:bg-primary/10 dark:hover:bg-primary/20"
+                                    onClick={() => handleClickContent(content)}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
-                                    {content.name || ''}
+                                    {content.name || 'Untitled'}
                                 </Button>
                             ))}
                             {isFetchingNextPage && <Loader />}

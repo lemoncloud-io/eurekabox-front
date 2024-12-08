@@ -1,9 +1,13 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
 import { Images } from '@lemonote/assets';
 import { Card } from '@lemonote/ui-kit/components/ui/card';
+import { useGlobalLoader } from '@lemonote/shared';
 
 export const LoginPage = () => {
+    const { setIsLoading } = useGlobalLoader();
+
     const onClickLogin = (provider: string) => {
+        setIsLoading(true);
         const HOST = import.meta.env.VITE_HOST.toLowerCase();
         const SOCIAL_OAUTH = import.meta.env.VITE_SOCIAL_OAUTH_ENDPOINT.toLowerCase();
         const redirectUrl = `${HOST}/auth/oauth-response`;

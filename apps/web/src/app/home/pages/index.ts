@@ -1,1 +1,3 @@
-export * from './EditorPage';
+export * from './CreateContentPage';
+export * from './UpdateContentPage';
+export * from './DefaultContentPage';
