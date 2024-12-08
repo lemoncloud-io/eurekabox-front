@@ -9,19 +9,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useInitWebCore, useRefreshToken } from '@lemonote/web-core';
 
 import { Router } from './routes';
-
-const ErrorFallback = () => {
-    const onClickRefresh = () => window.location.assign(window.location.origin);
-
-    return (
-        <div className="text-red-500 w-screen h-screen flex flex-col justify-center items-center" role="alert">
-            <h2 className="text-lg font-semibold">Oops, something went wrong :( </h2>
-            <button className="mt-4" onClick={onClickRefresh}>
-                Refresh
-            </button>
-        </div>
-    );
-};
+import { ErrorFallback, LoadingFallback } from '@lemonote/shared';
 
 export function App() {
     const queryClient = new QueryClient({
@@ -36,11 +24,11 @@ export function App() {
     useRefreshToken();
 
     if (!isInitialized) {
-        return <div>TODO: add loader</div>;
+        return <LoadingFallback />;
     }
 
     return (
-        <Suspense fallback={<div>TODO: add loader</div>}>
+        <Suspense fallback={LoadingFallback}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <HelmetProvider>
                     <QueryClientProvider client={queryClient}>

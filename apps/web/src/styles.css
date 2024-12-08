@@ -19,6 +19,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+    min-height: 100vh;
+}
+
 @layer base {
     :root {
         --background: 210 40% 98%;

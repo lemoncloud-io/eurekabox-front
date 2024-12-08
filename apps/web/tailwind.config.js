@@ -7,7 +7,7 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 module.exports = {
     darkMode: ['class'],
     content: [
-        join(__dirname, '{src,pages,components,app,features}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
+        join(__dirname, '{src,pages,components,app,features,shared}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
         ...createGlobPatternsForDependencies(__dirname),
     ],
     prefix: '',
