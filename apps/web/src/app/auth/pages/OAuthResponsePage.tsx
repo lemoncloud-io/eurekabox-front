@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useWebCoreStore, createCredentialsByProvider } from '@lemonote/web-core';
-import { Images } from '@lemonote/assets';
+import { LoadingFallback } from '@lemonote/shared';
+import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 
 export const OAuthResponsePage = () => {
     const setIsAuthenticated = useWebCoreStore(state => state.setIsAuthenticated);
@@ -27,18 +28,14 @@ export const OAuthResponsePage = () => {
                 return;
             }
             // Error occurred!
+            toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
             navigate('/auth/login');
         };
 
         checkLoginResult();
     }, [location.search]);
 
-    return (
-        <div className="bg-black w-screen h-screen flex flex-col items-center justify-center gap-12 max-sm:gap-6 fixed inset-0 bg-opacity-50 z-[1000]">
-            <img className="w-[160px] max-sm:w-[160px]" src={Images.logo} alt="" />
-            <img className="h-[42px] animate-spin" src={Images.loader} alt="" />
-        </div>
-    );
+    return <LoadingFallback message={'Signing...'} />;
 };
 
 export default OAuthResponsePage;

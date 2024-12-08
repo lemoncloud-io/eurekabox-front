@@ -1,6 +1,4 @@
-import { Card } from '@lemonote/ui-kit/components/ui/card';
 import { Loader2 } from 'lucide-react';
-import { GlobalLoader } from './GlobalLoader';
 
 interface LoadingFallbackProps {
     message?: string;
@@ -13,7 +11,7 @@ export const LoadingFallback: React.FC<LoadingFallbackProps> = ({ message = 'Loa
                 <div className="flex flex-col items-center space-y-4">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
                     <div className="text-center">
-                        <span className="text-lg font-bold gradient-text">Loading...</span>
+                        <span className="text-lg font-bold gradient-text">{message}</span>
                     </div>
                 </div>
             </div>
