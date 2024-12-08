@@ -16,7 +16,7 @@ export const fetchContents = async (params: Params): Promise<ListResult<ContentV
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ContentView>>();
-
+    console.log(data);
     return { ...data };
 };
 
