@@ -46,6 +46,7 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
     logout: async () => {
         await webCore.logout();
         set({ isAuthenticated: false, profile: null, userName: '' });
+        window.location.href = '/auth/login';
     },
     setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
     setProfile: (profile: UserProfile) =>

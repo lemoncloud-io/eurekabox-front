@@ -37,5 +37,3 @@ export const OAuthResponsePage = () => {
 
     return <LoadingFallback message={'Signing...'} />;
 };
-
-export default OAuthResponsePage;
