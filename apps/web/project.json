@@ -16,7 +16,7 @@
                     "mode": "dev",
                     "fileReplacements": [
                         {
-                            "replace": "apps/web/env/.env.local",
+                            "replace": "apps/web/.env.local",
                             "with": "apps/web/env/.env.stage"
                         }
                     ]
@@ -25,7 +25,7 @@
                     "mode": "production",
                     "fileReplacements": [
                         {
-                            "replace": "apps/web/env/.env.local",
+                            "replace": "apps/web/.env.local",
                             "with": "apps/web/env/.env.prod"
                         }
                     ]

@@ -8,15 +8,35 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig({
     root: __dirname,
     cacheDir: '../../node_modules/.vite/apps/web',
+
+    define: {
+        'process.env': {},
+        ...(process.env.NODE_ENV === 'development' ? { global: 'window' } : {}),
+    },
+
+    resolve: {
+        alias: {
+            '@lemonote/assets': '/assets/src/index.ts',
+            ...(process.env.NODE_ENV !== 'development'
+                ? {
+                      './runtimeConfig': './runtimeConfig.browser', // fix production build
+                  }
+                : {}),
+        },
+    },
+
     server: {
         port: 4200,
         host: 'localhost',
     },
+
     preview: {
         port: 4300,
         host: 'localhost',
     },
+
     plugins: [svgr(), react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
+
     // Uncomment this if you are using workers.
     // worker: {
     //  plugins: [ nxViteTsPaths() ],
@@ -35,19 +55,24 @@ export default defineConfig({
         },
     },
 
-    define: {
-        'process.env': {},
-        ...(process.env.NODE_ENV === 'development' ? { global: 'window' } : {}),
+    css: {
+        modules: {
+            localsConvention: 'camelCase',
+        },
     },
 
-    resolve: {
-        alias: {
-            '@lemonote/assets': '/assets/src/index.ts',
-            ...(process.env.NODE_ENV !== 'development'
-                ? {
-                      './runtimeConfig': './runtimeConfig.browser', // fix production build
-                  }
-                : {}),
+    test: {
+        globals: true,
+        cache: {
+            dir: '../../node_modules/.vitest',
+        },
+        environment: 'jsdom',
+        include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+
+        reporters: ['default'],
+        coverage: {
+            reportsDirectory: '../../coverage/apps/web',
+            provider: 'v8',
         },
     },
 });

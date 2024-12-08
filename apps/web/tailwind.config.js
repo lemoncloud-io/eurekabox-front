@@ -7,17 +7,11 @@ const { fontFamily } = require('tailwindcss/defaultTheme');
 module.exports = {
     darkMode: ['class'],
     content: [
-        join(__dirname, '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
+        join(__dirname, '{src,pages,components,app,features}/**/*!(*.stories|*.spec).{ts,tsx,html}'),
         ...createGlobPatternsForDependencies(__dirname),
     ],
     prefix: '',
     theme: {
-        screens: {
-            xs: '480px',
-            sm: '768px',
-            md: '1230px',
-            tablet: '600px',
-        },
         container: {
             center: true,
             padding: '2rem',
@@ -26,6 +20,12 @@ module.exports = {
             },
         },
         extend: {
+            screens: {
+                xs: '480px',
+                sm: '768px',
+                md: '1230px',
+                tablet: '600px',
+            },
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
@@ -66,6 +66,9 @@ module.exports = {
                 md: 'calc(var(--radius) - 2px)',
                 sm: 'calc(var(--radius) - 4px)',
             },
+            fontFamily: {
+                sans: ['var(--font-sans)', ...fontFamily.sans],
+            },
             keyframes: {
                 'accordion-down': {
                     from: { height: 0 },
@@ -82,5 +85,18 @@ module.exports = {
             },
         },
     },
-    plugins: [require('tailwindcss-animate')],
+    plugins: [
+        require('tailwindcss-animate'),
+        plugin(({ addUtilities }) =>
+            addUtilities({
+                '.scrollbar-hide': {
+                    '-ms-overflow-style': 'none',
+                    'scrollbar-width': 'none',
+                    '&::-webkit-scrollbar': {
+                        display: 'none',
+                    },
+                },
+            })
+        ),
+    ],
 };
