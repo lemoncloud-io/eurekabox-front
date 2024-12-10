@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
-import { Loader } from '@lemonote/shared';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MARKS, plugins, TOOLS } from '../utils';
 import { YooptaContentValue } from '@yoopta/editor/dist/editor/types';

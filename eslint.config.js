@@ -10,7 +10,7 @@ module.exports = [
     },
     {
         plugins: {
-            unusedImports,
+            'unused-imports': unusedImports,
         },
     },
     {
@@ -38,6 +38,17 @@ module.exports = [
             '@typescript-eslint/no-empty-object-type': 'off',
             '@typescript-eslint/no-empty-interface': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
+            'no-unused-vars': 'off',
+            'unused-imports/no-unused-imports': 'error',
+            'unused-imports/no-unused-vars': [
+                'warn',
+                {
+                    vars: 'all',
+                    varsIgnorePattern: '^_',
+                    args: 'after-used',
+                    argsIgnorePattern: '^_',
+                },
+            ],
         },
     },
 ];

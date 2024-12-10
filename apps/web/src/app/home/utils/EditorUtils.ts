@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-import { ElementStructure, useEditorContent } from '../hooks';
+import { ElementStructure } from '../hooks';
 
 import Accordion from '@yoopta/accordion';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
@@ -8,7 +6,7 @@ import Blockquote from '@yoopta/blockquote';
 import Callout from '@yoopta/callout';
 import Code from '@yoopta/code';
 import Divider from '@yoopta/divider';
-import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
+import { YooEditor } from '@yoopta/editor';
 import { YooptaBlockData, YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import Embed from '@yoopta/embed';
 import File from '@yoopta/file';

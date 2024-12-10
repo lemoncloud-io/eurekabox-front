@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { YooEditor, YooptaContentValue } from '@yoopta/editor';
+import { YooEditor } from '@yoopta/editor';
 import { html } from '@yoopta/exports';
 
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@lemonote/contents';
-import { YooptaBlockData } from '@yoopta/editor/dist/editor/types';
 import { convertElementToEditorValue, extractContent } from '../utils';
 
 export interface ElementStructure {

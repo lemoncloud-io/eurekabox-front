@@ -1,7 +1,7 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
 import { Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@lemonote/shared';
 import { useDeleteContent } from '@lemonote/contents';

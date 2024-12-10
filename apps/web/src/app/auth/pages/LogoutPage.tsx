@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useWebCoreStore, createCredentialsByProvider } from '@lemonote/web-core';
+import { useWebCoreStore } from '@lemonote/web-core';
 import { LoadingFallback } from '@lemonote/shared';
-import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 
 export const LogoutPage = () => {
     const isAuthenticated = useWebCoreStore(state => state.isAuthenticated);
