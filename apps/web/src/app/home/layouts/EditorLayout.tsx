@@ -18,6 +18,7 @@ import {
     AlertDialogTrigger,
 } from '@lemonote/ui-kit/components/ui/alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { ContentView } from '@lemoncloud/lemon-contents-api';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -93,14 +94,41 @@ export const EditorLayout = ({
             title: 'Untitled',
             subject: '',
         };
-
         await createContent.mutateAsync(newContent, {
-            onSuccess: response => {
+            onSuccess: async (response: ContentView) => {
+                prependContentToInfiniteCache(response);
                 navigate(`/home/${response.id}`);
             },
-            onError: error => {
-                toast({ description: `에러가 발생했습니다. ${error.toString()}`, variant: 'destructive' });
-            },
+        });
+    };
+
+    const prependContentToInfiniteCache = (content: ContentView) => {
+        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+            if (!oldData) {
+                return {
+                    pages: [
+                        {
+                            list: [content],
+                            page: 0,
+                            total: 1,
+                        },
+                    ],
+                    pageParams: [0],
+                };
+            }
+
+            // 첫 번째 페이지에 새 아이템 추가
+            const newPages = [...oldData.pages];
+            newPages[0] = {
+                ...newPages[0],
+                list: [content, ...newPages[0].list],
+                total: newPages[0].total + 1,
+            };
+
+            return {
+                ...oldData,
+                pages: newPages,
+            };
         });
     };
 
