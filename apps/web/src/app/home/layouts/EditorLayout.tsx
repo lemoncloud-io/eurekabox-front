@@ -146,6 +146,7 @@ export const EditorLayout = ({
                                         size="icon"
                                         className="hover:text-primary"
                                         onClick={handleSaveClick}
+                                        disabled={isLoading}
                                     >
                                         <Save className="h-5 w-5" />
                                         <span className="sr-only">저장</span>
@@ -192,7 +193,7 @@ export const EditorLayout = ({
                             </Link>
                         </div>
                     </header>
-                    <main className="flex-1 p-6">{children}</main>
+                    <main className="flex-1 p-6 overflow-auto">{children}</main>
                 </div>
             </div>
             <Button

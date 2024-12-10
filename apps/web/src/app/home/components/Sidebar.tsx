@@ -3,15 +3,15 @@ import { FileText, Loader2, Plus } from 'lucide-react';
 import { ScrollArea } from '@lemonote/ui-kit/components/ui/scroll-area';
 import { contentsKeys, CreateContentDTO, useCreateContent, useInfiniteContents } from '@lemonote/contents';
 import { useEffect, useMemo, useRef } from 'react';
-import { Loader, useGlobalLoader } from '@lemonote/shared';
+import { Loader } from '@lemonote/shared';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 export const SideBar = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const { contentId } = useParams<{ contentId: string }>();
     const scrollAreaRef = useRef(null);
 
     const createContent = useCreateContent();
@@ -110,7 +110,9 @@ export const SideBar = () => {
     return (
         <div className={`w-64 flex flex-col h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h1 className="text-2xl font-bold mb-4 gradient-text">EurekaBox</h1>
+                <h1 className="text-2xl font-bold mb-4 gradient-text cursor-pointer" onClick={() => navigate('/home')}>
+                    EurekaBox
+                </h1>
                 <Button
                     className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
                     disabled={createContent.isPending}
@@ -143,7 +145,8 @@ export const SideBar = () => {
                                 <Button
                                     key={content.id}
                                     variant="ghost"
-                                    className="w-full justify-start font-normal hover:bg-primary/10 dark:hover:bg-primary/20"
+                                    className={`w-full justify-start font-normal hover:bg-primary/10 dark:hover:bg-primary/20
+                                        ${content.id === contentId ? 'bg-primary/20' : ''}`}
                                     onClick={() => handleClickContent(content)}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />

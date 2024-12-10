@@ -72,6 +72,7 @@ export const UpdateContentPage = () => {
                     marks={MARKS}
                     width="100%"
                     value={value}
+                    autoFocus={true}
                 />
             </div>
         </EditorLayout>

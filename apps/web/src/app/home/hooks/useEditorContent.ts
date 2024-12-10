@@ -5,8 +5,11 @@ import { YooEditor, YooptaContentValue } from '@yoopta/editor';
 import { html } from '@yoopta/exports';
 
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@lemonote/contents';
+import { YooptaBlockData } from '@yoopta/editor/dist/editor/types';
+import { convertElementToEditorValue, extractContent } from '../utils';
 
-interface ElementStructure {
+export interface ElementStructure {
+    depth: number;
     id: string;
     name: string;
     text: string;
@@ -40,40 +43,6 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
 
     const fetchedRef = useRef<string | null>(null);
 
-    const convertElementToEditorValue = (
-        editor: YooEditor,
-        elements: ElementStructure[] = []
-    ): { value: YooptaContentValue } => {
-        const value: YooptaContentValue = {};
-
-        if (!elements || elements.length === 0) {
-            return { value };
-        }
-
-        // element$$ 탐색 없이 flat하게 변환
-        elements
-            .filter(element => !element.deletedAt)
-            .forEach((element, index) => {
-                // HTML -> editor value 변환
-                const editorBlocks = html.deserialize(editor, element.text || '');
-
-                // 모든 블록을 처리
-                Object.entries(editorBlocks).forEach(([blockId, block]) => {
-                    value[blockId] = {
-                        ...block,
-                        meta: {
-                            ...block.meta,
-                            depth: element.depth || 0,
-                            order: index,
-                            elementId: element.id,
-                        },
-                    };
-                });
-            });
-
-        return { value };
-    };
-
     const loadContent = useCallback(
         async (id: string) => {
             try {
@@ -102,6 +71,7 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 console.error('Failed to load content:', err);
                 setError(err as Error);
             } finally {
+                editor.focus();
                 setLoading(false);
             }
         },
@@ -118,25 +88,6 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 setLoading(true);
                 const currentValue = editor.getEditorValue();
                 const updatedValue = { ...currentValue };
-
-                const extractContent = (htmlString: string) => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlString, 'text/html');
-                    const mainElement = doc.body.firstElementChild;
-
-                    if (!mainElement) return '';
-
-                    // body의 data-editor-id만 제거
-                    doc.body.removeAttribute('id');
-
-                    // mainElement의 data-meta-* 속성만 제거 (style은 유지)
-                    mainElement
-                        .getAttributeNames()
-                        .filter(name => name.startsWith('data-meta-'))
-                        .forEach(name => mainElement.removeAttribute(name));
-
-                    return mainElement.outerHTML;
-                };
 
                 // 변경사항 추적을 위한 객체들
                 const toCreate: Array<{ blockId: string; block: any }> = [];

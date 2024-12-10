@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useEditorContent } from '../hooks';
+import { ElementStructure, useEditorContent } from '../hooks';
 
 import Accordion from '@yoopta/accordion';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
@@ -8,8 +8,8 @@ import Blockquote from '@yoopta/blockquote';
 import Callout from '@yoopta/callout';
 import Code from '@yoopta/code';
 import Divider from '@yoopta/divider';
-import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
-import { YooptaContentValue } from '@yoopta/editor/dist/editor/types';
+import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
+import { YooptaBlockData, YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import Embed from '@yoopta/embed';
 import File from '@yoopta/file';
 import { HeadingOne, HeadingThree, HeadingTwo } from '@yoopta/headings';
@@ -24,6 +24,7 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import Video from '@yoopta/video';
 
 import { uploadImage } from '@lemonote/contents';
+import { html } from '@yoopta/exports';
 
 export const plugins = [
     Paragraph,
@@ -134,4 +135,57 @@ export const getAllAdjustedDepths = (editorValue: YooptaContentValue, maxDepthDi
     });
 
     return adjustments;
+};
+
+export const extractContent = (htmlString: string) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    const mainElement = doc.body.firstElementChild;
+
+    if (!mainElement) return '';
+
+    // body의 data-editor-id만 제거
+    doc.body.removeAttribute('id');
+
+    // mainElement의 data-meta-* 속성만 제거 (style은 유지)
+    mainElement
+        .getAttributeNames()
+        .filter(name => name.startsWith('data-meta-'))
+        .forEach(name => mainElement.removeAttribute(name));
+
+    return mainElement.outerHTML;
+};
+
+export const convertElementToEditorValue = (
+    editor: YooEditor,
+    elements: ElementStructure[] = []
+): { value: YooptaContentValue } => {
+    const value: YooptaContentValue = {};
+
+    if (!elements || elements.length === 0) {
+        return { value };
+    }
+
+    // element$$ 탐색 없이 flat하게 변환
+    elements
+        .filter(element => !element.deletedAt)
+        .forEach((element, index) => {
+            // HTML -> editor value 변환
+            const editorBlocks = html.deserialize(editor, element.text || '');
+
+            // 모든 블록을 처리
+            Object.entries(editorBlocks).forEach(([blockId, block]) => {
+                value[blockId] = {
+                    ...block,
+                    meta: {
+                        ...block.meta,
+                        depth: element.depth || 0,
+                        order: index,
+                        elementId: element.id,
+                    },
+                } as YooptaBlockData;
+            });
+        });
+
+    return { value };
 };
