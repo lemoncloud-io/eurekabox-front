@@ -1,7 +1,6 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { contentsKeys, CreateContentDTO, useCreateContent } from '@lemonote/contents';
+import { CreateContentDTO, useCreateContent } from '@lemonote/contents';
 import { useNavigate } from 'react-router-dom';
 import { useContentCache } from './useContentCache';
 

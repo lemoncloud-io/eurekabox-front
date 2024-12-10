@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@lemonote/shared';
-import { contentsKeys, CreateContentDTO, useCreateContent, useDeleteContent } from '@lemonote/contents';
+import { useDeleteContent } from '@lemonote/contents';
 import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 import {
     AlertDialog,
@@ -18,7 +18,6 @@ import {
     AlertDialogTrigger,
 } from '@lemonote/ui-kit/components/ui/alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
 
 interface EditorLayoutProps {

@@ -1,16 +1,14 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
-import { FileText, Loader2, Plus } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { ScrollArea } from '@lemonote/ui-kit/components/ui/scroll-area';
-import { contentsKeys, CreateContentDTO, useCreateContent, useInfiniteContents } from '@lemonote/contents';
+import { useInfiniteContents } from '@lemonote/contents';
 import { useEffect, useMemo, useRef } from 'react';
 import { Loader } from '@lemonote/shared';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import { useCreateContentWithCache } from '../hooks';
 
 export const SideBar = () => {
-    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { contentId } = useParams<{ contentId: string }>();
     const scrollAreaRef = useRef(null);
