@@ -27,7 +27,6 @@ export const UpdateContentPage = () => {
 
     useEffect(() => {
         if (content?.title) {
-            console.log('content.title', content?.title);
             setTitle(content.title);
         }
     }, [content]);

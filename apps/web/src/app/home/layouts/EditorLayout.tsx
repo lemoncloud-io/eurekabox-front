@@ -4,7 +4,7 @@ import { ReactNode, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@lemonote/shared';
-import { contentsKeys, useDeleteContent } from '@lemonote/contents';
+import { contentsKeys, CreateContentDTO, useCreateContent, useDeleteContent } from '@lemonote/contents';
 import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 import {
     AlertDialog,
@@ -22,13 +22,21 @@ import { useQueryClient } from '@tanstack/react-query';
 
 interface EditorLayoutProps {
     children: ReactNode;
+    isDashboard?: boolean;
     title: string;
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
     handleSave?: () => void;
 }
 
-export const EditorLayout = ({ children, title, isLoading = false, onTitleChange, handleSave }: EditorLayoutProps) => {
+export const EditorLayout = ({
+    children,
+    isDashboard = false,
+    title,
+    isLoading = false,
+    onTitleChange,
+    handleSave,
+}: EditorLayoutProps) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -36,6 +44,7 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+    const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
 
     const handleDelete = () => {
@@ -52,6 +61,23 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                 navigate('/home');
                 await createAsyncDelay(500);
                 queryClient.invalidateQueries(contentsKeys.lists() as never);
+            },
+        });
+    };
+
+    const handleClickCreate = async () => {
+        const newContent: CreateContentDTO = {
+            name: '',
+            title: '',
+            subject: '',
+        };
+
+        await createContent.mutateAsync(newContent, {
+            onSuccess: response => {
+                navigate(`/home/${response.id}`);
+            },
+            onError: error => {
+                toast({ description: `에러가 발생했습니다. ${error.toString()}`, variant: 'destructive' });
             },
         });
     };
@@ -91,37 +117,47 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                             )}
                         </div>
                         <div className="flex items-center gap-4">
-                            <Button variant="ghost" size="icon" className="hover:text-primary" onClick={handleSave}>
-                                <Save className="h-5 w-5" />
-                                <span className="sr-only">저장</span>
-                            </Button>
-                            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                                <AlertDialogTrigger asChild>
+                            {!isDashboard && (
+                                <>
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="hover:text-destructive"
-                                        onClick={handleDelete}
+                                        className="hover:text-primary"
+                                        onClick={handleSave}
                                     >
-                                        <Trash2 className="h-5 w-5" />
-                                        <span className="sr-only">삭제</span>
+                                        <Save className="h-5 w-5" />
+                                        <span className="sr-only">저장</span>
                                     </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            Are you sure you want to delete this document?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. The document will be permanently deleted.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>취소</AlertDialogCancel>
-                                        <AlertDialogAction onClick={confirmDelete}>삭제</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                                    <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="hover:text-destructive"
+                                                onClick={handleDelete}
+                                            >
+                                                <Trash2 className="h-5 w-5" />
+                                                <span className="sr-only">삭제</span>
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Are you sure you want to delete this document?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. The document will be permanently
+                                                    deleted.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>취소</AlertDialogCancel>
+                                                <AlertDialogAction onClick={confirmDelete}>삭제</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </>
+                            )}
                             <Button variant="ghost" size="icon" className="hover:text-primary">
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
@@ -140,11 +176,14 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
             <Button
                 className="fixed bottom-6 right-6 rounded-full w-12 h-12 shadow-lg hover:shadow-xl transition-shadow"
                 size="icon"
-                as={Link}
-                to="/home/create"
+                disabled={createContent.isPending}
+                onClick={handleClickCreate}
             >
-                <Plus className="h-6 w-6" />
-                <span className="sr-only">New page</span>
+                {createContent.isPending ? (
+                    <Loader className="text-white space-x-0" message={''} />
+                ) : (
+                    <Plus className="h-6 w-6" />
+                )}
             </Button>
         </div>
     );

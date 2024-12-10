@@ -70,11 +70,7 @@ export const SideBar = () => {
             title: '',
             subject: '',
         };
-        await handleCreate(newContent);
-    };
-
-    const handleCreate = async (data: CreateContentDTO) => {
-        await createContent.mutateAsync(data, {
+        await createContent.mutateAsync(newContent, {
             onSuccess: response => {
                 navigate(`/home/${response.id}`);
             },
