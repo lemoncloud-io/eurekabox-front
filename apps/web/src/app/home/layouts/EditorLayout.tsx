@@ -68,7 +68,7 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                 </div>
                 <div className="flex-1 flex flex-col">
                     <header className="flex items-center justify-between p-4 glassmorphism">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 w-full">
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -85,7 +85,7 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                                     type="text"
                                     value={title}
                                     onChange={e => onTitleChange?.(e.target.value)}
-                                    className="text-xl font-semibold gradient-text border-none focus:outline-none"
+                                    className="w-full text-xl font-semibold gradient-text border-none focus:outline-none caret-black dark:caret-white"
                                     placeholder="Untitled"
                                 />
                             )}
@@ -127,9 +127,9 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                                 <span className="sr-only">Search</span>
                             </Button>
                             <ThemeToggle />
-                            <Link href="/login">
-                                <Button variant="ghost" size="icon" className="hover:text-primary">
-                                    Login
+                            <Link to="/auth/logout">
+                                <Button variant="ghost" className="hover:text-primary">
+                                    Logout
                                 </Button>
                             </Link>
                         </div>

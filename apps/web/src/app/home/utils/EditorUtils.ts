@@ -24,7 +24,6 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import Video from '@yoopta/video';
 
 import { uploadImage } from '@lemonote/contents';
-import { Loader } from '@lemonote/shared';
 
 export const plugins = [
     Paragraph,
@@ -96,13 +95,13 @@ export const TOOLS = {
 
 export const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
 
-interface AdjustedDepth {
+export interface AdjustedDepth {
     id: string;
     depth: number;
     order: number;
 }
 
-const getAllAdjustedDepths = (editorValue: YooptaContentValue, maxDepthDifference = 1): AdjustedDepth[] => {
+export const getAllAdjustedDepths = (editorValue: YooptaContentValue, maxDepthDifference = 1): AdjustedDepth[] => {
     const sortedBlocks = Object.values(editorValue).sort((a, b) => a.meta.order - b.meta.order);
     const adjustments: AdjustedDepth[] = [];
 
@@ -135,44 +134,4 @@ const getAllAdjustedDepths = (editorValue: YooptaContentValue, maxDepthDifferenc
     });
 
     return adjustments;
-};
-
-export const ContentEditor = ({ contentId = '' }) => {
-    const selectionRef = useRef(null);
-    const [value, setValue] = useState<YooptaContentValue>({});
-    const editor = useMemo(() => createYooptaEditor(), []);
-
-    const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
-
-    const onChange = (updated: any, options: any) => {
-        // console.log(value, updated, options);
-        setValue(updated);
-    };
-
-    useEffect(() => {
-        // const data = getAllAdjustedDepths(value);
-        // if (data.length > 0) {
-        //     data.forEach(item => {
-        //         editor.decreaseBlockDepth({ blockId: item.id, at: item.order });
-        //     });
-        // }
-    }, [value]);
-
-    return (
-        <div
-            className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[80px] pb-[40px] flex justify-center"
-            ref={selectionRef}
-        >
-            <YooptaEditor
-                selectionBoxRoot={selectionRef}
-                editor={editor}
-                plugins={plugins}
-                tools={TOOLS as Partial<Tools>}
-                marks={MARKS}
-                width="100%"
-                value={value}
-                onChange={onChange}
-            />
-        </div>
-    );
 };

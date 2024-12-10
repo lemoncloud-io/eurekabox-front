@@ -108,164 +108,161 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
         [editor]
     );
 
-    const handleSave = useCallback(async () => {
-        if (!contentId) return;
-
-        try {
-            setLoading(true);
-            const currentValue = editor.getEditorValue();
-            const updatedValue = { ...currentValue };
-
-            const extractContent = (htmlString: string) => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(htmlString, 'text/html');
-                const mainElement = doc.body.firstElementChild;
-
-                if (!mainElement) return '';
-
-                // body의 data-editor-id만 제거
-                doc.body.removeAttribute('id');
-
-                // mainElement의 data-meta-* 속성만 제거 (style은 유지)
-                mainElement
-                    .getAttributeNames()
-                    .filter(name => name.startsWith('data-meta-'))
-                    .forEach(name => mainElement.removeAttribute(name));
-
-                return mainElement.outerHTML;
-            };
-
-            // 변경사항 추적을 위한 객체들
-            const toCreate: Array<{ blockId: string; block: any }> = [];
-            const toUpdate: Array<{ id: string; text: string; type: string; depth: number }> = [];
-            const toDelete: string[] = [];
-
-            // 1. 삭제된 블록 찾기
-            const currentElementIds = new Set(
-                Object.values(currentValue)
-                    .map(block => block.meta.elementId)
-                    .filter(Boolean)
-            );
-
-            for (const elementId of Object.keys(elementTrackerRef.current)) {
-                if (!currentElementIds.has(elementId)) {
-                    toDelete.push(elementId);
-                }
+    const handleSave = useCallback(
+        async (title: string) => {
+            if (!contentId) {
+                return;
             }
 
-            // 2. 새로운 블록과 변경된 블록 찾기
-            console.log('123');
-            for (const [blockId, block] of Object.entries(currentValue)) {
-                const elementId = block.meta.elementId;
-                const serializedHtml = html.serialize(editor, { [blockId]: block });
-                console.log('1234');
+            try {
+                setLoading(true);
+                const currentValue = editor.getEditorValue();
+                const updatedValue = { ...currentValue };
 
-                if (!elementId) {
-                    // 새로운 블록
-                    toCreate.push({ blockId, block });
-                    console.log('12346');
-                } else {
-                    // 기존 블록 - 변경사항 확인
-                    const prevElement = elementTrackerRef.current[elementId];
-                    console.log('prevElement', elementId, elementTrackerRef.current, prevElement);
-                    if (prevElement) {
-                        console.log(serializedHtml);
-                        console.log(prevElement.text);
-                        const currentContent = extractContent(serializedHtml);
-                        const prevContent = extractContent(prevElement.text);
+                const extractContent = (htmlString: string) => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlString, 'text/html');
+                    const mainElement = doc.body.firstElementChild;
 
-                        // 내용이나 depth가 변경된 경우에만 업데이트
-                        if (currentContent !== prevContent || block.meta.depth !== prevElement.depth) {
-                            toUpdate.push({
-                                id: elementId,
-                                text: serializedHtml,
-                                type: block.type,
-                                depth: block.meta.depth,
-                            });
+                    if (!mainElement) return '';
+
+                    // body의 data-editor-id만 제거
+                    doc.body.removeAttribute('id');
+
+                    // mainElement의 data-meta-* 속성만 제거 (style은 유지)
+                    mainElement
+                        .getAttributeNames()
+                        .filter(name => name.startsWith('data-meta-'))
+                        .forEach(name => mainElement.removeAttribute(name));
+
+                    return mainElement.outerHTML;
+                };
+
+                // 변경사항 추적을 위한 객체들
+                const toCreate: Array<{ blockId: string; block: any }> = [];
+                const toUpdate: Array<{ id: string; text: string; type: string; depth: number }> = [];
+                const toDelete: string[] = [];
+
+                // 1. 삭제된 블록 찾기
+                const currentElementIds = new Set(
+                    Object.values(currentValue)
+                        .map(block => block.meta.elementId)
+                        .filter(Boolean)
+                );
+
+                for (const elementId of Object.keys(elementTrackerRef.current)) {
+                    if (!currentElementIds.has(elementId)) {
+                        toDelete.push(elementId);
+                    }
+                }
+
+                // 2. 새로운 블록과 변경된 블록 찾기
+                for (const [blockId, block] of Object.entries(currentValue)) {
+                    const elementId = block.meta.elementId;
+                    const serializedHtml = html.serialize(editor, { [blockId]: block });
+
+                    if (!elementId) {
+                        // 새로운 블록
+                        toCreate.push({ blockId, block });
+                    } else {
+                        // 기존 블록 - 변경사항 확인
+                        const prevElement = elementTrackerRef.current[elementId];
+                        console.log('prevElement', elementId, elementTrackerRef.current, prevElement);
+                        if (prevElement) {
+                            console.log(serializedHtml);
+                            console.log(prevElement.text);
+                            const currentContent = extractContent(serializedHtml);
+                            const prevContent = extractContent(prevElement.text);
+
+                            // 내용이나 depth가 변경된 경우에만 업데이트
+                            if (currentContent !== prevContent || block.meta.depth !== prevElement.depth) {
+                                toUpdate.push({
+                                    id: elementId,
+                                    text: serializedHtml,
+                                    type: block.type,
+                                    depth: block.meta.depth,
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            // 3. 변경사항 적용
-            // 3.1. 삭제
-            for (const elementId of toDelete) {
-                // await deleteElement(elementId);
-                delete elementTrackerRef.current[elementId];
-            }
+                // 3. 변경사항 적용
+                // 3.1. 삭제
+                for (const elementId of toDelete) {
+                    // await deleteElement(elementId);
+                    delete elementTrackerRef.current[elementId];
+                }
 
-            // 3.2. 생성
-            for (const { blockId, block } of toCreate) {
-                const created = await createElement({
-                    contentId,
-                    body: {
+                // 3.2. 생성
+                for (const { blockId, block } of toCreate) {
+                    const created = await createElement({
+                        contentId,
                         name: block.type,
                         text: html.serialize(editor, { [blockId]: block }),
                         depth: block.meta.depth,
-                    },
-                });
+                    });
 
-                updatedValue[blockId] = {
-                    ...block,
-                    meta: {
-                        ...block.meta,
-                        elementId: created.id,
-                    },
-                };
-            }
+                    updatedValue[blockId] = {
+                        ...block,
+                        meta: {
+                            ...block.meta,
+                            elementId: created.id,
+                        },
+                    };
+                }
 
-            console.log('toUpdate', toUpdate);
-            // 3.3. 업데이트
-            for (const update of toUpdate) {
-                await updateElement({
-                    elementId: update.id,
-                    body: {
+                console.log('toUpdate', toUpdate);
+                // 3.3. 업데이트
+                for (const update of toUpdate) {
+                    await updateElement({
+                        elementId: update.id,
                         text: update.text,
                         name: update.type,
                         depth: update.depth,
-                    },
-                });
-            }
-
-            // 4. elementIds 업데이트 (실제 순서 변경이 있는 경우에만)
-            const orderedElementIds = Object.entries(updatedValue)
-                .sort(([, a], [, b]) => a.meta.order - b.meta.order)
-                .map(([, block]) => block.meta.elementId)
-                .filter(Boolean);
-
-            const currentIds = contentRef.current.elementIds || [];
-            console.log(currentIds, orderedElementIds);
-            if (JSON.stringify(orderedElementIds) !== JSON.stringify(currentIds)) {
-                console.log('updateContent');
-                await updateContent({
-                    contentId,
-                    body: {
-                        elementIds: orderedElementIds,
-                    },
-                });
-            }
-
-            // 5. 트래커 업데이트
-            for (const [blockId, block] of Object.entries(updatedValue)) {
-                const elementId = block.meta.elementId;
-                if (elementId) {
-                    elementTrackerRef.current[elementId] = {
-                        text: html.serialize(editor, { [blockId]: block }),
-                        type: block.type,
-                        depth: block.meta.depth,
-                    };
+                    });
                 }
-            }
 
-            // 6. 데이터 리로드
-            await loadContent(contentId);
-        } catch (err) {
-            console.error('Save failed:', err);
-            setError(err as Error);
-        } finally {
-            setLoading(false);
-        }
-    }, [contentId, editor, loadContent]);
+                // 4. elementIds 업데이트 (실제 순서 변경이 있는 경우에만) && title 변경사항 확인
+                const orderedElementIds = Object.entries(updatedValue)
+                    .sort(([, a], [, b]) => a.meta.order - b.meta.order)
+                    .map(([, block]) => block.meta.elementId)
+                    .filter(Boolean);
+
+                const currentIds = contentRef.current.elementIds || [];
+                const isElementIdsChanged = JSON.stringify(orderedElementIds) !== JSON.stringify(currentIds);
+                const isTitleChanged = title !== contentRef.current.title;
+                if (isElementIdsChanged || isTitleChanged) {
+                    await updateContent({
+                        contentId,
+                        ...(isElementIdsChanged && { elementIds: orderedElementIds }),
+                        ...(isTitleChanged && { title }),
+                    });
+                }
+
+                // 5. 트래커 업데이트
+                for (const [blockId, block] of Object.entries(updatedValue)) {
+                    const elementId = block.meta.elementId;
+                    if (elementId) {
+                        elementTrackerRef.current[elementId] = {
+                            text: html.serialize(editor, { [blockId]: block }),
+                            type: block.type,
+                            depth: block.meta.depth,
+                        };
+                    }
+                }
+
+                // 6. 데이터 리로드
+                await loadContent(contentId);
+            } catch (err) {
+                console.error('Save failed:', err);
+                setError(err as Error);
+            } finally {
+                setLoading(false);
+            }
+        },
+        [contentId, editor, loadContent]
+    );
 
     useEffect(() => {
         if (!contentId || fetchedRef.current === contentId) return;

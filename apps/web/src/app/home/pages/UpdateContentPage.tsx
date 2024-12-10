@@ -1,9 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
-import { useContent } from '@lemonote/contents';
 import { Loader } from '@lemonote/shared';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ContentEditor, MARKS, plugins, TOOLS } from '../components';
+import { MARKS, plugins, TOOLS } from '../utils';
 import { YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
@@ -21,13 +20,14 @@ export const UpdateContentPage = () => {
         setValue(updated);
     };
 
-    const handleClickSave = () => {
+    const handleClickSave = async () => {
         console.log('title', title);
-        handleSave();
+        await handleSave(title);
     };
 
     useEffect(() => {
         if (content?.title) {
+            console.log('content.title', content?.title);
             setTitle(content.title);
         }
     }, [content]);
