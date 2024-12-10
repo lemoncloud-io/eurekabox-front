@@ -7,6 +7,7 @@ import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { contentsKeys } from '@lemonote/contents';
+import { useGlobalLoader } from '@lemonote/shared';
 
 export const UpdateContentPage = () => {
     const queryClient = useQueryClient();
@@ -14,6 +15,7 @@ export const UpdateContentPage = () => {
     const [title, setTitle] = useState<string>('Untitled');
     const selectionRef = useRef(null);
     const [value, setValue] = useState<YooptaContentValue>({});
+    const { setIsLoading } = useGlobalLoader();
     const editor = useMemo(() => createYooptaEditor(), []);
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
@@ -23,6 +25,10 @@ export const UpdateContentPage = () => {
             setTitle(content.title);
         }
     }, [content]);
+
+    useEffect(() => {
+        setIsLoading(loading);
+    }, [loading]);
 
     const updateContentInInfiniteCache = (contentId: string | undefined, title: string) => {
         if (!contentId) {
