@@ -10,6 +10,7 @@ import { useInitWebCore, useRefreshToken } from '@lemonote/web-core';
 
 import { Router } from './routes';
 import { ErrorFallback, LoadingFallback, GlobalLoader } from '@lemonote/shared';
+import { ThemeProvider } from '@lemonote/theme';
 
 export function App() {
     const queryClient = new QueryClient({
@@ -32,9 +33,11 @@ export function App() {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <HelmetProvider>
                     <QueryClientProvider client={queryClient}>
-                        <Router />
-                        <GlobalLoader />
-                        <Toaster />
+                        <ThemeProvider>
+                            <Router />
+                            <GlobalLoader />
+                            <Toaster />
+                        </ThemeProvider>
                         {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />}
                     </QueryClientProvider>
                 </HelmetProvider>

@@ -18,7 +18,7 @@ export const LoginPage = () => {
         <div className="min-h-screen flex items-center justify-center bg-background">
             <Card className="w-full max-w-md p-8 space-y-8 glassmorphism">
                 <div className="text-center">
-                    <h1 className="text-4xl font-bold gradient-text mb-2">Lemonote</h1>
+                    <h1 className="text-4xl font-bold gradient-text mb-2">EurekaBox</h1>
                     <p className="text-muted-foreground">Sign in to continue</p>
                 </div>
 

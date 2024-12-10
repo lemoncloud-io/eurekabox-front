@@ -1,8 +1,8 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
-import { Menu, Plus, Search } from 'lucide-react';
+import { Menu, Plus, Save, Search } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SideBar } from '../components';
+import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@lemonote/shared';
 
 interface EditorLayoutProps {
@@ -10,9 +10,10 @@ interface EditorLayoutProps {
     title: string;
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
+    handleSave?: () => void;
 }
 
-export const EditorLayout = ({ children, title, isLoading = false, onTitleChange }: EditorLayoutProps) => {
+export const EditorLayout = ({ children, title, isLoading = false, onTitleChange, handleSave }: EditorLayoutProps) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     return (
@@ -50,11 +51,16 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                             )}
                         </div>
                         <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="icon" className="hover:text-primary" onClick={handleSave}>
+                                <Save className="h-5 w-5" />
+                                <span className="sr-only">저장</span>
+                            </Button>
                             <Button variant="ghost" size="icon" className="hover:text-primary">
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
                             </Button>
-                            <Link to="/login">
+                            <ThemeToggle />
+                            <Link href="/login">
                                 <Button variant="ghost" size="icon" className="hover:text-primary">
                                     Login
                                 </Button>

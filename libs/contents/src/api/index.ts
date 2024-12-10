@@ -7,6 +7,23 @@ import { webCore } from '@lemonote/web-core';
 import { UpdateContentDTO, UpdateElementDTO } from '../types';
 
 const CONTENT_ENDPOINT = import.meta.env.VITE_CONTENT_ENDPOINT.toLowerCase();
+const IMAGE_API_ENDPOINT = import.meta.env.VITE_IMAGE_API_ENDPOINT.toLowerCase();
+
+export interface UploadedImage {
+    contentLength: number;
+    contentType: string;
+    createdAt: number;
+    hash: string;
+    height?: number;
+    id: string;
+    location: string;
+    name: string;
+    ns: string;
+    origin: string;
+    type: string;
+    url: string;
+    width?: number;
+}
 
 export const fetchContents = async (params: Params): Promise<ListResult<ContentView>> => {
     const { data } = await webCore
@@ -161,4 +178,37 @@ export const deleteElement = async (elementId: string): Promise<ElementView> => 
         .execute<ElementView>();
 
     return data;
+};
+
+export const uploadImage = async (
+    image: File,
+    onUploadProgress?: (event: unknown) => void
+): Promise<UploadedImage | null> => {
+    if (!image) {
+        throw new Error('@image is required');
+    }
+    const extraConfig = onUploadProgress ? { onUploadProgress } : {};
+    const form = new FormData();
+    form.append('file', image);
+
+    const { data } = await webCore
+        .buildSignedRequest({
+            method: 'POST',
+            baseURL: `${IMAGE_API_ENDPOINT}/upload`,
+        })
+        .setParams({})
+        .setBody(form)
+        .addHeaders({
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'multipart/form-data',
+        })
+        .addAxiosRequestConfig(extraConfig)
+        .execute();
+
+    try {
+        return data.list[0];
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 };

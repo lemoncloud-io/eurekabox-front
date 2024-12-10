@@ -65,7 +65,7 @@ export const SideBar = () => {
     return (
         <div className={`w-64 flex flex-col h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h1 className="text-2xl font-bold mb-4 gradient-text">Lemonote</h1>
+                <h1 className="text-2xl font-bold mb-4 gradient-text">EurekaBox</h1>
                 <Button
                     className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
                     onClick={handleClickCreate}

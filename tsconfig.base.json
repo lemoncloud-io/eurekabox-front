@@ -18,6 +18,7 @@
             "@lemonote/assets": ["assets/src/index.ts"],
             "@lemonote/contents": ["libs/contents/src/index.ts"],
             "@lemonote/shared": ["libs/shared/src/index.ts"],
+            "@lemonote/theme": ["libs/theme/src/index.ts"],
             "@lemonote/ui-kit": ["libs/ui-kit/src/index.ts"],
             "@lemonote/ui-kit/*": ["libs/ui-kit/src/*"],
             "@lemonote/web-core": ["libs/web-core/src/index.ts"]
