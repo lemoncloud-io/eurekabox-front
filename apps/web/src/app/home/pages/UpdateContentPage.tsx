@@ -60,7 +60,7 @@ export const UpdateContentPage = () => {
             contentId={contentId}
         >
             <div
-                className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[80px] pb-[40px] flex justify-center max-w-screen-xl"
+                className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"
                 ref={selectionRef}
             >
                 <YooptaEditor

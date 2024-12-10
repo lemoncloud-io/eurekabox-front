@@ -20,12 +20,6 @@ module.exports = {
             },
         },
         extend: {
-            screens: {
-                xs: '480px',
-                sm: '768px',
-                md: '1230px',
-                tablet: '600px',
-            },
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
