@@ -19,6 +19,7 @@ import {
 } from '@lemonote/ui-kit/components/ui/alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { useContentCache, useCreateContentWithCache } from '../hooks';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -44,7 +45,8 @@ export const EditorLayout = ({
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    const createContent = useCreateContent();
+    const { removeContentFromInfiniteCache } = useContentCache();
+    const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const deleteContent = useDeleteContent();
 
     const handleSaveClick = async () => {
@@ -67,68 +69,6 @@ export const EditorLayout = ({
                 toast({ description: `Successfully deleted.` });
                 navigate('/home');
             },
-        });
-    };
-
-    const removeContentFromInfiniteCache = (contentId: string) => {
-        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
-            if (!oldData) {
-                return oldData;
-            }
-            // 모든 페이지를 순회하면서 해당 contentId를 가진 아이템 제거
-            const newPages = oldData.pages.map(page => ({
-                ...page,
-                list: page.list.filter(item => item.id !== contentId),
-                total: page.total - 1, // total 감소
-            }));
-            return {
-                ...oldData,
-                pages: newPages,
-            };
-        });
-    };
-
-    const handleClickCreate = async () => {
-        const newContent: CreateContentDTO = {
-            name: '',
-            title: 'Untitled',
-            subject: '',
-        };
-        await createContent.mutateAsync(newContent, {
-            onSuccess: async (response: ContentView) => {
-                prependContentToInfiniteCache(response);
-                navigate(`/home/${response.id}`);
-            },
-        });
-    };
-
-    const prependContentToInfiniteCache = (content: ContentView) => {
-        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
-            if (!oldData) {
-                return {
-                    pages: [
-                        {
-                            list: [content],
-                            page: 0,
-                            total: 1,
-                        },
-                    ],
-                    pageParams: [0],
-                };
-            }
-
-            // 첫 번째 페이지에 새 아이템 추가
-            const newPages = [...oldData.pages];
-            newPages[0] = {
-                ...newPages[0],
-                list: [content, ...newPages[0].list],
-                total: newPages[0].total + 1,
-            };
-
-            return {
-                ...oldData,
-                pages: newPages,
-            };
         });
     };
 
@@ -227,10 +167,10 @@ export const EditorLayout = ({
             <Button
                 className="fixed bottom-6 right-6 rounded-full w-12 h-12 shadow-lg hover:shadow-xl transition-shadow"
                 size="icon"
-                disabled={createContent.isPending}
-                onClick={handleClickCreate}
+                disabled={isCreatePending}
+                onClick={handleCreate}
             >
-                {createContent.isPending ? (
+                {isCreatePending ? (
                     <Loader className="text-white space-x-0" message={''} />
                 ) : (
                     <Plus className="h-6 w-6" />

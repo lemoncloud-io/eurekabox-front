@@ -7,14 +7,14 @@ import { Loader } from '@lemonote/shared';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCreateContentWithCache } from '../hooks';
 
 export const SideBar = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { contentId } = useParams<{ contentId: string }>();
     const scrollAreaRef = useRef(null);
-
-    const createContent = useCreateContent();
+    const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
 
     const {
         data: contentsData,
@@ -63,50 +63,6 @@ export const SideBar = () => {
         navigate(`/home/${content.id}`);
     };
 
-    const handleClickCreate = async () => {
-        const newContent: CreateContentDTO = {
-            name: '',
-            title: 'Untitled',
-            subject: '',
-        };
-        await createContent.mutateAsync(newContent, {
-            onSuccess: async (response: ContentView) => {
-                prependContentToInfiniteCache(response);
-                navigate(`/home/${response.id}`);
-            },
-        });
-    };
-
-    const prependContentToInfiniteCache = (content: ContentView) => {
-        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
-            if (!oldData) {
-                return {
-                    pages: [
-                        {
-                            list: [content],
-                            page: 0,
-                            total: 1,
-                        },
-                    ],
-                    pageParams: [0],
-                };
-            }
-
-            // 첫 번째 페이지에 새 아이템 추가
-            const newPages = [...oldData.pages];
-            newPages[0] = {
-                ...newPages[0],
-                list: [content, ...newPages[0].list],
-                total: newPages[0].total + 1,
-            };
-
-            return {
-                ...oldData,
-                pages: newPages,
-            };
-        });
-    };
-
     return (
         <div className={`w-64 flex flex-col h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -115,10 +71,10 @@ export const SideBar = () => {
                 </h1>
                 <Button
                     className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
-                    disabled={createContent.isPending}
-                    onClick={handleClickCreate}
+                    disabled={isCreatePending}
+                    onClick={handleCreate}
                 >
-                    {createContent.isPending ? (
+                    {isCreatePending ? (
                         <Loader className="text-white" message={'Creating...'} />
                     ) : (
                         <>
