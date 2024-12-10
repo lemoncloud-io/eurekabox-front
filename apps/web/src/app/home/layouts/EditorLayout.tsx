@@ -148,7 +148,12 @@ export const EditorLayout = ({
                                     </AlertDialog>
                                 </>
                             )}
-                            <Button variant="ghost" size="icon" className="hover:text-primary">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="hover:text-primary"
+                                onClick={() => toast({ description: 'TODO: add search' })}
+                            >
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
                             </Button>
