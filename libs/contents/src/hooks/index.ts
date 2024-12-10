@@ -1,10 +1,11 @@
 import { PaginationType, useCustomMutation } from '@lemonote/shared';
-import { Params } from '@lemoncloud/lemon-web-core';
+import { createAsyncDelay, Params } from '@lemoncloud/lemon-web-core';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { contentsKeys } from '../consts';
 import { createContent, deleteContent, fetchContentById, fetchContents, updateContent } from '../api';
 import { CreateContentDTO, UpdateContentDTO } from '../types';
+import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 
 /**
  * 컨텐츠 목록을 불러오는 훅
@@ -97,7 +98,8 @@ export const useCreateContent = () => {
     const queryClient = useQueryClient();
 
     return useCustomMutation((data: CreateContentDTO) => createContent(data), {
-        onSuccess: () => {
+        onSuccess: async () => {
+            await createAsyncDelay(500);
             queryClient.invalidateQueries(contentsKeys.lists() as never);
         },
     });
@@ -130,19 +132,18 @@ export const useUpdateContent = () => {
     const queryClient = useQueryClient();
 
     return useCustomMutation((data: UpdateContentDTO) => updateContent(data), {
-        onSuccess: (response, variables) => {
-            queryClient.invalidateQueries(contentsKeys.lists() as never);
+        onSuccess: async (response, variables) => {
             queryClient.setQueryData(contentsKeys.detail(variables.contentId), response);
+            await createAsyncDelay(500);
+            queryClient.invalidateQueries(contentsKeys.lists() as never);
         },
     });
 };
 
 export const useDeleteContent = () => {
-    const queryClient = useQueryClient();
-
     return useCustomMutation((id: string) => deleteContent(id), {
-        onSuccess: () => {
-            queryClient.invalidateQueries(contentsKeys.lists() as never);
+        onError: error => {
+            toast({ description: `${error.toString()}`, variant: 'destructive' });
         },
     });
 };

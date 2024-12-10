@@ -1,15 +1,21 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
 import { FileText, Loader2, Plus } from 'lucide-react';
 import { ScrollArea } from '@lemonote/ui-kit/components/ui/scroll-area';
-import { useInfiniteContents } from '@lemonote/contents';
+import { contentsKeys, CreateContentDTO, useCreateContent, useInfiniteContents } from '@lemonote/contents';
 import { useEffect, useMemo, useRef } from 'react';
 import { Loader } from '@lemonote/shared';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from '@lemonote/ui-kit/hooks/use-toast';
+import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 export const SideBar = () => {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const scrollAreaRef = useRef(null);
+
+    const createContent = useCreateContent();
 
     const {
         data: contentsData,
@@ -58,8 +64,24 @@ export const SideBar = () => {
         navigate(`/home/${content.id}`);
     };
 
-    const handleClickCreate = () => {
-        navigate('/home/create');
+    const handleClickCreate = async () => {
+        const newContent: CreateContentDTO = {
+            name: '',
+            title: '',
+            subject: '',
+        };
+        await handleCreate(newContent);
+    };
+
+    const handleCreate = async (data: CreateContentDTO) => {
+        await createContent.mutateAsync(data, {
+            onSuccess: response => {
+                navigate(`/home/${response.id}`);
+            },
+            onError: error => {
+                toast({ description: `에러가 발생했습니다. ${error.toString()}`, variant: 'destructive' });
+            },
+        });
     };
 
     return (
@@ -68,10 +90,17 @@ export const SideBar = () => {
                 <h1 className="text-2xl font-bold mb-4 gradient-text">EurekaBox</h1>
                 <Button
                     className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
+                    disabled={createContent.isPending}
                     onClick={handleClickCreate}
                 >
-                    <Plus className="mr-2 h-4 w-4" />
-                    New page
+                    {createContent.isPending ? (
+                        <Loader className="text-white" message={'Creating...'} />
+                    ) : (
+                        <>
+                            <Plus className="mr-2 h-4 w-4" />
+                            New page
+                        </>
+                    )}
                 </Button>
             </div>
             <ScrollArea className="flex-grow" ref={scrollAreaRef}>

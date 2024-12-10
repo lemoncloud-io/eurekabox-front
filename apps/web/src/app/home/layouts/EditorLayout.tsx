@@ -1,9 +1,24 @@
 import { Button } from '@lemonote/ui-kit/components/ui/button';
-import { Menu, Plus, Save, Search } from 'lucide-react';
+import { Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@lemonote/shared';
+import { contentsKeys, useDeleteContent } from '@lemonote/contents';
+import { toast } from '@lemonote/ui-kit/hooks/use-toast';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@lemonote/ui-kit/components/ui/alert-dialog';
+import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -14,7 +29,32 @@ interface EditorLayoutProps {
 }
 
 export const EditorLayout = ({ children, title, isLoading = false, onTitleChange, handleSave }: EditorLayoutProps) => {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const { contentId } = useParams<{ contentId: string }>();
     const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+    const deleteContent = useDeleteContent();
+
+    const handleDelete = () => {
+        setShowDeleteDialog(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!contentId) {
+            return;
+        }
+        await deleteContent.mutateAsync(contentId, {
+            onSuccess: async () => {
+                toast({ description: `Successfully deleted.` });
+                navigate('/home');
+                await createAsyncDelay(500);
+                queryClient.invalidateQueries(contentsKeys.lists() as never);
+            },
+        });
+    };
 
     return (
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
@@ -55,6 +95,33 @@ export const EditorLayout = ({ children, title, isLoading = false, onTitleChange
                                 <Save className="h-5 w-5" />
                                 <span className="sr-only">저장</span>
                             </Button>
+                            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                                <AlertDialogTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="hover:text-destructive"
+                                        onClick={handleDelete}
+                                    >
+                                        <Trash2 className="h-5 w-5" />
+                                        <span className="sr-only">삭제</span>
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Are you sure you want to delete this document?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. The document will be permanently deleted.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>취소</AlertDialogCancel>
+                                        <AlertDialogAction onClick={confirmDelete}>삭제</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                             <Button variant="ghost" size="icon" className="hover:text-primary">
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>

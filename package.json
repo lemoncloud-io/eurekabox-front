@@ -13,7 +13,7 @@
         "build:all:prod": "npx nx run-many --target=build --configuration=prod --all",
         "!web": "------------- web scripts -------------",
         "prestart:web": "yarn clean:cache",
-        "start:web": "npx nx serve web --port 5000",
+        "start:web": "npx nx serve web --port 5001",
         "build:web": "npx nx build web"
     },
     "private": true,
@@ -21,6 +21,7 @@
         "@hookform/resolvers": "^3.9.1",
         "@lemoncloud/lemon-web-core": "^1.2.6",
         "@radix-ui/react-accordion": "^1.2.1",
+        "@radix-ui/react-alert-dialog": "^1.1.2",
         "@radix-ui/react-scroll-area": "^1.2.1",
         "@radix-ui/react-slot": "^1.1.0",
         "@radix-ui/react-toast": "^1.2.2",

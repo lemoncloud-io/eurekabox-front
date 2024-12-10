@@ -26,7 +26,7 @@ import Video from '@yoopta/video';
 import { uploadImage } from '@lemonote/contents';
 import { Loader } from '@lemonote/shared';
 
-const plugins = [
+export const plugins = [
     Paragraph,
     Table,
     Divider,
@@ -79,7 +79,7 @@ const plugins = [
     File,
 ];
 
-const TOOLS = {
+export const TOOLS = {
     ActionMenu: {
         render: DefaultActionMenuRender,
         tool: ActionMenuList,
@@ -94,7 +94,7 @@ const TOOLS = {
     },
 };
 
-const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
+export const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
 
 interface AdjustedDepth {
     id: string;

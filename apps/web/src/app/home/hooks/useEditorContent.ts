@@ -190,7 +190,7 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
             // 3. 변경사항 적용
             // 3.1. 삭제
             for (const elementId of toDelete) {
-                await deleteElement(elementId);
+                // await deleteElement(elementId);
                 delete elementTrackerRef.current[elementId];
             }
 
