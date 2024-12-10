@@ -17,7 +17,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@lemonote/ui-kit/components/ui/alert-dialog';
-import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface EditorLayoutProps {
@@ -31,6 +30,7 @@ interface EditorLayoutProps {
 
 export const EditorLayout = ({
     children,
+    contentId,
     isDashboard = false,
     title,
     isLoading = false,
@@ -40,12 +40,17 @@ export const EditorLayout = ({
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const { contentId } = useParams<{ contentId: string }>();
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
+
+    const handleSaveClick = async () => {
+        if (handleSave) {
+            handleSave();
+        }
+    };
 
     const handleDelete = () => {
         setShowDeleteDialog(true);
@@ -57,18 +62,35 @@ export const EditorLayout = ({
         }
         await deleteContent.mutateAsync(contentId, {
             onSuccess: async () => {
+                removeContentFromInfiniteCache(contentId);
                 toast({ description: `Successfully deleted.` });
                 navigate('/home');
-                await createAsyncDelay(500);
-                queryClient.invalidateQueries(contentsKeys.lists() as never);
             },
+        });
+    };
+
+    const removeContentFromInfiniteCache = (contentId: string) => {
+        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+            if (!oldData) {
+                return oldData;
+            }
+            // 모든 페이지를 순회하면서 해당 contentId를 가진 아이템 제거
+            const newPages = oldData.pages.map(page => ({
+                ...page,
+                list: page.list.filter(item => item.id !== contentId),
+                total: page.total - 1, // total 감소
+            }));
+            return {
+                ...oldData,
+                pages: newPages,
+            };
         });
     };
 
     const handleClickCreate = async () => {
         const newContent: CreateContentDTO = {
             name: '',
-            title: '',
+            title: 'Untitled',
             subject: '',
         };
 
@@ -123,7 +145,7 @@ export const EditorLayout = ({
                                         variant="ghost"
                                         size="icon"
                                         className="hover:text-primary"
-                                        onClick={handleSave}
+                                        onClick={handleSaveClick}
                                     >
                                         <Save className="h-5 w-5" />
                                         <span className="sr-only">저장</span>
@@ -170,7 +192,7 @@ export const EditorLayout = ({
                             </Link>
                         </div>
                     </header>
-                    <main className="flex-1 overflow-auto p-6">{children}</main>
+                    <main className="flex-1 p-6">{children}</main>
                 </div>
             </div>
             <Button

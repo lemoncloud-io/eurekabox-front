@@ -3,11 +3,10 @@ import { FileText, Loader2, Plus } from 'lucide-react';
 import { ScrollArea } from '@lemonote/ui-kit/components/ui/scroll-area';
 import { contentsKeys, CreateContentDTO, useCreateContent, useInfiniteContents } from '@lemonote/contents';
 import { useEffect, useMemo, useRef } from 'react';
-import { Loader } from '@lemonote/shared';
+import { Loader, useGlobalLoader } from '@lemonote/shared';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 export const SideBar = () => {
@@ -67,16 +66,44 @@ export const SideBar = () => {
     const handleClickCreate = async () => {
         const newContent: CreateContentDTO = {
             name: '',
-            title: '',
+            title: 'Untitled',
             subject: '',
         };
         await createContent.mutateAsync(newContent, {
-            onSuccess: response => {
+            onSuccess: async (response: ContentView) => {
+                prependContentToInfiniteCache(response);
                 navigate(`/home/${response.id}`);
             },
-            onError: error => {
-                toast({ description: `에러가 발생했습니다. ${error.toString()}`, variant: 'destructive' });
-            },
+        });
+    };
+
+    const prependContentToInfiniteCache = (content: ContentView) => {
+        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+            if (!oldData) {
+                return {
+                    pages: [
+                        {
+                            list: [content],
+                            page: 0,
+                            total: 1,
+                        },
+                    ],
+                    pageParams: [0],
+                };
+            }
+
+            // 첫 번째 페이지에 새 아이템 추가
+            const newPages = [...oldData.pages];
+            newPages[0] = {
+                ...newPages[0],
+                list: [content, ...newPages[0].list],
+                total: newPages[0].total + 1,
+            };
+
+            return {
+                ...oldData,
+                pages: newPages,
+            };
         });
     };
 
@@ -120,7 +147,7 @@ export const SideBar = () => {
                                     onClick={() => handleClickContent(content)}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
-                                    {content.name || 'Untitled'}
+                                    {content.title || 'Untitled'}
                                 </Button>
                             ))}
                             {isFetchingNextPage && <Loader />}

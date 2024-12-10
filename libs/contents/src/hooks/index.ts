@@ -95,12 +95,9 @@ export const useContent = (contentId: string) =>
  * ```
  */
 export const useCreateContent = () => {
-    const queryClient = useQueryClient();
-
     return useCustomMutation((data: CreateContentDTO) => createContent(data), {
-        onSuccess: async () => {
-            await createAsyncDelay(500);
-            queryClient.invalidateQueries(contentsKeys.lists() as never);
+        onError: error => {
+            toast({ description: `${error.toString()}`, variant: 'destructive' });
         },
     });
 };
@@ -135,7 +132,7 @@ export const useUpdateContent = () => {
         onSuccess: async (response, variables) => {
             queryClient.setQueryData(contentsKeys.detail(variables.contentId), response);
             await createAsyncDelay(500);
-            queryClient.invalidateQueries(contentsKeys.lists() as never);
+            await queryClient.invalidateQueries(contentsKeys.lists() as never);
         },
     });
 };
