@@ -1,20 +1,28 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {}
-  },
-  "exclude": ["node_modules", "tmp"]
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2020", "dom"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@lemonote/assets": ["assets/src/index.ts"],
+            "@lemonote/contents": ["libs/contents/src/index.ts"],
+            "@lemonote/shared": ["libs/shared/src/index.ts"],
+            "@lemonote/theme": ["libs/theme/src/index.ts"],
+            "@lemonote/ui-kit": ["libs/ui-kit/src/index.ts"],
+            "@lemonote/ui-kit/*": ["libs/ui-kit/src/*"],
+            "@lemonote/web-core": ["libs/web-core/src/index.ts"]
+        }
+    },
+    "exclude": ["node_modules", "tmp"]
 }
