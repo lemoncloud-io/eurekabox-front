@@ -57,9 +57,11 @@ export const UpdateContentPage = () => {
         if (!hasChangesRef.current || !checkForChanges()) {
             return;
         }
-
-        await handleSave(title);
+        // 현재 path 저장
+        const currentPath = editor.path;
         // 저장 후 현재 상태를 저장
+        await handleSave(title);
+
         const currentContent = editor.getEditorValue();
         lastSavedContentRef.current = JSON.stringify(currentContent);
         hasChangesRef.current = false;
@@ -82,6 +84,16 @@ export const UpdateContentPage = () => {
         }
 
         setTitle(title);
+
+        // 저장 완료 후 이전 path로 복원
+        if (currentPath.current !== null) {
+            const previousBlock = Object.entries(currentContent)[currentPath.current];
+            const blockId = previousBlock[0];
+            editor.focusBlock(blockId, {
+                waitExecution: true,
+                waitExecutionMs: 0,
+            });
+        }
     }, [handleSave, queryClient, contentId, title, editor, checkForChanges]);
 
     const debouncedSave = useMemo(

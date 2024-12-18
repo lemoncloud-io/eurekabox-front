@@ -65,14 +65,6 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                     }
                 });
 
-                // const lastEntry = Object.entries(value)[Object.entries(value).length - 1];
-                // const lastBlockId = lastEntry[0];
-                // editor.focusBlock(lastBlockId, {
-                //     // waitExecution: true,
-                //     // focusAt: [1],
-                //     // waitExecutionMs: 100,
-                //     // shouldUpdateBlockPath: false,
-                // })
                 editor.setEditorValue(value);
             } catch (err) {
                 console.error('Failed to load content:', err);
