@@ -149,8 +149,10 @@ export const UpdateContentPage = () => {
     const checkForChanges = useCallback(() => {
         const currentContent = editor.getEditorValue();
         const currentContentStr = JSON.stringify(currentContent);
-        return currentContentStr !== lastSavedContentRef.current;
-    }, [editor]);
+
+        // content 변경 또는 title 변경 체크
+        return currentContentStr !== lastSavedContentRef.current || title !== content?.title;
+    }, [editor, title, content?.title]);
 
     const saveContent = useCallback(async () => {
         if (!hasChangesRef.current || !checkForChanges()) {
@@ -265,6 +267,17 @@ export const UpdateContentPage = () => {
         await saveContent();
     }, [saveContent]);
 
+    const handleTitleChange = useCallback(
+        (newTitle: string) => {
+            setTitle(newTitle);
+            hasChangesRef.current = true;
+            if (autoSave) {
+                debouncedSave();
+            }
+        },
+        [autoSave, debouncedSave]
+    );
+
     return (
         <>
             {error && (
@@ -281,13 +294,7 @@ export const UpdateContentPage = () => {
             <EditorLayout
                 title={title}
                 isLoading={loading}
-                onTitleChange={newTitle => {
-                    setTitle(newTitle);
-                    hasChangesRef.current = true;
-                    if (autoSave) {
-                        debouncedSave();
-                    }
-                }}
+                onTitleChange={handleTitleChange}
                 handleSave={handleClickSave}
                 contentId={contentId}
             >
