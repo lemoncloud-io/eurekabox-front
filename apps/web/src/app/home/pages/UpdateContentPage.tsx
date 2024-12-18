@@ -6,7 +6,7 @@ import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { contentsKeys } from '@lemonote/contents';
-import { useGlobalLoader } from '@lemonote/shared';
+import { useGlobalLoader, useLocalStorage } from '@lemonote/shared';
 import debounce from 'lodash/debounce';
 import { AutoSaveToggle } from '../components';
 
@@ -15,7 +15,7 @@ export const UpdateContentPage = () => {
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
     const [title, setTitle] = useState<string>('Untitled');
-    const [autoSave, setAutoSave] = useState(true);
+    const [autoSave, setAutoSave] = useLocalStorage('editor-autosave', true);
 
     const editor = useMemo(() => createYooptaEditor(), []);
     const selectionRef = useRef(null);
