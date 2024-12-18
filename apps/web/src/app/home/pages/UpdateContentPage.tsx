@@ -7,17 +7,33 @@ import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { contentsKeys } from '@lemonote/contents';
 import { useGlobalLoader } from '@lemonote/shared';
+import debounce from 'lodash/debounce';
+import { AutoSaveToggle } from '../components';
 
 export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
     const [title, setTitle] = useState<string>('Untitled');
+    const [autoSave, setAutoSave] = useState(true);
 
     const editor = useMemo(() => createYooptaEditor(), []);
     const selectionRef = useRef(null);
 
+    // 마지막 저장 시점의 content를 저장
+    const lastSavedContentRef = useRef('');
+    const hasChangesRef = useRef(false);
+
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
+
+    // 컨텐츠가 처음 로드될 때 lastSavedContent 초기화
+    useEffect(() => {
+        if (content) {
+            const currentContent = editor.getEditorValue();
+            lastSavedContentRef.current = JSON.stringify(currentContent);
+            hasChangesRef.current = false;
+        }
+    }, [content, editor]);
 
     useEffect(() => {
         if (content?.title) {
@@ -30,10 +46,24 @@ export const UpdateContentPage = () => {
         return () => setIsLoading(false);
     }, [loading, setIsLoading]);
 
-    const handleClickSave = useCallback(async () => {
-        await handleSave(title);
+    // 현재 content와 마지막 저장된 content를 비교하는 함수
+    const checkForChanges = useCallback(() => {
+        const currentContent = editor.getEditorValue();
+        const currentContentStr = JSON.stringify(currentContent);
+        return currentContentStr !== lastSavedContentRef.current;
+    }, [editor]);
 
-        // updateContentInInfiniteCache
+    const saveContent = useCallback(async () => {
+        if (!hasChangesRef.current || !checkForChanges()) {
+            return;
+        }
+
+        await handleSave(title);
+        // 저장 후 현재 상태를 저장
+        const currentContent = editor.getEditorValue();
+        lastSavedContentRef.current = JSON.stringify(currentContent);
+        hasChangesRef.current = false;
+
         if (contentId) {
             queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
                 if (!oldData) {
@@ -52,7 +82,39 @@ export const UpdateContentPage = () => {
         }
 
         setTitle(title);
-    }, [handleSave, queryClient, contentId, title]);
+    }, [handleSave, queryClient, contentId, title, editor, checkForChanges]);
+
+    const debouncedSave = useMemo(
+        () =>
+            debounce(() => {
+                if (hasChangesRef.current && checkForChanges()) {
+                    saveContent();
+                }
+            }, 3 * 1000), // 마지막 변경 후 3초가 지나면 자동 저장
+        [saveContent, checkForChanges]
+    );
+
+    const handleClickSave = useCallback(async () => {
+        debouncedSave.cancel();
+        await saveContent();
+    }, [debouncedSave, saveContent]);
+
+    useEffect(() => {
+        if (!autoSave) {
+            return;
+        }
+        const handleEditorChange = () => {
+            if (checkForChanges()) {
+                hasChangesRef.current = true;
+                debouncedSave();
+            }
+        };
+        editor.on('change', handleEditorChange);
+        return () => {
+            editor.off('change', handleEditorChange);
+            debouncedSave.cancel();
+        };
+    }, [editor, debouncedSave, autoSave, checkForChanges]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -67,27 +129,34 @@ export const UpdateContentPage = () => {
     }, [handleClickSave]);
 
     return (
-        <EditorLayout
-            title={title}
-            isLoading={loading}
-            onTitleChange={setTitle}
-            handleSave={handleClickSave}
-            contentId={contentId}
-        >
-            <div
-                className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"
-                ref={selectionRef}
+        <>
+            <AutoSaveToggle checked={autoSave} onCheckedChange={setAutoSave} />
+            <EditorLayout
+                title={title}
+                isLoading={loading}
+                onTitleChange={newTitle => {
+                    setTitle(newTitle);
+                    hasChangesRef.current = true;
+                    debouncedSave();
+                }}
+                handleSave={handleClickSave}
+                contentId={contentId}
             >
-                <YooptaEditor
-                    selectionBoxRoot={selectionRef}
-                    editor={editor}
-                    plugins={plugins}
-                    tools={TOOLS as Partial<Tools>}
-                    marks={MARKS}
-                    width="100%"
-                    autoFocus={true}
-                />
-            </div>
-        </EditorLayout>
+                <div
+                    className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"
+                    ref={selectionRef}
+                >
+                    <YooptaEditor
+                        selectionBoxRoot={selectionRef}
+                        editor={editor}
+                        plugins={plugins}
+                        tools={TOOLS as Partial<Tools>}
+                        marks={MARKS}
+                        width="100%"
+                        autoFocus={true}
+                    />
+                </div>
+            </EditorLayout>
+        </>
     );
 };
