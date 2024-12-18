@@ -18,7 +18,7 @@ export const AutoSaveToggle = ({ checked, onCheckedChange }: AutoSaveToggleProps
                         </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>마지막 변경 후 5초가 지나면 자동 저장</p>
+                        <p>마지막 변경 후 3초가 지나면 자동 저장</p>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>

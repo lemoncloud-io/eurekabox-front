@@ -46,6 +46,24 @@ export const UpdateContentPage = () => {
         return () => setIsLoading(false);
     }, [loading, setIsLoading]);
 
+    const focusBlockWithOptions = (editor, blockId, savedSelection) => {
+        const baseOptions = {
+            waitExecution: true,
+            waitExecutionMs: 0,
+        };
+        const focusOptions =
+            savedSelection?.start === savedSelection?.end
+                ? {
+                      ...baseOptions,
+                      focusAt: {
+                          path: [0],
+                          offset: savedSelection?.end ?? 0,
+                      },
+                  }
+                : baseOptions;
+        editor.focusBlock(blockId, focusOptions);
+    };
+
     // 현재 content와 마지막 저장된 content를 비교하는 함수
     const checkForChanges = useCallback(() => {
         const currentContent = editor.getEditorValue();
@@ -103,14 +121,7 @@ export const UpdateContentPage = () => {
         if (currentPath.current !== null) {
             const previousBlock = Object.entries(currentContent)[currentPath.current];
             const blockId = previousBlock[0];
-            editor.focusBlock(blockId, {
-                waitExecution: true,
-                waitExecutionMs: 0,
-                focusAt: {
-                    path: [0],
-                    offset: savedSelection?.start || 0,
-                },
-            });
+            focusBlockWithOptions(editor, blockId, savedSelection);
         }
     }, [handleSave, queryClient, contentId, title, editor, checkForChanges]);
 
