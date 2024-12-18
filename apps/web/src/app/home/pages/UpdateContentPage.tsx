@@ -67,7 +67,7 @@ export const UpdateContentPage = () => {
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [handleClickSave]); // 오직 handleClickSave가 변경될 때만 이벤트 리스너 업데이트
+    }, [handleClickSave]);
 
     return (
         <EditorLayout
