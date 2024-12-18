@@ -14,7 +14,12 @@
         "!web": "------------- web scripts -------------",
         "prestart:web": "yarn clean:cache",
         "start:web": "npx nx serve web --port 5001",
-        "build:web": "npx nx build web"
+        "build:web:dev": "yarn clean:cache && npx nx build --configuration=dev web",
+        "build:web:prod": "yarn clean:cache && npx nx build --configuration=prod web",
+        "predeploy:web:dev": "(rm -rf ./dist/apps/web || true) && yarn build:web:dev",
+        "deploy:web:dev": "./scripts/deploy-web.sh dev",
+        "predeploy:web:prod": "(rm -rf ./dist/apps/web || true) && yarn build:web:prod",
+        "deploy:web:prod": "./scripts/deploy-web.sh prod"
     },
     "private": true,
     "dependencies": {

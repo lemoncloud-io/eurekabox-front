@@ -4,7 +4,7 @@ import { ScrollArea } from '@lemonote/lib/components/ui/scroll-area';
 import { Input } from '@lemonote/lib/components/ui/input';
 import { FileText } from 'lucide-react';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { useContents } from '@lemonote/contents';
+import { useSearchContents } from '@lemonote/contents';
 import { Loader, useDebounce } from '@lemonote/shared';
 
 interface SearchDialogProps {
@@ -17,7 +17,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
-    const { data, isLoading } = useContents({
+    const { data, isLoading } = useSearchContents({
         limit: 100,
         keyword: debouncedSearchTerm || '',
     });

@@ -3,7 +3,7 @@ import { createAsyncDelay, Params } from '@lemoncloud/lemon-web-core';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { contentsKeys } from '../consts';
-import { createContent, deleteContent, fetchContentById, fetchContents, updateContent } from '../api';
+import { createContent, deleteContent, fetchContentById, fetchContents, searchContents, updateContent } from '../api';
 import { CreateContentDTO, UpdateContentDTO } from '../types';
 import { toast } from '@lemonote/ui-kit/hooks/use-toast';
 
@@ -58,6 +58,16 @@ export const useContents = (params: Params) =>
         queryKey: contentsKeys.list(params ?? {}),
         queryFn: async () => {
             const result = await fetchContents(params);
+            return { ...result, data: result.list || [] } as PaginationType<ContentView[]>;
+        },
+        refetchOnWindowFocus: false,
+    });
+
+export const useSearchContents = (params: Params) =>
+    useQuery<PaginationType<ContentView[]>>({
+        queryKey: contentsKeys.list(params ?? {}),
+        queryFn: async () => {
+            const result = await searchContents(params);
             return { ...result, data: result.list || [] } as PaginationType<ContentView[]>;
         },
         refetchOnWindowFocus: false,
