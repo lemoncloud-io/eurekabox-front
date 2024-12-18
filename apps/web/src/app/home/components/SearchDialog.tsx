@@ -6,6 +6,7 @@ import { FileText } from 'lucide-react';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useSearchContents } from '@lemonote/contents';
 import { Loader, useDebounce } from '@lemonote/shared';
+import { Alert, AlertDescription } from '@lemonote/lib/components/ui/alert';
 
 interface SearchDialogProps {
     open: boolean;
@@ -17,7 +18,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
-    const { data, isLoading } = useSearchContents({
+    const { data, isLoading, error, refetch } = useSearchContents({
         limit: 100,
         keyword: debouncedSearchTerm || '',
     });
@@ -43,6 +44,18 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                         <div className="p-4 space-y-4">
                             {isLoading ? (
                                 <Loader message={'Searching...'} />
+                            ) : error ? (
+                                <Alert variant="destructive" className="mx-4">
+                                    <AlertDescription className="ml-2">
+                                        {error.toString() || '검색 중 오류가 발생했습니다.'}
+                                        <button
+                                            onClick={() => refetch()}
+                                            className="ml-2 text-sm underline hover:no-underline"
+                                        >
+                                            Retry
+                                        </button>
+                                    </AlertDescription>
+                                </Alert>
                             ) : (
                                 <>
                                     {results.map(result => (
