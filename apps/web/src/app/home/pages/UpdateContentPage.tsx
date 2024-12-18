@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MARKS, plugins, TOOLS } from '../utils';
 import { YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
@@ -51,11 +51,23 @@ export const UpdateContentPage = () => {
         });
     };
 
-    const handleClickSave = async () => {
+    const handleClickSave = useCallback(async () => {
         await handleSave(title);
         updateContentInInfiniteCache(contentId, title);
         setTitle(title);
-    };
+    }, [handleSave, updateContentInInfiniteCache, contentId, title]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+                event.preventDefault();
+                handleClickSave();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [handleClickSave]); // 오직 handleClickSave가 변경될 때만 이벤트 리스너 업데이트
 
     return (
         <EditorLayout
