@@ -17,7 +17,7 @@
                     "fileReplacements": [
                         {
                             "replace": "apps/web/.env.local",
-                            "with": "apps/web/env/.env.dev"
+                            "with": "apps/web/.env.dev"
                         }
                     ]
                 },
