@@ -1,0 +1,146 @@
+name: deploy-dev
+on:
+    push:
+        branches:
+            - develop
+
+jobs:
+    changes:
+        name: Check changed projects
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: read
+        outputs:
+            web: ${{ steps.filter.outputs.web }}
+            projects: ${{ steps.filter.outputs.changes }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.LEMON_BOT_TOKEN }}
+            - uses: dorny/paths-filter@v2
+              id: filter
+              with:
+                  base: 'develop'
+                  filters: |
+                      web:
+                          - 'apps/web/**'
+                          - 'libs/**'
+                          - '!**/*.json'
+                          - '!**/*.md'
+
+    build:
+        needs: changes
+        if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
+        name: Build and Set Version
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        outputs:
+            web-version: ${{ steps.web-version.outputs.version }}
+        steps:
+            - name: Check out a copy of the repo
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.LEMON_BOT_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version-file: '.nvmrc' # node 20버전 이상
+
+            - name: Get Yarn cache path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            - name: Cache Yarn cache and node_modules
+              id: cache-dependencies
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                      node_modules
+                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+
+            - name: Install dependencies
+              run: |
+                  yarn install --frozen-lockfile
+              if: steps.cache-dependencies.outputs.cache-hit != 'true'
+
+            - name: Configure git
+              run: |
+                  git config user.name "${GITHUB_ACTOR}"
+                  git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+            #            - name: Update package version and changelog
+            #              env:
+            #                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #                  PROJECTS: ${{ join(fromJSON(needs.changes.outputs.projects), ',') }}
+            #              run: |
+            #                  echo "PROJECTS: [$PROJECTS]"
+            #                  npx nx release --projects=$PROJECTS --skip-publish
+
+            - name: Get Latest Version of Web
+              if: ${{ needs.changes.outputs.web == 'true' }}
+              id: web-version
+              run: |
+                  VERSION=$(node -p "require('./apps/web/package.json').version")
+                  echo "web@$VERSION"
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+    deploy-dev:
+        needs: build
+        runs-on: ubuntu-latest
+        name: Deploy to DEV
+        strategy:
+            matrix:
+                project: [web]
+                include:
+                    - project: web
+                      version: ${{ needs.build.outputs.web-version }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.LEMON_BOT_TOKEN }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version-file: '.nvmrc' # node 20버전 이상
+
+            - name: Get Yarn cache path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            - name: Cache Yarn cache and node_modules
+              id: cache-dependencies
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                      node_modules
+                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+
+            - name: Install dependencies
+              run: |
+                  yarn install --frozen-lockfile
+              if: steps.cache-dependencies.outputs.cache-hit != 'true'
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+            - name: Deploy to DEV
+              if: ${{ matrix.version != null }}
+              run: |
+                  chmod +x scripts/deploy-${{ matrix.project }}.sh
+                  yarn deploy:${{ matrix.project }}:dev

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { YooEditor } from '@yoopta/editor';
-import { html } from '@yoopta/exports';
+import { html, markdown } from '@yoopta/exports';
 
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@lemonote/contents';
 import { convertElementToEditorValue, extractContent } from '../utils';
@@ -182,13 +182,12 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 const currentIds = contentRef.current.elementIds || [];
                 const isElementIdsChanged = JSON.stringify(orderedElementIds) !== JSON.stringify(currentIds);
                 const isTitleChanged = title !== contentRef.current.title;
-                if (isElementIdsChanged || isTitleChanged) {
-                    await updateContent({
-                        contentId,
-                        ...(isElementIdsChanged && { elementIds: orderedElementIds }),
-                        ...(isTitleChanged && { title }),
-                    });
-                }
+                await updateContent({
+                    contentId,
+                    readme: markdown.serialize(editor, currentValue),
+                    ...(isElementIdsChanged && { elementIds: orderedElementIds }),
+                    ...(isTitleChanged && { title }),
+                });
 
                 // 5. 트래커 업데이트
                 for (const [blockId, block] of Object.entries(updatedValue)) {
