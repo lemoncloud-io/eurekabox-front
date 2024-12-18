@@ -135,39 +135,39 @@ export const UpdateContentPage = () => {
         [saveContent, checkForChanges]
     );
 
-    const handleClickSave = useCallback(async () => {
-        debouncedSave.cancel();
-        await saveContent();
-    }, [debouncedSave, saveContent]);
-
+    // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
-        if (!autoSave) {
-            return;
-        }
         const handleEditorChange = () => {
             if (checkForChanges()) {
                 hasChangesRef.current = true;
-                debouncedSave();
+                if (autoSave) {
+                    debouncedSave();
+                }
             }
         };
+
         editor.on('change', handleEditorChange);
         return () => {
             editor.off('change', handleEditorChange);
             debouncedSave.cancel();
         };
-    }, [editor, debouncedSave, autoSave, checkForChanges]);
+    }, [editor, autoSave, debouncedSave, checkForChanges]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if ((event.ctrlKey || event.metaKey) && event.key === 's') {
                 event.preventDefault();
-                handleClickSave();
+                saveContent();
             }
         };
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [handleClickSave]);
+    }, [saveContent]);
+
+    const handleClickSave = useCallback(async () => {
+        await saveContent();
+    }, [saveContent]);
 
     return (
         <>
@@ -178,7 +178,9 @@ export const UpdateContentPage = () => {
                 onTitleChange={newTitle => {
                     setTitle(newTitle);
                     hasChangesRef.current = true;
-                    debouncedSave();
+                    if (autoSave) {
+                        debouncedSave();
+                    }
                 }}
                 handleSave={handleClickSave}
                 contentId={contentId}
