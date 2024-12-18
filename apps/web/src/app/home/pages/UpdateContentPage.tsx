@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MARKS, plugins, TOOLS } from '../utils';
-import { YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import YooptaEditor, { createYooptaEditor, Tools } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,13 +9,13 @@ import { contentsKeys } from '@lemonote/contents';
 import { useGlobalLoader } from '@lemonote/shared';
 
 export const UpdateContentPage = () => {
+    const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
     const [title, setTitle] = useState<string>('Untitled');
-    const selectionRef = useRef(null);
-    const [value, setValue] = useState<YooptaContentValue>({});
-    const { setIsLoading } = useGlobalLoader();
+
     const editor = useMemo(() => createYooptaEditor(), []);
+    const selectionRef = useRef(null);
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
 
@@ -28,34 +27,32 @@ export const UpdateContentPage = () => {
 
     useEffect(() => {
         setIsLoading(loading);
-    }, [loading]);
-
-    const updateContentInInfiniteCache = (contentId: string | undefined, title: string) => {
-        if (!contentId) {
-            return;
-        }
-        queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
-            if (!oldData) {
-                return oldData;
-            }
-            // 모든 페이지를 순회하면서 해당 contentId를 가진 아이템의 title 업데이트
-            const newPages = oldData.pages.map(page => ({
-                ...page,
-                list: page.list.map(item => (item.id === contentId ? { ...item, title } : item)),
-            }));
-
-            return {
-                ...oldData,
-                pages: newPages,
-            };
-        });
-    };
+        return () => setIsLoading(false);
+    }, [loading, setIsLoading]);
 
     const handleClickSave = useCallback(async () => {
         await handleSave(title);
-        updateContentInInfiniteCache(contentId, title);
+
+        // updateContentInInfiniteCache
+        if (contentId) {
+            queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+                if (!oldData) {
+                    return oldData;
+                }
+                const newPages = oldData.pages.map(page => ({
+                    ...page,
+                    list: page.list.map(item => (item.id === contentId ? { ...item, title } : item)),
+                }));
+
+                return {
+                    ...oldData,
+                    pages: newPages,
+                };
+            });
+        }
+
         setTitle(title);
-    }, [handleSave, updateContentInInfiniteCache, contentId, title]);
+    }, [handleSave, queryClient, contentId, title]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -88,7 +85,6 @@ export const UpdateContentPage = () => {
                     tools={TOOLS as Partial<Tools>}
                     marks={MARKS}
                     width="100%"
-                    value={value}
                     autoFocus={true}
                 />
             </div>

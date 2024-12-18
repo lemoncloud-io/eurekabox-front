@@ -1,11 +1,15 @@
-import { BrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { AppRoutes } from './app';
+import { useWebCoreStore } from '@lemonote/web-core';
+import { ProtectedRoutes } from './protected';
+import { PublicRoutes } from './public';
+import { CommonRoutes } from './common';
 
 export const Router = () => {
-    return (
-        <BrowserRouter>
-            <AppRoutes></AppRoutes>
-        </BrowserRouter>
-    );
+    const isAuthenticated = useWebCoreStore(state => state.isAuthenticated);
+
+    const routes = isAuthenticated ? [...ProtectedRoutes, ...PublicRoutes] : PublicRoutes;
+    const router = createBrowserRouter([...routes, ...CommonRoutes]);
+
+    return <RouterProvider router={router} />;
 };
