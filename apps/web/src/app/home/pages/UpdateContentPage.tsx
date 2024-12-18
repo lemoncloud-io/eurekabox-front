@@ -59,6 +59,20 @@ export const UpdateContentPage = () => {
         }
         // 현재 path 저장
         const currentPath = editor.path;
+        let savedSelection;
+        try {
+            const domSelection = window.getSelection();
+            if (domSelection && domSelection.rangeCount > 0) {
+                const range = domSelection.getRangeAt(0);
+                savedSelection = {
+                    start: range.startOffset,
+                    end: range.endOffset,
+                };
+            }
+        } catch (error) {
+            console.log('Selection save failed:', error);
+        }
+
         // 저장 후 현재 상태를 저장
         await handleSave(title);
 
@@ -92,6 +106,10 @@ export const UpdateContentPage = () => {
             editor.focusBlock(blockId, {
                 waitExecution: true,
                 waitExecutionMs: 0,
+                focusAt: {
+                    path: [0],
+                    offset: savedSelection?.start || 0,
+                },
             });
         }
     }, [handleSave, queryClient, contentId, title, editor, checkForChanges]);
