@@ -29,7 +29,7 @@ export const fetchContents = async (params: Params): Promise<ListResult<ContentV
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/contents`,
+            baseURL: `${CONTENT_ENDPOINT}/contents/0/list`,
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ContentView>>();

@@ -19,6 +19,8 @@ import {
 } from '@lemonote/ui-kit/components/ui/alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
+import { SearchDialog } from '../components';
+import { ContentView } from '@lemoncloud/lemon-contents-api';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -43,6 +45,7 @@ export const EditorLayout = ({
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { removeContentFromInfiniteCache } = useContentCache();
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
@@ -69,6 +72,14 @@ export const EditorLayout = ({
                 navigate('/home');
             },
         });
+    };
+
+    const handleContentSelect = (content: ContentView) => {
+        if (!content || !content.id) {
+            toast({ description: `No Content!`, variant: 'destructive' });
+            return;
+        }
+        navigate(`/home/${content.id}`);
     };
 
     return (
@@ -152,7 +163,7 @@ export const EditorLayout = ({
                                 variant="ghost"
                                 size="icon"
                                 className="hover:text-primary"
-                                onClick={() => toast({ description: 'TODO: add search' })}
+                                onClick={() => setIsSearchOpen(true)}
                             >
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
@@ -180,6 +191,7 @@ export const EditorLayout = ({
                     <Plus className="h-6 w-6" />
                 )}
             </Button>
+            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
         </div>
     );
 };
