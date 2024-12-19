@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { contentsKeys } from '@lemonote/contents';
+import { contentsKeys } from '@eurekabox/contents';
 
 export const useContentCache = () => {
     const queryClient = useQueryClient();

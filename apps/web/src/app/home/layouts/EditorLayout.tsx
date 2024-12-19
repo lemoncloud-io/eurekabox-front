@@ -1,11 +1,11 @@
-import { Button } from '@lemonote/ui-kit/components/ui/button';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
-import { Loader } from '@lemonote/shared';
-import { useDeleteContent } from '@lemonote/contents';
-import { toast } from '@lemonote/ui-kit/hooks/use-toast';
+import { Loader } from '@eurekabox/shared';
+import { useDeleteContent } from '@eurekabox/contents';
+import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -16,7 +16,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@lemonote/ui-kit/components/ui/alert-dialog';
+} from '@eurekabox/ui-kit/components/ui/alert-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';

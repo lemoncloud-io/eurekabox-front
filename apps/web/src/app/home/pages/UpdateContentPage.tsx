@@ -5,12 +5,12 @@ import { MARKS, plugins, TOOLS } from '../utils';
 import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { contentsKeys } from '@lemonote/contents';
-import { useGlobalLoader, useLocalStorage } from '@lemonote/shared';
+import { contentsKeys } from '@eurekabox/contents';
+import { useGlobalLoader, useLocalStorage } from '@eurekabox/shared';
 import debounce from 'lodash/debounce';
 import { AutoSaveToggle } from '../components';
-import { toast } from '@lemonote/lib/hooks/use-toast';
-import { Alert, AlertDescription } from '@lemonote/lib/components/ui/alert';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
+import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 
 const saveSelection = () => {
     try {

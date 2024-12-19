@@ -1,11 +1,11 @@
-import { PaginationType, useCustomMutation } from '@lemonote/shared';
+import { PaginationType, useCustomMutation } from '@eurekabox/shared';
 import { createAsyncDelay, Params } from '@lemoncloud/lemon-web-core';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { contentsKeys } from '../consts';
 import { createContent, deleteContent, fetchContentById, fetchContents, searchContents, updateContent } from '../api';
 import { CreateContentDTO, UpdateContentDTO } from '../types';
-import { toast } from '@lemonote/ui-kit/hooks/use-toast';
+import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 /**
  * 컨텐츠 목록을 불러오는 훅

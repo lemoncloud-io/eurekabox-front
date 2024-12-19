@@ -9,8 +9,8 @@
         "cssVariables": true
     },
     "aliases": {
-        "components": "@lemonote/ui-kit/components",
-        "utils": "@lemonote/ui-kit/utils"
+        "components": "@eurekabox/ui-kit/components",
+        "utils": "@eurekabox/ui-kit/utils"
     },
     "iconLibrary": "lucide"
 }

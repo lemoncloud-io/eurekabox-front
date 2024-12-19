@@ -1,9 +1,9 @@
-import { ListResult } from '@lemonote/shared';
+import { ListResult } from '@eurekabox/shared';
 import { ContentBody, ContentView, ElementBody, ElementView } from '@lemoncloud/lemon-contents-api';
 import { Params } from '@lemoncloud/lemon-web-core';
 import { AxiosRequestConfig, GenericAbortSignal } from 'axios';
 
-import { webCore } from '@lemonote/web-core';
+import { webCore } from '@eurekabox/web-core';
 import { UpdateContentDTO, UpdateElementDTO } from '../types';
 
 const CONTENT_ENDPOINT = import.meta.env.VITE_CONTENT_ENDPOINT.toLowerCase();

@@ -4,7 +4,7 @@ import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
-import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@lemonote/contents';
+import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@eurekabox/contents';
 import { convertElementToEditorValue, extractContent } from '../utils';
 
 export interface ElementStructure {

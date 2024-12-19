@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@lemonote/ui-kit/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@eurekabox/ui-kit/components/ui/avatar';
 
 const activities = [
     {
