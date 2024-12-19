@@ -25,22 +25,24 @@ jobs:
                   filters: |
                       web:
                           - 'apps/web/**'
+                          - 'assets/**'
                           - 'libs/**'
                           - '!**/*.json'
                           - '!**/*.md'
 
-    build:
+    version-update:
         needs: changes
         if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
-        name: Build and Set Version
+        name: Update Versions
         runs-on: ubuntu-latest
         permissions:
             contents: write
             pull-requests: write
         outputs:
-            web-version: ${{ steps.web-version.outputs.version }}
+            root-version: ${{ steps.version-update.outputs.root-version }}
+            web-version: ${{ steps.version-update.outputs.web-version }}
         steps:
-            - name: Check out a copy of the repo
+            - name: Check out repository
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
@@ -49,59 +51,91 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version-file: '.nvmrc' # node 20버전 이상
+                  node-version-file: '.nvmrc'
 
             - name: Get Yarn cache path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-            - name: Cache Yarn cache and node_modules
-              id: cache-dependencies
-              uses: actions/cache@v2
+            - name: Cache dependencies
+              uses: actions/cache@v3
               with:
                   path: |
                       ${{ steps.yarn-cache-dir-path.outputs.dir }}
                       node_modules
-                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
 
             - name: Install dependencies
-              run: |
-                  yarn install --frozen-lockfile
               if: steps.cache-dependencies.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
 
             - name: Configure git
               run: |
-                  git config user.name "${GITHUB_ACTOR}"
-                  git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            #            - name: Update package version and changelog
-            #              env:
-            #                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #                  PROJECTS: ${{ join(fromJSON(needs.changes.outputs.projects), ',') }}
-            #              run: |
-            #                  echo "PROJECTS: [$PROJECTS]"
-            #                  npx nx release --projects=$PROJECTS --skip-publish
-
-            - name: Get Latest Version of Web
-              if: ${{ needs.changes.outputs.web == 'true' }}
-              id: web-version
+            - name: Update versions and changelog
+              id: version-update
               run: |
-                  VERSION=$(node -p "require('./apps/web/package.json').version")
-                  echo "web@$VERSION"
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  chmod +x scripts/version-update.js
+                  node scripts/version-update.js
 
-    deploy-dev:
-        needs: build
+                  # Export updated versions
+                  # root
+                  if [ -f "package.json" ]; then
+                    ROOT_VERSION=$(node -p "require('./package.json').version")
+                    echo "root-version=${ROOT_VERSION}" >> $GITHUB_OUTPUT
+                  fi
+
+                  # web
+                  if [ -f "apps/web/package.json" ]; then
+                    WEB_VERSION=$(node -p "require('./apps/web/package.json').version")
+                    echo "web-version=${WEB_VERSION}" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Commit and push changes
+              env:
+                  ROOT_VERSION: ${{ steps.version-update.outputs.root-version }}
+              run: |
+                  git add .
+                  git commit -m "chore(release): bump root version to ${ROOT_VERSION} [skip ci]" || echo "No changes to commit"
+                  git push
+
+    create-draft-release:
+        needs: [changes, version-update]
+        if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
         runs-on: ubuntu-latest
-        name: Deploy to DEV
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - uses: release-drafter/release-drafter@v5
+              id: draft
+              with:
+                  publish: false
+                  version: ${{ needs.version-update.outputs.root-version }}
+                  tag: ${{ needs.version-update.outputs.root-version }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    build-and-deploy:
+        needs: [changes, version-update]
+        runs-on: ubuntu-latest
+        name: Build and Deploy
         strategy:
             matrix:
                 project: [web]
                 include:
                     - project: web
-                      version: ${{ needs.build.outputs.web-version }}
+                      version: ${{ needs.version-update.outputs.web-version }}
+                      should_run: ${{ needs.changes.outputs.web == 'true' }}
         steps:
+            - name: Skip if no changes
+              if: ${{ matrix.should_run }}
+              run: echo "Processing ${{ matrix.project }}"
+
             - name: Checkout code
               uses: actions/checkout@v4
               with:
@@ -111,26 +145,25 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version-file: '.nvmrc' # node 20버전 이상
+                  node-version-file: '.nvmrc'
 
             - name: Get Yarn cache path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-            - name: Cache Yarn cache and node_modules
-              id: cache-dependencies
-              uses: actions/cache@v2
+            - name: Cache dependencies
+              uses: actions/cache@v3
               with:
                   path: |
                       ${{ steps.yarn-cache-dir-path.outputs.dir }}
                       node_modules
-                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
 
             - name: Install dependencies
-              run: |
-                  yarn install --frozen-lockfile
               if: steps.cache-dependencies.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -140,7 +173,6 @@ jobs:
                   aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
             - name: Deploy to DEV
-              if: ${{ matrix.version != null }}
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
-                  yarn deploy:${{ matrix.project }}:dev
+                  yarn ${{ matrix.project }}:deploy:dev

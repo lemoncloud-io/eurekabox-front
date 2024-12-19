@@ -6,12 +6,21 @@ const { spawnSync } = require('child_process');
 const CONFIG = {
     changelogPath: 'CHANGELOG.md',
     targetBranch: 'develop',
+    rootPackagePath: 'package.json', // 루트 package.json 경로
     projectPaths: {
         web: 'apps/web/package.json',
     },
     scopeMap: {
         web: 'web',
     },
+};
+
+// 버전 변경 타입의 우선순위를 정의
+const VERSION_PRIORITY = {
+    major: 3,
+    minor: 2,
+    patch: 1,
+    none: 0,
 };
 
 function parseSquashMergeCommit(commitMessage) {
@@ -46,7 +55,7 @@ function parseSquashMergeCommit(commitMessage) {
         }
     });
 
-    // Feature/ 형식 처리
+    // Feature/ 형식 처리 - 다른 커밋이 없을 때만 처리
     if (commits.length === 0 && firstLine.toLowerCase().startsWith('feature/')) {
         commits.push({
             type: 'feat',
@@ -54,6 +63,9 @@ function parseSquashMergeCommit(commitMessage) {
             message: firstLine.substring(8).trim(),
         });
     }
+
+    // 디버깅용 로그
+    console.log('Parsed commits:', JSON.stringify(commits, null, 2));
 
     return commits;
 }
@@ -74,15 +86,17 @@ function shouldUpdateProject(projectName, commits) {
 }
 
 function determineReleaseType(commits, projectName) {
+    // scope가 없거나 해당 프로젝트의 scope를 가진 커밋 모두 포함
+    const relevantCommits = commits.filter(commit => !commit.scope || commit.scope === CONFIG.scopeMap[projectName]);
+
     let releaseType = 'patch';
 
-    // 해당 프로젝트 관련 커밋만 필터링하여 릴리즈 타입 결정
-    const projectCommits = commits.filter(commit => commit.scope === CONFIG.scopeMap[projectName]);
-
-    for (const commit of projectCommits) {
-        if (commit.message.includes('BREAKING CHANGE') || commit.type.endsWith('!')) {
+    for (const commit of relevantCommits) {
+        if (commit.type.endsWith('!') || commit.message.includes('BREAKING CHANGE')) {
             return 'major';
-        } else if (commit.type === 'feat' && releaseType !== 'major') {
+        }
+
+        if (commit.type === 'feat') {
             releaseType = 'minor';
         }
     }
@@ -228,32 +242,47 @@ function main() {
         }
 
         let updatedAnyProject = false;
-        const updatedVersions = [];
+        let updatedVersions = [];
+        let highestReleaseType = 'none';
 
-        // 1. 먼저 각 프로젝트의 버전 업데이트 처리
+        // 1. 각 프로젝트의 버전 업데이트 처리
         Object.entries(CONFIG.projectPaths).forEach(([projectName, projectPath]) => {
             const packageJson = JSON.parse(fs.readFileSync(projectPath, 'utf8'));
 
             if (shouldUpdateProject(projectName, commits)) {
                 updatedAnyProject = true;
                 const releaseType = determineReleaseType(commits, projectName);
-                const newVersion = incrementVersion(packageJson.version, releaseType);
 
+                // 가장 높은 버전 변경 타입 추적
+                if (VERSION_PRIORITY[releaseType] > VERSION_PRIORITY[highestReleaseType]) {
+                    highestReleaseType = releaseType;
+                }
+
+                const newVersion = incrementVersion(packageJson.version, releaseType);
                 const { name, oldVersion } = updatePackageVersion(projectPath, newVersion);
                 updatedVersions.push({ name, version: newVersion });
 
                 console.log(`Updated ${name} from ${oldVersion} to ${newVersion}`);
-                console.log(`::set-output name=PACKAGE_VERSION::${newVersion}`);
+                console.log(`::set-output name=${projectName.toUpperCase()}_VERSION::${newVersion}`);
             } else {
                 console.log(`Skipping version update for ${projectName}: No relevant changes`);
             }
         });
 
-        // 2. 변경된 프로젝트가 있는 경우에만 CHANGELOG 생성
+        // 2. 루트 package.json 업데이트
+        if (highestReleaseType !== 'none') {
+            const rootPackage = JSON.parse(fs.readFileSync(CONFIG.rootPackagePath, 'utf8'));
+            const newRootVersion = incrementVersion(rootPackage.version, highestReleaseType);
+            const { name, oldVersion } = updatePackageVersion(CONFIG.rootPackagePath, newRootVersion);
+            updatedVersions.unshift({ name: 'root', version: newRootVersion });
+
+            console.log(`Updated root package from ${oldVersion} to ${newRootVersion}`);
+        }
+
+        // 3. CHANGELOG 생성
         if (commits.length > 0) {
             const categories = categorizeCommits(commits);
 
-            // 변경된 버전 정보를 포함한 버전 문자열 생성
             let versionInfo = '';
             if (updatedVersions.length > 0) {
                 versionInfo = updatedVersions.map(({ name, version }) => `${name}@${version}`).join(', ');

@@ -12,14 +12,11 @@
         "build:all:dev": "npx nx run-many --target=build --configuration=dev --all",
         "build:all:prod": "npx nx run-many --target=build --configuration=prod --all",
         "!web": "------------- web scripts -------------",
-        "prestart:web": "yarn clean:cache",
-        "start:web": "npx nx serve web --port 5001",
-        "build:web:dev": "yarn clean:cache && npx nx build --configuration=dev web",
-        "build:web:prod": "yarn clean:cache && npx nx build --configuration=prod web",
-        "predeploy:web:dev": "(rm -rf ./dist/apps/web || true) && yarn build:web:dev",
-        "deploy:web:dev": "./scripts/deploy-web.sh dev",
-        "predeploy:web:prod": "(rm -rf ./dist/apps/web || true) && yarn build:web:prod",
-        "deploy:web:prod": "./scripts/deploy-web.sh prod"
+        "web:start": "yarn clean:cache && npx nx serve web --port 5001",
+        "web:build:dev": "yarn clean:cache && npx nx build --configuration=dev web",
+        "web:build:prod": "yarn clean:cache && npx nx build --configuration=prod web",
+        "web:deploy:dev": "(rm -rf ./dist/apps/web || true) && yarn web:build:dev && ./scripts/deploy-web.sh dev",
+        "web:deploy:prod": "(rm -rf ./dist/apps/web || true) && yarn web:build:prod && ./scripts/deploy-web.sh prod"
     },
     "private": true,
     "dependencies": {
