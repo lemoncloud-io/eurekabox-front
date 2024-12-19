@@ -21,7 +21,7 @@ import Table from '@yoopta/table';
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import Video from '@yoopta/video';
 
-import { uploadImage } from '@lemonote/contents';
+import { uploadImage } from '@eurekabox/contents';
 import { html } from '@yoopta/exports';
 
 export const plugins = [

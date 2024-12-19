@@ -1,7 +1,7 @@
-import { Button } from '@lemonote/ui-kit/components/ui/button';
-import { Images } from '@lemonote/assets';
-import { Card } from '@lemonote/ui-kit/components/ui/card';
-import { useGlobalLoader } from '@lemonote/shared';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { Images } from '@eurekabox/assets';
+import { Card } from '@eurekabox/ui-kit/components/ui/card';
+import { useGlobalLoader } from '@eurekabox/shared';
 
 export const LoginPage = () => {
     const { setIsLoading } = useGlobalLoader();

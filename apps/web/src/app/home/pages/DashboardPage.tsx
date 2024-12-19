@@ -1,6 +1,6 @@
 import { EditorLayout } from '../layouts/EditorLayout';
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@lemonote/ui-kit/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@eurekabox/ui-kit/components/ui/card';
 import { ActivityFeed, Overview, RecentDocuments, UserStats } from '../components/dashboard';
 
 export const DashboardPage = () => {

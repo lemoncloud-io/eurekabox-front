@@ -1,6 +1,6 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@lemonote/lib/components/ui/tooltip';
-import { Switch } from '@lemonote/lib/components/ui/switch';
-import { useLocalStorage } from '@lemonote/shared';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
+import { Switch } from '@eurekabox/lib/components/ui/switch';
+import { useLocalStorage } from '@eurekabox/shared';
 
 interface AutoSaveToggleProps {
     checked: boolean;

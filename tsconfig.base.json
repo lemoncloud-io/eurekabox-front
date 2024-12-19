@@ -15,14 +15,14 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
-            "@lemonote/assets": ["assets/src/index.ts"],
-            "@lemonote/contents": ["libs/contents/src/index.ts"],
-            "@lemonote/lib/*": ["libs/ui-kit/src/*"],
-            "@lemonote/shared": ["libs/shared/src/index.ts"],
-            "@lemonote/theme": ["libs/theme/src/index.ts"],
-            "@lemonote/ui-kit": ["libs/ui-kit/src/index.ts"],
-            "@lemonote/ui-kit/*": ["libs/ui-kit/src/*"],
-            "@lemonote/web-core": ["libs/web-core/src/index.ts"]
+            "@eurekabox/assets": ["assets/src/index.ts"],
+            "@eurekabox/contents": ["libs/contents/src/index.ts"],
+            "@eurekabox/lib/*": ["libs/ui-kit/src/*"],
+            "@eurekabox/shared": ["libs/shared/src/index.ts"],
+            "@eurekabox/theme": ["libs/theme/src/index.ts"],
+            "@eurekabox/ui-kit": ["libs/ui-kit/src/index.ts"],
+            "@eurekabox/ui-kit/*": ["libs/ui-kit/src/*"],
+            "@eurekabox/web-core": ["libs/web-core/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

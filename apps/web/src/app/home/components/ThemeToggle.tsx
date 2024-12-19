@@ -1,7 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
-import { Button } from '@lemonote/ui-kit/components/ui/button';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@lemonote/theme';
+import { useTheme } from '@eurekabox/theme';
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme();
