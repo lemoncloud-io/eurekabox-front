@@ -268,8 +268,8 @@ export const UpdateContentPage = () => {
         await saveContent();
     }, [saveContent]);
 
-    const handleClickExportMarkdown = useCallback(async () => {
-        console.log(editor.getEditorValue());
+    const handleClickExportPDF = useCallback(async () => {
+        // TODO: export PDF
         try {
             const markdownText = markdown.serialize(editor, editor.getEditorValue());
             const blob = new Blob([markdownText], { type: 'text/markdown' });
@@ -324,7 +324,7 @@ export const UpdateContentPage = () => {
                 onTitleChange={handleTitleChange}
                 contentId={contentId}
                 handleSave={handleClickSave}
-                handleExportMarkdown={handleClickExportMarkdown}
+                handleExportPDF={handleClickExportPDF}
             >
                 <div
                     className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"

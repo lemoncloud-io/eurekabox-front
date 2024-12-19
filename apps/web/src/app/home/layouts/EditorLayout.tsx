@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { Separator } from '@eurekabox/lib/components/ui/separator';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -29,7 +30,7 @@ interface EditorLayoutProps {
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
     handleSave?: () => void;
-    handleExportMarkdown?: () => void;
+    handleExportPDF?: () => void;
 }
 
 export const EditorLayout = ({
@@ -40,7 +41,7 @@ export const EditorLayout = ({
     isLoading = false,
     onTitleChange,
     handleSave,
-    handleExportMarkdown,
+    handleExportPDF,
 }: EditorLayoutProps) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -59,9 +60,9 @@ export const EditorLayout = ({
         }
     };
 
-    const handleExportMarkdownClick = async () => {
-        if (handleExportMarkdown) {
-            handleExportMarkdown();
+    const handleExportPDFClick = async () => {
+        if (handleExportPDF) {
+            handleExportPDF();
         }
     };
 
@@ -131,10 +132,10 @@ export const EditorLayout = ({
                                         variant="ghost"
                                         size="icon"
                                         className="hover:text-primary"
-                                        onClick={handleExportMarkdownClick}
+                                        onClick={handleExportPDFClick}
                                     >
                                         <FileDown className="h-5 w-5" />
-                                        <span className="sr-only">Markdown으로 내보내기</span>
+                                        <span className="sr-only">PDF 내보내기</span>
                                     </Button>
                                     <Button
                                         variant="ghost"
@@ -174,6 +175,7 @@ export const EditorLayout = ({
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
+                                    <Separator orientation="vertical" className="h-6" />
                                 </>
                             )}
                             <Button
