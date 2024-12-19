@@ -1,5 +1,5 @@
 {
-    "name": "@lemonote/web-core",
+    "name": "@eurekabox/web-core",
     "version": "0.0.1",
     "dependencies": {},
     "private": true

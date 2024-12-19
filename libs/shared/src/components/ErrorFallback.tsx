@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
-import { Button } from '@lemonote/ui-kit/components/ui/button';
-import { Card } from '@lemonote/ui-kit/components/ui/card';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { Card } from '@eurekabox/ui-kit/components/ui/card';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { FallbackProps } from 'react-error-boundary';
 

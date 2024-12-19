@@ -2,15 +2,15 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 
-import { Toaster } from '@lemonote/ui-kit/components/ui/toaster';
+import { Toaster } from '@eurekabox/ui-kit/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { useInitWebCore, useRefreshToken } from '@lemonote/web-core';
+import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';
-import { ErrorFallback, LoadingFallback, GlobalLoader } from '@lemonote/shared';
-import { ThemeProvider } from '@lemonote/theme';
+import { ErrorFallback, LoadingFallback, GlobalLoader } from '@eurekabox/shared';
+import { ThemeProvider } from '@eurekabox/theme';
 
 export function App() {
     const queryClient = new QueryClient({

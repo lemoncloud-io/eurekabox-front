@@ -16,7 +16,7 @@ export default defineConfig({
 
     resolve: {
         alias: {
-            '@lemonote/assets': '/assets/src/index.ts',
+            '@eurekabox/assets': '/assets/src/index.ts',
             ...(process.env.NODE_ENV !== 'development'
                 ? {
                       './runtimeConfig': './runtimeConfig.browser', // fix production build

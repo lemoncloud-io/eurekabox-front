@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { useWebCoreStore } from '@lemonote/web-core';
+import { useWebCoreStore } from '@eurekabox/web-core';
 import { ProtectedRoutes } from './protected';
 import { PublicRoutes } from './public';
 import { CommonRoutes } from './common';

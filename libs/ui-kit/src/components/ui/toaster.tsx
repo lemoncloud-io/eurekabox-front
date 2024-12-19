@@ -1,4 +1,4 @@
-import { useToast } from '@lemonote/ui-kit/hooks/use-toast';
+import { useToast } from '@eurekabox/ui-kit/hooks/use-toast';
 import {
     Toast,
     ToastClose,
@@ -6,7 +6,7 @@ import {
     ToastProvider,
     ToastTitle,
     ToastViewport,
-} from '@lemonote/ui-kit/components/ui/toast';
+} from '@eurekabox/ui-kit/components/ui/toast';
 
 export function Toaster() {
     const { toasts } = useToast();
