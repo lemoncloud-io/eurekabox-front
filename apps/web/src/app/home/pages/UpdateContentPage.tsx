@@ -11,6 +11,7 @@ import debounce from 'lodash/debounce';
 import { AutoSaveToggle } from '../components';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
+import { markdown } from '@yoopta/exports';
 
 const saveSelection = () => {
     try {
@@ -267,6 +268,32 @@ export const UpdateContentPage = () => {
         await saveContent();
     }, [saveContent]);
 
+    const handleClickExportMarkdown = useCallback(async () => {
+        console.log(editor.getEditorValue());
+        try {
+            const markdownText = markdown.serialize(editor, editor.getEditorValue());
+            const blob = new Blob([markdownText], { type: 'text/markdown' });
+
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${title}.md`;
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            toast({
+                variant: 'destructive',
+                title: 'Download failed',
+                description: `${error.toString()}`,
+            });
+            console.error('Download failed:', error);
+        }
+    }, [title, editor]);
+
     const handleTitleChange = useCallback(
         (newTitle: string) => {
             setTitle(newTitle);
@@ -295,8 +322,9 @@ export const UpdateContentPage = () => {
                 title={title}
                 isLoading={loading}
                 onTitleChange={handleTitleChange}
-                handleSave={handleClickSave}
                 contentId={contentId}
+                handleSave={handleClickSave}
+                handleExportMarkdown={handleClickExportMarkdown}
             >
                 <div
                     className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"

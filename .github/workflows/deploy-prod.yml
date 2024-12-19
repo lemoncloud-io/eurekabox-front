@@ -28,7 +28,8 @@ jobs:
                           - 'assets/**'
                           - 'libs/**'
                           - '!**/*.json'
-                          - '!**/*.md
+                          - '!**/*.md'
+                          - '!**/*.yml'
 
     get-version:
         needs: changes

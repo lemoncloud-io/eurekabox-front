@@ -29,6 +29,7 @@ jobs:
                           - 'libs/**'
                           - '!**/*.json'
                           - '!**/*.md'
+                          - '!**/*.yml'
 
     version-update:
         needs: changes

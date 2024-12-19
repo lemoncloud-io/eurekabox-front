@@ -1,5 +1,5 @@
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+import { FileDown, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
@@ -29,6 +29,7 @@ interface EditorLayoutProps {
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
     handleSave?: () => void;
+    handleExportMarkdown?: () => void;
 }
 
 export const EditorLayout = ({
@@ -39,6 +40,7 @@ export const EditorLayout = ({
     isLoading = false,
     onTitleChange,
     handleSave,
+    handleExportMarkdown,
 }: EditorLayoutProps) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -54,6 +56,12 @@ export const EditorLayout = ({
     const handleSaveClick = async () => {
         if (handleSave) {
             handleSave();
+        }
+    };
+
+    const handleExportMarkdownClick = async () => {
+        if (handleExportMarkdown) {
+            handleExportMarkdown();
         }
     };
 
@@ -119,6 +127,15 @@ export const EditorLayout = ({
                         <div className="flex items-center gap-4">
                             {!isDashboard && (
                                 <>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="hover:text-primary"
+                                        onClick={handleExportMarkdownClick}
+                                    >
+                                        <FileDown className="h-5 w-5" />
+                                        <span className="sr-only">Markdown으로 내보내기</span>
+                                    </Button>
                                     <Button
                                         variant="ghost"
                                         size="icon"
