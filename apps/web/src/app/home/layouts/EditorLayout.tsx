@@ -1,5 +1,5 @@
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+import { FileDown, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { Separator } from '@eurekabox/lib/components/ui/separator';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -29,6 +30,7 @@ interface EditorLayoutProps {
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
     handleSave?: () => void;
+    handleExportPDF?: () => void;
 }
 
 export const EditorLayout = ({
@@ -39,6 +41,7 @@ export const EditorLayout = ({
     isLoading = false,
     onTitleChange,
     handleSave,
+    handleExportPDF,
 }: EditorLayoutProps) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -54,6 +57,12 @@ export const EditorLayout = ({
     const handleSaveClick = async () => {
         if (handleSave) {
             handleSave();
+        }
+    };
+
+    const handleExportPDFClick = async () => {
+        if (handleExportPDF) {
+            handleExportPDF();
         }
     };
 
@@ -123,6 +132,15 @@ export const EditorLayout = ({
                                         variant="ghost"
                                         size="icon"
                                         className="hover:text-primary"
+                                        onClick={handleExportPDFClick}
+                                    >
+                                        <FileDown className="h-5 w-5" />
+                                        <span className="sr-only">PDF 내보내기</span>
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="hover:text-primary"
                                         onClick={handleSaveClick}
                                         disabled={isLoading}
                                     >
@@ -157,6 +175,7 @@ export const EditorLayout = ({
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
+                                    <Separator orientation="vertical" className="h-6" />
                                 </>
                             )}
                             <Button

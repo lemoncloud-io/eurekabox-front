@@ -1,0 +1,55 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+categories:
+    - title: '변경사항'
+      labels:
+          - 'feature'
+          - 'enhancement'
+          - 'chore'
+          - 'refactor'
+    - title: '수정사항'
+      labels:
+          - 'fix'
+          - 'bugfix'
+          - 'bug'
+    - title: '퍼블리싱'
+      label: 'publishing'
+include-labels:
+    - 'feature'
+    - 'enhancement'
+    - 'chore'
+    - 'refactor'
+    - 'fix'
+    - 'bugfix'
+    - 'bug'
+    - 'publishing'
+replacers:
+    - search: 'louis-lemon'
+      replace: '루이'
+    - search: 'alice-0130'
+      replace: '앨리스'
+    - search: 'Mark-obov'
+      replace: '마크'
+    - search: 'caleb-lemon'
+      replace: '케일럽'
+    - search: 'shy-lemon'
+      replace: '샤이'
+    - search: 'luke-lemon'
+      replace: '루크'
+    - search: '/#(\d+)/g'
+      replace: '[#$1](https://github.com/lemoncloud-io/eurekabox-front/pull/$1)'
+version-resolver:
+    major:
+        labels:
+            - 'major'
+    minor:
+        labels:
+            - 'minor'
+    patch:
+        labels:
+            - 'patch'
+    default: patch
+template: |
+
+    $CHANGES
