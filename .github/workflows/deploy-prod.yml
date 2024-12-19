@@ -25,11 +25,13 @@ jobs:
                   filters: |
                       web:
                           - 'apps/web/**'
+                          - 'assets/**'
                           - 'libs/**'
                           - '!**/*.json'
                           - '!**/*.md'
+                          - '!**/*.yml'
 
-    build:
+    get-version:
         needs: changes
         if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
         name: Build and Set Version
@@ -38,7 +40,8 @@ jobs:
             contents: write
             pull-requests: write
         outputs:
-            web-version: ${{ steps.web-version.outputs.version }}
+            root-version: ${{ steps.get-version.outputs.root-version }}
+            web-version: ${{ steps.get-version.outputs.web-version }}
         steps:
             - name: Check out a copy of the repo
               uses: actions/checkout@v4
@@ -49,50 +52,60 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version-file: '.nvmrc' # node 20버전 이상
+                  node-version-file: '.nvmrc'
 
             - name: Get Yarn cache path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-            - name: Cache Yarn cache and node_modules
-              id: cache-dependencies
-              uses: actions/cache@v2
+            - name: Cache dependencies
+              uses: actions/cache@v3
               with:
                   path: |
                       ${{ steps.yarn-cache-dir-path.outputs.dir }}
                       node_modules
-                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
 
             - name: Install dependencies
-              run: |
-                  yarn install --frozen-lockfile
               if: steps.cache-dependencies.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
 
             - name: Configure git
               run: |
-                  git config user.name "${GITHUB_ACTOR}"
-                  git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            - name: Get Latest Version of Web
-              if: ${{ needs.changes.outputs.web == 'true' }}
-              id: web-version
+            - name: Get Root Version
+              id: get-root-version
               run: |
-                  VERSION=$(node -p "require('./apps/web/package.json').version")
-                  echo "web@$VERSION"
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  if [ -f "package.json" ]; then
+                    ROOT_VERSION=$(node -p "require('./package.json').version")
+                    echo "root-version=${ROOT_VERSION}" >> $GITHUB_OUTPUT
+                  fi
 
-    deploy-prod:
-        name: Deploy to Prod
-        needs: build
+            - name: Get Web Version
+              if: ${{ needs.changes.outputs.web == 'true' }}
+              id: get-web-version
+              run: |
+                  if [ -f "apps/web/package.json" ]; then
+                    WEB_VERSION=$(node -p "require('./apps/web/package.json').version")
+                    echo "web-version=${WEB_VERSION}" >> $GITHUB_OUTPUT
+                  fi
+
+    build-and-deploy:
+        needs: [changes, get-version]
         runs-on: ubuntu-latest
+        name: Build and Deploy
         strategy:
             matrix:
                 project: [web]
                 include:
                     - project: web
-                      version: ${{ needs.build.outputs.web-version }}
+                      version: ${{ needs.get-version.outputs.web-version }}
+                      should_run: ${{ needs.changes.outputs.web == 'true' }}
+        if: ${{ matrix.should_run }}
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -103,26 +116,25 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
-                  node-version-file: '.nvmrc' # node 20버전 이상
+                  node-version-file: '.nvmrc'
 
             - name: Get Yarn cache path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-            - name: Cache Yarn cache and node_modules
-              id: cache-dependencies
-              uses: actions/cache@v2
+            - name: Cache dependencies
+              uses: actions/cache@v3
               with:
                   path: |
                       ${{ steps.yarn-cache-dir-path.outputs.dir }}
                       node_modules
-                  key: ${{ runner.os }}-${{ env.NODE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: ${{ runner.os }}-${{ env.NODE_VERSION }}-
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
 
             - name: Install dependencies
-              run: |
-                  yarn install --frozen-lockfile
               if: steps.cache-dependencies.outputs.cache-hit != 'true'
+              run: yarn install --frozen-lockfile
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -132,51 +144,73 @@ jobs:
                   aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
             - name: Deploy to PROD
-              if: ${{ matrix.version != null }}
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
-                  yarn deploy:${{ matrix.project }}:prod
+                  yarn ${{ matrix.project }}:deploy:prod
 
-#            - name: Post Web release to a Slack channel
-#              if: ${{ matrix.project == 'web' && matrix.version != null }}
-#              id: web-post-slack
-#              uses: slackapi/slack-github-action@v1.25.0
-#              with:
-#                  channel-id: ${{ secrets.COLOVER_CHANNEL }}
-#                  payload: |
-#                      {
-#                          "text": "프론트 운영 배포",
-#                          "blocks": [
-#                      		  {
-#                                  "type": "section",
-#                                  "text": {
-#                                      "type": "mrkdwn",
-#                                      "text": "*웹 <https://front.lemoncloud.io/|운영 서버> 배포되었습니다. v${{ matrix.version }}*"
-#                                  }
-#                              }
-#                          ]
-#                      }
-#              env:
-#                  SLACK_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }
-#
-#            - name: Post Admin release to a Slack channel
-#              if: ${{ matrix.project == 'admin' && matrix.version != null }}
-#              id: admin-post-slack
-#              uses: slackapi/slack-github-action@v1.25.0
-#              with:
-#                  channel-id: ${{ secrets.COLOVER_CHANNEL }}
-#                  payload: |
-#                      {
-#                          "text": "어드민 운영 배포",
-#                          "blocks": [
-#                      		  {
-#                                  "type": "section",
-#                                  "text": {
-#                                      "type": "mrkdwn",
-#                                      "text": "*어드민 <https://admin.lemoncloud.io/|운영 서버> 배포되었습니다. v${{ matrix.version }}*"
-#                                  }
-#                              }
-#                          ]
-#                      }
-#              env:
-#                  SLACK_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }
+    notity-slack:
+        needs: [changes, get-version, build-and-deploy]
+        if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - uses: release-drafter/release-drafter@v5
+              id: release-drafted
+              with:
+                  publish: true
+                  version: ${{ needs.get-version.outputs.root-version }}
+                  tag: ${{ needs.get-version.outputs.root-version }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Convert notes to slack body
+              id: slack-body
+              uses: LoveToKnow/slackify-markdown-action@v1.0.2
+              with:
+                  text: ${{ steps.release-drafted.outputs.body }}
+
+            - name: Prepare Slack message
+              id: slack-message
+              run: |
+                  MESSAGE=""
+                  if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
+                      echo "text=*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
+                  fi
+
+            #                 if [[ "${{ needs.changes.outputs.web }}" == "true" && "${{ needs.changes.outputs.admin }}" == "true" ]]; then
+            #                     echo "text=*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*\n*어드민 <https://admin.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.admin-version }}*" >> $GITHUB_OUTPUT
+            #                 elif [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
+            #                     echo "text=*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
+            #                 elif [[ "${{ needs.changes.outputs.admin }}" == "true" ]]; then
+            #                     echo "text=*어드민 <https://admin.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.admin-version }}*" >> $GITHUB_OUTPUT
+            #                 fi
+
+            - name: Post to a Slack channel
+              id: post-slack
+              uses: slackapi/slack-github-action@v1.25.0
+              with:
+                  channel-id: ${{ secrets.EUREKACODES_CHANNEL }}
+                  payload: |
+                      {
+                          "text": "EUREKABOX 운영 배포",
+                          "blocks": [
+                      		  {
+                                  "type": "section",
+                                  "text": {
+                                      "type": "mrkdwn",
+                                      "text": "${{ steps.slack-message.outputs.text }}"
+                                  }
+                              },
+                              {
+                                  "type": "section",
+                                  "text": {
+                                      "type": "mrkdwn",
+                                      "text": "${{ steps.slack-body.outputs.text }}"
+                                  }
+                              }
+                          ]
+                      }
+              env:
+                  SLACK_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
