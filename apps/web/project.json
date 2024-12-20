@@ -1,9 +1,36 @@
 {
-  "name": "web",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/web/src",
-  "projectType": "application",
-  "tags": [],
-  "// targets": "to see all targets run: nx show project web --web",
-  "targets": {}
+    "name": "web",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/web/src",
+    "projectType": "application",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project web --web",
+    "targets": {
+        "build": {
+            "defaultConfiguration": "production",
+            "configurations": {
+                "development": {
+                    "mode": "development"
+                },
+                "dev": {
+                    "mode": "dev",
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/web/.env.local",
+                            "with": "apps/web/.env.dev"
+                        }
+                    ]
+                },
+                "prod": {
+                    "mode": "production",
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/web/.env.local",
+                            "with": "apps/web/.env.prod"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }
