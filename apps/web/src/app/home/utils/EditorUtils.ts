@@ -12,7 +12,7 @@ import Embed from '@yoopta/embed';
 import File from '@yoopta/file';
 import { HeadingOne, HeadingThree, HeadingTwo } from '@yoopta/headings';
 import Image from '@yoopta/image';
-import Link from '@yoopta/link';
+import Link, { LinkElementProps } from '@yoopta/link';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { BulletedList, NumberedList, TodoList } from '@yoopta/lists';
 import { Bold, CodeMark, Highlight, Italic, Strike, Underline } from '@yoopta/marks';
@@ -38,7 +38,14 @@ export const plugins = [
     BulletedList,
     TodoList,
     Code,
-    Link,
+    Link.extend({
+        elementProps: {
+            link: (props: LinkElementProps) => ({
+                ...props,
+                target: '_blank',
+            }),
+        },
+    }),
     Embed,
     Image.extend({
         options: {
