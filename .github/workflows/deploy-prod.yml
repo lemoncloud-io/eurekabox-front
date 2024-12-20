@@ -179,17 +179,15 @@ jobs:
               id: slack-message
               run: |
                   BASE_MESSAGE=":codes: *EUREKABOX 운영 환경 배포 완료*\n\n"
+                  DEPLOY_MESSAGE=""
+
                   if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
-                      echo "text=${BASE_MESSAGE}*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
+                      DEPLOY_MESSAGE="*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*"
+                  else
+                      DEPLOY_MESSAGE="변경사항이 없습니다."
                   fi
 
-            #                 if [[ "${{ needs.changes.outputs.web }}" == "true" && "${{ needs.changes.outputs.admin }}" == "true" ]]; then
-            #                     echo "text=*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*\n*어드민 <https://admin.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.admin-version }}*" >> $GITHUB_OUTPUT
-            #                 elif [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
-            #                     echo "text=*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
-            #                 elif [[ "${{ needs.changes.outputs.admin }}" == "true" ]]; then
-            #                     echo "text=*어드민 <https://admin.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.admin-version }}*" >> $GITHUB_OUTPUT
-            #                 fi
+                  echo "text=${BASE_MESSAGE}${DEPLOY_MESSAGE}" >> $GITHUB_OUTPUT
 
             - name: Post to a Slack channel
               id: post-slack
