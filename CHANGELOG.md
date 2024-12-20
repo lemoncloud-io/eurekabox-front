@@ -1,5 +1,19 @@
 # Changelog
 
+## [2024-12-20] - root@0.2.0, @eurekabox/web@0.2.0
+
+### Features
+
+-   set link target to \_blank
+
+### Chores
+
+-   simplify deploy message logic
+
+### Other
+
+-   ci: improve deploy workflow
+
 ## [2024-12-20] - root@0.1.1, @eurekabox/web@0.1.1
 
 ### Bug Fixes
