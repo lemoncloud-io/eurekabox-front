@@ -105,8 +105,12 @@ jobs:
                     - project: web
                       version: ${{ needs.get-version.outputs.web-version }}
                       should_run: ${{ needs.changes.outputs.web == 'true' }}
-        if: ${{ matrix.should_run }}
+
         steps:
+            - name: Skip if no changes
+              if: ${{ matrix.should_run }}
+              run: echo "Processing ${{ matrix.project }}"
+
             - name: Checkout code
               uses: actions/checkout@v4
               with:
@@ -174,9 +178,9 @@ jobs:
             - name: Prepare Slack message
               id: slack-message
               run: |
-                  MESSAGE=""
+                  BASE_MESSAGE=":codes: *EUREKABOX 운영 환경 배포 완료*\n\n"
                   if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
-                      echo "text=:codes: *웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
+                      echo "text=${BASE_MESSAGE}*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*" >> $GITHUB_OUTPUT
                   fi
 
             #                 if [[ "${{ needs.changes.outputs.web }}" == "true" && "${{ needs.changes.outputs.admin }}" == "true" ]]; then
@@ -194,7 +198,7 @@ jobs:
                   channel-id: ${{ secrets.EUREKACODES_CHANNEL }}
                   payload: |
                       {
-                          "text": "EUREKABOX 운영 배포",
+                          "text": "EUREKABOX 운영 배포 알림",
                           "blocks": [
                       		  {
                                   "type": "section",
