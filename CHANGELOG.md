@@ -1,5 +1,12 @@
 # Changelog
 
+## [2024-12-20] - root@0.1.1, @eurekabox/web@0.1.1
+
+### Bug Fixes
+
+-   fix nx.json configuration
+-   update deployment message format
+
 ## [2024-12-19] - root@0.1.0, @eurekabox/web@0.1.0
 
 ### Features
