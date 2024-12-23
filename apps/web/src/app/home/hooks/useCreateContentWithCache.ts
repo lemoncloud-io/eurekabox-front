@@ -9,20 +9,23 @@ export const useCreateContentWithCache = () => {
     const { prependContentToInfiniteCache } = useContentCache();
     const createContent = useCreateContent();
 
-    const handleCreate = useCallback(async () => {
-        const newContent: CreateContentDTO = {
-            name: '',
-            title: 'Untitled',
-            subject: '',
-        };
+    const handleCreate = useCallback(
+        async (title = 'Untitled') => {
+            const newContent: CreateContentDTO = {
+                name: '',
+                title,
+                subject: '',
+            };
 
-        await createContent.mutateAsync(newContent, {
-            onSuccess: (response: ContentView) => {
-                prependContentToInfiniteCache(response);
-                navigate(`/home/${response.id}`);
-            },
-        });
-    }, [createContent, navigate, prependContentToInfiniteCache]);
+            await createContent.mutateAsync(newContent, {
+                onSuccess: (response: ContentView) => {
+                    prependContentToInfiniteCache(response);
+                    navigate(`/home/${response.id}`);
+                },
+            });
+        },
+        [createContent, navigate, prependContentToInfiniteCache]
+    );
 
     return {
         handleCreate,

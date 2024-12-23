@@ -6,6 +6,7 @@ import { html, markdown } from '@yoopta/exports';
 
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@eurekabox/contents';
 import { convertElementToEditorValue, extractContent } from '../utils';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 
 export interface ElementStructure {
     depth: number;
@@ -48,6 +49,19 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 setLoading(true);
                 const content = await fetchContentById(id);
                 contentRef.current = content;
+
+                const hasNoElement = !content.element$$ || content.element$$?.length === 0;
+                if (!!content.readme && hasNoElement) {
+                    const editorValue = markdown.deserialize(editor, content.readme);
+                    console.log(editorValue);
+                    editor.setEditorValue(editorValue);
+                    await handleSave(content.title);
+                    toast({
+                        title: '파일 업로드 성공',
+                        description: '마크다운 파일이 성공적으로 로드되었습니다.',
+                    });
+                    return;
+                }
 
                 // element$$ 변환
                 const { value } = convertElementToEditorValue(editor, content.element$$ as ElementStructure[]);
