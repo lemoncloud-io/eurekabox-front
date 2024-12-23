@@ -1,5 +1,16 @@
 # Changelog
 
+## [2024-12-23] - root@0.3.0, @eurekabox/web@0.3.0
+
+### Features
+
+-   add markdown import functionality
+-   add tooltip for markdown import button
+
+### Refactor
+
+-   rename Sidebar to SideBar
+
 ## [2024-12-20] - root@0.2.0, @eurekabox/web@0.2.0
 
 ### Features
