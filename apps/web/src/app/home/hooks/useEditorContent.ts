@@ -40,14 +40,33 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     const [error, setError] = useState<Error | null>(null);
     const elementTrackerRef = useRef<ElementTracker>({});
     const contentRef = useRef<ContentView>(null);
-
     const fetchedRef = useRef<string | null>(null);
+    const loadingRef = useRef(false);
+
+    useEffect(() => {
+        return () => {
+            loadingRef.current = false;
+            editor.setEditorValue({});
+            elementTrackerRef.current = {};
+            contentRef.current = null;
+        };
+    }, [editor]);
 
     const loadContent = useCallback(
         async (id: string) => {
+            // 이미 로딩 중이면 중복 로드 방지
+            if (loadingRef.current) {
+                return;
+            }
+
             try {
+                loadingRef.current = true;
                 setLoading(true);
                 const content = await fetchContentById(id);
+                // unmount됐거나 contentId가 변경됐다면 로드 중단
+                if (content.id !== contentId) {
+                    return;
+                }
                 contentRef.current = content;
 
                 const hasNoElement = !content.element$$ || content.element$$?.length === 0;
@@ -89,11 +108,12 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 console.error('Failed to load content:', err);
                 setError(err as Error);
             } finally {
-                editor.focus();
+                loadingRef.current = false;
                 setLoading(false);
+                editor.focus();
             }
         },
-        [editor]
+        [contentId, editor]
     );
 
     const handleSave = useCallback(
