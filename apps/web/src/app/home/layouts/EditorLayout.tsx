@@ -1,10 +1,10 @@
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { FileDown, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { FileDown, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+import { ReactNode, useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
 import { Loader } from '@eurekabox/shared';
-import { useDeleteContent } from '@eurekabox/contents';
+import { CreateContentDTO, useCreateContent, useDeleteContent } from '@eurekabox/contents';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import {
     AlertDialog,
@@ -22,6 +22,7 @@ import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { Separator } from '@eurekabox/lib/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -52,6 +53,8 @@ export const EditorLayout = ({
 
     const { removeContentFromInfiniteCache } = useContentCache();
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
+    const { prependContentToInfiniteCache } = useContentCache();
+    const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
 
     const handleSaveClick = async () => {
@@ -65,6 +68,52 @@ export const EditorLayout = ({
             handleExportPDF();
         }
     };
+
+    const handleImportMarkdownClick = useCallback(async () => {
+        // eslint-disable-next-line no-restricted-globals
+        const file = event.target.files?.[0];
+        if (!file) {
+            return;
+        }
+
+        try {
+            if (!file.name.endsWith('.md')) {
+                toast({
+                    variant: 'destructive',
+                    title: '잘못된 파일 형식',
+                    description: '마크다운(.md) 파일만 업로드 가능합니다.',
+                });
+                return;
+            }
+
+            const title = file.name.substring(0, file.name.lastIndexOf('.'));
+            const text = await file.text();
+
+            const newContent: CreateContentDTO = {
+                name: '',
+                subject: '',
+                title,
+                readme: text,
+            };
+
+            await createContent.mutateAsync(newContent, {
+                onSuccess: (response: ContentView) => {
+                    prependContentToInfiniteCache(response);
+                    navigate(`/home/${response.id}`);
+                },
+            });
+        } catch (error) {
+            console.error('Markdown upload failed:', error);
+            toast({
+                variant: 'destructive',
+                title: '파일 업로드 실패',
+                description: '마크다운 파일을 읽는 중 오류가 발생했습니다.',
+            });
+        }
+
+        // eslint-disable-next-line no-restricted-globals
+        event.target.value = '';
+    }, [toast]);
 
     const handleDelete = () => {
         setShowDeleteDialog(true);
@@ -178,6 +227,31 @@ export const EditorLayout = ({
                                     <Separator orientation="vertical" className="h-6" />
                                 </>
                             )}
+                            <input
+                                type="file"
+                                accept=".md"
+                                onChange={handleImportMarkdownClick}
+                                style={{ display: 'none' }}
+                                id="markdown-upload"
+                            />
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="hover:text-primary"
+                                            onClick={() => document.getElementById('markdown-upload')?.click()}
+                                        >
+                                            <FileUp className="h-5 w-5" />
+                                            <span className="sr-only">Markdown import</span>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Markdown 가져오기</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             <Button
                                 variant="ghost"
                                 size="icon"
