@@ -1,5 +1,12 @@
 # Changelog
 
+## [2024-12-23] - root@0.4.1, @eurekabox/web@0.4.1
+
+### Bug Fixes
+
+-   conditionally render import button
+-   prevent duplicate content loading
+
 ## [2024-12-23] - root@0.4.0, @eurekabox/web@0.4.0
 
 ### Features
