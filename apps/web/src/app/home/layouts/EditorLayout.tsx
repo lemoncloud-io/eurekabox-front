@@ -22,6 +22,7 @@ import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { Separator } from '@eurekabox/lib/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -233,15 +234,24 @@ export const EditorLayout = ({
                                 style={{ display: 'none' }}
                                 id="markdown-upload"
                             />
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="hover:text-primary"
-                                onClick={() => document.getElementById('markdown-upload')?.click()}
-                            >
-                                <FileUp className="h-5 w-5" />
-                                <span className="sr-only">Markdown import</span>
-                            </Button>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="hover:text-primary"
+                                            onClick={() => document.getElementById('markdown-upload')?.click()}
+                                        >
+                                            <FileUp className="h-5 w-5" />
+                                            <span className="sr-only">Markdown import</span>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Markdown 가져오기</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             <Button
                                 variant="ghost"
                                 size="icon"
