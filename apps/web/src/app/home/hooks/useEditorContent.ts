@@ -40,7 +40,6 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     const [error, setError] = useState<Error | null>(null);
     const elementTrackerRef = useRef<ElementTracker>({});
     const contentRef = useRef<ContentView>(null);
-
     const fetchedRef = useRef<string | null>(null);
 
     const loadContent = useCallback(
