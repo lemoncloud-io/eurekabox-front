@@ -20,8 +20,8 @@ export const AutoSaveToggle = ({
     };
 
     return (
-        <div className="fixed top-20 right-10 z-50 flex items-center gap-2 bg-white p-2 rounded-lg shadow-md">
-            <TooltipProvider>
+        <TooltipProvider>
+            <div className="fixed top-20 right-10 z-50 flex items-center gap-2 bg-white p-2 rounded-lg shadow-md">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ export const AutoSaveToggle = ({
                         <p>마지막 변경 후 3초가 지나면 자동 저장</p>
                     </TooltipContent>
                 </Tooltip>
-            </TooltipProvider>
-        </div>
+            </div>
+        </TooltipProvider>
     );
 };

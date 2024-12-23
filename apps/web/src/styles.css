@@ -118,12 +118,6 @@ body {
     @apply from-blue-400 to-cyan-400;
 }
 
-* {
-    transition-property: width, height, opacity, transform;
-    transition-duration: 300ms;
-    transition-timing-function: ease-in-out;
-}
-
 .transition-all {
     transition-property: all;
 }
