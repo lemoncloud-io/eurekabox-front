@@ -1,5 +1,15 @@
 # Changelog
 
+## [2024-12-23] - root@0.4.0, @eurekabox/web@0.4.0
+
+### Features
+
+-   support html import in editor
+
+### Chores
+
+-   update deploy message url
+
 ## [2024-12-23] - root@0.3.0, @eurekabox/web@0.3.0
 
 ### Features
