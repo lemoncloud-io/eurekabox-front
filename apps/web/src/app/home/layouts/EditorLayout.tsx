@@ -77,11 +77,11 @@ export const EditorLayout = ({
         }
 
         try {
-            if (!file.name.endsWith('.md')) {
+            if (!(file.name.endsWith('.md') || file.name.endsWith('.html'))) {
                 toast({
                     variant: 'destructive',
                     title: '잘못된 파일 형식',
-                    description: '마크다운(.md) 파일만 업로드 가능합니다.',
+                    description: '.md, .html 파일만 업로드 가능합니다.',
                 });
                 return;
             }
@@ -227,31 +227,35 @@ export const EditorLayout = ({
                                     <Separator orientation="vertical" className="h-6" />
                                 </>
                             )}
-                            <input
-                                type="file"
-                                accept=".md"
-                                onChange={handleImportMarkdownClick}
-                                style={{ display: 'none' }}
-                                id="markdown-upload"
-                            />
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="hover:text-primary"
-                                            onClick={() => document.getElementById('markdown-upload')?.click()}
-                                        >
-                                            <FileUp className="h-5 w-5" />
-                                            <span className="sr-only">Markdown import</span>
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Markdown 가져오기</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            {isDashboard && (
+                                <>
+                                    <input
+                                        type="file"
+                                        accept=".md,.html"
+                                        onChange={handleImportMarkdownClick}
+                                        style={{ display: 'none' }}
+                                        id="markdown-upload"
+                                    />
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="hover:text-primary"
+                                                    onClick={() => document.getElementById('markdown-upload')?.click()}
+                                                >
+                                                    <FileUp className="h-5 w-5" />
+                                                    <span className="sr-only">import</span>
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Markdown, HTML 가져오기</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -261,6 +265,7 @@ export const EditorLayout = ({
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
                             </Button>
+
                             <ThemeToggle />
                             <Link to="/auth/logout">
                                 <Button variant="ghost" className="hover:text-primary">

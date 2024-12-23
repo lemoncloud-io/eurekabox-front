@@ -155,6 +155,7 @@ jobs:
     notity-slack:
         needs: [changes, get-version, build-and-deploy]
         if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
+        name: Notify Slack
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -182,7 +183,7 @@ jobs:
                   DEPLOY_MESSAGE=""
 
                   if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
-                      DEPLOY_MESSAGE="*웹 <https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.version-update.outputs.web-version }}*"
+                      DEPLOY_MESSAGE="*<https://box.eureka.codes/|운영 서버> 배포되었습니다. v${{ needs.get-version.outputs.web-version }}*"
                   else
                       DEPLOY_MESSAGE="변경사항이 없습니다."
                   fi
