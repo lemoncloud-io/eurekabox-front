@@ -51,14 +51,19 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 contentRef.current = content;
 
                 const hasNoElement = !content.element$$ || content.element$$?.length === 0;
-                if (!!content.readme && hasNoElement) {
-                    const editorValue = markdown.deserialize(editor, content.readme);
-                    console.log(editorValue);
+                const isImported = !!content.readme && hasNoElement;
+                if (isImported) {
+                    let editorValue = markdown.deserialize(editor, content.readme);
+                    const isHTML = content.readme.startsWith('<html') || content.readme.startsWith('<HTML');
+                    if (isHTML) {
+                        editorValue = html.deserialize(editor, content.readme);
+                    }
+
                     editor.setEditorValue(editorValue);
                     await handleSave(content.title);
                     toast({
                         title: '파일 업로드 성공',
-                        description: '마크다운 파일이 성공적으로 로드되었습니다.',
+                        description: '파일이 성공적으로 로드되었습니다.',
                     });
                     return;
                 }

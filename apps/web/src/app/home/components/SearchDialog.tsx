@@ -27,7 +27,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTitle>Search</DialogTitle>
+            <DialogTitle></DialogTitle>
             <DialogContent className="sm:max-w-[700px] p-0">
                 <div className="flex flex-col h-[80vh]">
                     <div className="p-4 border-b">
