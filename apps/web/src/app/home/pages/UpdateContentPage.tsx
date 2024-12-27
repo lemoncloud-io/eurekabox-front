@@ -138,6 +138,9 @@ export const UpdateContentPage = () => {
 
             if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
+                if (!previousBlock || previousBlock.length === 0) {
+                    return;
+                }
                 const blockId = previousBlock[0];
                 focusBlockWithOptions(editor, blockId);
             }
@@ -196,6 +199,9 @@ export const UpdateContentPage = () => {
             // 저장 완료 후 이전 path로 복원
             if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
+                if (!previousBlock || previousBlock.length === 0) {
+                    return;
+                }
                 const blockId = previousBlock[0];
                 focusBlockWithOptions(editor, blockId);
             }

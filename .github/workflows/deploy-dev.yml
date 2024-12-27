@@ -18,7 +18,7 @@ jobs:
               with:
                   fetch-depth: 0
                   token: ${{ secrets.LEMON_BOT_TOKEN }}
-            - uses: dorny/paths-filter@v2
+            - uses: dorny/paths-filter@v3
               id: filter
               with:
                   base: 'develop'
@@ -27,9 +27,6 @@ jobs:
                           - 'apps/web/**'
                           - 'assets/**'
                           - 'libs/**'
-                          - '!**/*.json'
-                          - '!**/*.md'
-                          - '!**/*.yml'
 
     version-update:
         needs: changes
