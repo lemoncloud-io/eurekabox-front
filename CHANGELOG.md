@@ -1,5 +1,11 @@
 # Changelog
 
+## [2024-12-27] - root@0.6.0, @eurekabox/web@0.6.0
+
+### Features
+
+-   preserve redirect URL after login
+
 ## [2024-12-27] - root@0.5.0, @eurekabox/web@0.5.0
 
 ### Features
