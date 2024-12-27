@@ -27,9 +27,6 @@ jobs:
                           - 'apps/web/**'
                           - 'assets/**'
                           - 'libs/**'
-                          - '!**/*.json'
-                          - '!**/*.md'
-                          - '!**/*.yml'
 
     get-version:
         needs: changes
@@ -40,8 +37,8 @@ jobs:
             contents: write
             pull-requests: write
         outputs:
-            root-version: ${{ steps.get-version.outputs.root-version }}
-            web-version: ${{ steps.get-version.outputs.web-version }}
+            root-version: ${{ steps.get-root-version.outputs.root-version }}
+            web-version: ${{ steps.get-web-version.outputs.web-version }}
         steps:
             - name: Check out a copy of the repo
               uses: actions/checkout@v4
