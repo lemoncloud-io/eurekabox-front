@@ -1,5 +1,11 @@
 # Changelog
 
+## [2024-12-27] - root@0.5.0, @eurekabox/web@0.5.0
+
+### Features
+
+-   update paths-filter dependency
+
 ## [2024-12-23] - root@0.4.1, @eurekabox/web@0.4.1
 
 ### Bug Fixes
