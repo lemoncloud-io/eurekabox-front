@@ -20,7 +20,7 @@ export const SideBar = () => {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useInfiniteContents({ limit: 10, page: 0 });
+    } = useInfiniteContents({ limit: 50, page: 0 });
 
     const totalContents = useMemo(() => {
         return contentsData?.pages[0]?.total || 0;
