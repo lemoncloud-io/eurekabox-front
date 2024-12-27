@@ -16,17 +16,31 @@ export const OAuthResponsePage = () => {
             return;
         }
         checkLoginResultCalled.current = true;
+
         const checkLoginResult = async () => {
             const routeParams = new URLSearchParams(location.search);
             const code = routeParams.get('code') || '';
             const provider = routeParams.get('provider') || '';
+            const stateParam = routeParams.get('state') || '';
             const isSuccess = code.length > 5;
+
             if (isSuccess) {
                 await createCredentialsByProvider(provider, code);
                 setIsAuthenticated(true);
-                navigate('/home');
+
+                // state 파라미터에서 원래 경로 추출
+                let redirectTo = '/home';
+                try {
+                    const stateObj = JSON.parse(decodeURIComponent(stateParam));
+                    redirectTo = stateObj.from || '/home';
+                } catch (e) {
+                    console.warn('Failed to parse state parameter:', e);
+                }
+
+                navigate(redirectTo, { replace: true });
                 return;
             }
+
             // Error occurred!
             toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
             navigate('/auth/login');
