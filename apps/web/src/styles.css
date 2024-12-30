@@ -52,6 +52,7 @@ body {
         --border: 214.3 31.8% 91.4%;
         --input: 214.3 31.8% 91.4%;
         --ring: 221.2 83.2% 53.3%;
+        --hover: 240 100% 97.8%;
 
         --radius: 0.5rem;
     }
@@ -84,6 +85,49 @@ body {
         --border: 217.2 32.6% 17.5%;
         --input: 217.2 32.6% 17.5%;
         --ring: 224.3 76.3% 48%;
+        --hover: 240 80% 97.8%;
+
+        & .yoopta-block-actions button {
+            color: #fff !important;
+        }
+
+        & .yoopta-toolbar-root {
+            background-color: #1f1f1f;
+            box-shadow: 0 4px 12px #0f0f0f;
+            color: white;
+        }
+
+        & .yoopta-table td[data-cell-selected='true'] {
+            background-color: #1f1f1f;
+        }
+
+        .yoopta-block-options-menu-content {
+            @apply bg-accent !important;
+
+            .yoopta-block-options-button:hover {
+                @apply bg-hover/20 !important;
+            }
+        }
+
+        .yoopta-action-menu-list-content {
+            @apply bg-accent !important;
+
+            .yoopta-button:hover {
+                @apply bg-hover/20 !important;
+            }
+
+            .yoo-action-menu-flex {
+                @apply bg-transparent !important;
+            }
+
+            svg {
+                @apply text-foreground !important;
+            }
+        }
+
+        .yoopta-mark-code {
+            @apply bg-accent !important;
+        }
     }
 }
 

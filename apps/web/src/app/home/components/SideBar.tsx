@@ -62,7 +62,7 @@ export const SideBar = () => {
     };
 
     return (
-        <div className={`w-64 flex flex-col h-full glassmorphism`}>
+        <div className={`w-64 flex flex-col border-r border-border h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <h1 className="text-2xl font-bold mb-4 gradient-text cursor-pointer" onClick={() => navigate('/home')}>
                     EurekaBox
@@ -83,7 +83,7 @@ export const SideBar = () => {
                 </Button>
             </div>
             <ScrollArea className="flex-grow" ref={scrollAreaRef}>
-                <div className="p-4 space-y-2">
+                <div className="p-4 space-y-2 w-64">
                     {isLoading && <Loader />}
                     {!isLoading && myContents.length === 0 && (
                         <Button
@@ -104,7 +104,7 @@ export const SideBar = () => {
                                     onClick={() => handleClickContent(content)}
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
-                                    {content.title || 'Untitled'}
+                                    <span className="truncate">{content.title || 'Untitled'}</span>
                                 </Button>
                             ))}
                             {isFetchingNextPage && <Loader />}

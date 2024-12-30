@@ -1,5 +1,11 @@
 # Changelog
 
+## [2024-12-30] - root@0.6.1, @eurekabox/web@0.6.1
+
+### Refactor
+
+-   dark mode color, detail style
+
 ## [2024-12-27] - root@0.6.0, @eurekabox/web@0.6.0
 
 ### Features
