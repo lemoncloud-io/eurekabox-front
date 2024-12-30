@@ -221,12 +221,15 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 const currentIds = contentRef.current.elementIds || [];
                 const isElementIdsChanged = JSON.stringify(orderedElementIds) !== JSON.stringify(currentIds);
                 const isTitleChanged = title !== contentRef.current.title;
-                await updateContent({
-                    contentId,
-                    readme: markdown.serialize(editor, currentValue),
-                    ...(isElementIdsChanged && { elementIds: orderedElementIds }),
-                    ...(isTitleChanged && { title }),
-                });
+
+                if (isElementIdsChanged || isTitleChanged) {
+                    await updateContent({
+                        contentId,
+                        readme: markdown.serialize(editor, currentValue),
+                        ...(isElementIdsChanged && { elementIds: orderedElementIds }),
+                        ...(isTitleChanged && { title }),
+                    });
+                }
 
                 // 5. 트래커 업데이트
                 for (const [blockId, block] of Object.entries(updatedValue)) {

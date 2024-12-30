@@ -13,23 +13,16 @@ import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { markdown } from '@yoopta/exports';
 
-const saveSelection = () => {
+export const saveSelection = () => {
     try {
         const domSelection = window.getSelection();
-        if (!domSelection) {
-            console.log('No window.getSelection()');
+        if (!domSelection || domSelection.rangeCount === 0) {
+            // rangeCount도 체크 추가
             return null;
         }
 
         const range = domSelection.getRangeAt(0);
-        if (!range) {
-            console.log('No range');
-            return null;
-        }
-
-        // range가 유효한지 확인
-        if (!range.startContainer || !range.endContainer) {
-            console.log('Invalid range');
+        if (!range || !range.startContainer || !range.endContainer) {
             return null;
         }
 
