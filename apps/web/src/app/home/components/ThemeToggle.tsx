@@ -22,7 +22,7 @@ export function ThemeToggle() {
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
             className="hover:text-primary"
         >
-            {theme === 'light' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             <span className="sr-only">Toggle theme</span>
         </Button>
     );

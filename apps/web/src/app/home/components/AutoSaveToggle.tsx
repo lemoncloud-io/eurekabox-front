@@ -21,7 +21,7 @@ export const AutoSaveToggle = ({
 
     return (
         <TooltipProvider>
-            <div className="fixed top-20 right-10 z-50 flex items-center gap-2 bg-white p-2 rounded-lg shadow-md">
+            <div className="fixed top-20 right-10 z-50 flex items-center gap-2 dark:bg-accent p-2 rounded-lg shadow-md border border-border">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <div className="flex items-center gap-2">
