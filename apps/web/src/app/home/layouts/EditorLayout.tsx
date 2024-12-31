@@ -1,5 +1,5 @@
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { FileDown, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBar, ThemeToggle } from '../components';
@@ -17,12 +17,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@eurekabox/ui-kit/components/ui/alert-dialog';
-import { useQueryClient } from '@tanstack/react-query';
 import { useContentCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from '../components';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { Separator } from '@eurekabox/lib/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@eurekabox/lib/components/ui/dropdown-menu';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -31,7 +36,7 @@ interface EditorLayoutProps {
     isLoading: boolean;
     onTitleChange?: (title: string) => void;
     handleSave?: () => void;
-    handleExportPDF?: () => void;
+    handleExport?: () => void;
 }
 
 export const EditorLayout = ({
@@ -42,10 +47,9 @@ export const EditorLayout = ({
     isLoading = false,
     onTitleChange,
     handleSave,
-    handleExportPDF,
+    handleExport,
 }: EditorLayoutProps) => {
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -63,9 +67,9 @@ export const EditorLayout = ({
         }
     };
 
-    const handleExportPDFClick = async () => {
-        if (handleExportPDF) {
-            handleExportPDF();
+    const handleClickExport = async (type: 'markdown' | 'html') => {
+        if (handleExport) {
+            handleExport(type);
         }
     };
 
@@ -177,15 +181,24 @@ export const EditorLayout = ({
                         <div className="flex items-center gap-4">
                             {!isDashboard && (
                                 <>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="hover:text-primary"
-                                        onClick={handleExportPDFClick}
-                                    >
-                                        <FileDown className="h-5 w-5" />
-                                        <span className="sr-only">PDF 내보내기</span>
-                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="hover:text-primary">
+                                                <FileDown className="h-5 w-5" />
+                                                <span className="sr-only">내보내기</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem onClick={() => handleClickExport('markdown')}>
+                                                <FileType className="mr-2 h-4 w-4" />
+                                                <span>Markdown으로 내보내기</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleClickExport('html')}>
+                                                <FileType className="mr-2 h-4 w-4" />
+                                                <span>HTML로 내보내기</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                     <Button
                                         variant="ghost"
                                         size="icon"
