@@ -1,5 +1,26 @@
 # Changelog
 
+## [2024-12-31] - root@0.7.0, @eurekabox/web@0.7.0
+
+### Features
+
+-   add page leave blocker
+-   add export options for markdown and html
+
+### Refactor
+
+-   improve content caching
+-   move beforeunload to shared hook
+
+### Chores
+
+-   update @yoopta packages to 4.9.3
+
+### Other
+
+-   perf: (web) reduce unnecessary content updates
+-   perf: (web) parallelize element updates
+
 ## [2024-12-30] - root@0.6.1, @eurekabox/web@0.6.1
 
 ### Refactor
