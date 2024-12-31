@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MARKS, plugins, saveSelection, TOOLS } from '../utils';
+import { exportToHTML, MARKS, plugins, saveSelection, TOOLS } from '../utils';
 import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
@@ -211,31 +211,49 @@ export const UpdateContentPage = () => {
         await saveContent();
     }, [saveContent]);
 
-    const handleClickExportPDF = useCallback(async () => {
-        // TODO: export PDF
-        try {
-            const markdownText = markdown.serialize(editor, editor.getEditorValue());
-            const blob = new Blob([markdownText], { type: 'text/markdown' });
+    const handleClickExport = useCallback(
+        async (type: 'markdown' | 'html') => {
+            try {
+                let content: string;
+                let mimeType: string;
+                let fileExtension: string;
 
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${title}.md`;
+                if (type === 'markdown') {
+                    content = markdown.serialize(editor, editor.getEditorValue());
+                    mimeType = 'text/markdown';
+                    fileExtension = 'md';
+                } else {
+                    content = exportToHTML(editor, title);
+                    mimeType = 'text/html';
+                    fileExtension = 'html';
+                }
 
-            document.body.appendChild(link);
-            link.click();
+                const blob = new Blob([content], { type: mimeType });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${title}.${fileExtension}`;
 
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: 'Download failed',
-                description: `${error.toString()}`,
-            });
-            console.error('Download failed:', error);
-        }
-    }, [title, editor]);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+
+                toast({
+                    title: '내보내기 완료',
+                    description: `${type === 'markdown' ? 'Markdown' : 'HTML'} 파일이 생성되었습니다.`,
+                });
+            } catch (error) {
+                console.error('Export failed:', error);
+                toast({
+                    variant: 'destructive',
+                    title: '내보내기 실패',
+                    description: `${error.toString()}`,
+                });
+            }
+        },
+        [title, editor]
+    );
 
     const handleTitleChange = useCallback((newTitle: string) => {
         setTitle(newTitle);
@@ -265,7 +283,7 @@ export const UpdateContentPage = () => {
                 onTitleChange={handleTitleChange}
                 contentId={contentId}
                 handleSave={handleClickSave}
-                handleExportPDF={handleClickExportPDF}
+                handleExport={handleClickExport}
             >
                 <div
                     className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"

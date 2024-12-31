@@ -217,3 +217,164 @@ export const saveSelection = () => {
         return null;
     }
 };
+
+export const exportToHTML = (editor: YooEditor, title: string) => {
+    const editorValue = editor.getEditorValue();
+    const editorHtml = html.serialize(editor, editorValue);
+
+    // 기본 스타일 정의
+    const styles = `
+        <style>
+            /* Base styles */
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: system-ui, -apple-system, sans-serif;
+                line-height: 1.5;
+                color: #1a1a1a;
+                background-color: #ffffff;
+            }
+
+            /* Dark mode styles */
+            @media (prefers-color-scheme: dark) {
+                body {
+                    color: #e5e5e5;
+                    background-color: #1a1a1a;
+                }
+            }
+
+            /* Container styles */
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 40px 20px;
+            }
+
+            /* Editor content styles */
+            .editor-content {
+                padding: 100px 200px 100px 80px;
+            }
+
+            /* Typography */
+            h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+            h2 { font-size: 2rem; font-weight: 600; margin-bottom: 0.875rem; }
+            h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+
+            p { margin-bottom: 1rem; }
+
+            /* Code blocks */
+            pre {
+                background-color: #f3f4f6;
+                padding: 1rem;
+                border-radius: 0.375rem;
+                overflow-x: auto;
+            }
+
+            code {
+                font-family: monospace;
+            }
+
+            /* Lists */
+            ul, ol {
+                padding-left: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Links */
+            a {
+                color: #2563eb;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* Tables */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 1rem;
+            }
+
+            th, td {
+                border: 1px solid #e5e7eb;
+                padding: 0.75rem;
+                text-align: left;
+            }
+
+            /* Blockquotes */
+            blockquote {
+                border-left: 4px solid #e5e7eb;
+                margin: 0;
+                padding-left: 1rem;
+                color: #4b5563;
+            }
+
+            /* Images */
+            img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 0.375rem;
+            }
+
+            /* Custom Yoopta editor styles */
+            [data-type="heading-one"] {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+            }
+
+            [data-type="heading-two"] {
+                font-size: 2rem;
+                font-weight: 600;
+                margin-bottom: 1.25rem;
+            }
+
+            [data-type="heading-three"] {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+            }
+
+            [data-type="paragraph"] {
+                margin-bottom: 1rem;
+                line-height: 1.75;
+            }
+
+            [data-type="code-block"] {
+                background-color: #f3f4f6;
+                padding: 1rem;
+                border-radius: 0.375rem;
+                font-family: monospace;
+                white-space: pre-wrap;
+                margin-bottom: 1rem;
+            }
+
+            /* Add more Yoopta-specific styles here */
+        </style>
+    `;
+
+    // HTML 문서 생성
+    const htmlDocument = `
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${title}</title>
+            ${styles}
+        </head>
+        <body>
+            <div class="container">
+                <div class="editor-content">
+                    <h1>${title}</h1>
+                    ${editorHtml}
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+
+    return htmlDocument;
+};
