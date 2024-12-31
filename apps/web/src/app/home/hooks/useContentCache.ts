@@ -8,7 +8,7 @@ export const useContentCache = () => {
 
     const prependContentToInfiniteCache = useCallback(
         (content: ContentView) => {
-            queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+            queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
                 if (!oldData) {
                     return {
                         pages: [
@@ -40,7 +40,7 @@ export const useContentCache = () => {
 
     const removeContentFromInfiniteCache = useCallback(
         (contentId: string) => {
-            queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+            queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
                 if (!oldData) return oldData;
 
                 const newPages = oldData.pages.map(page => ({
