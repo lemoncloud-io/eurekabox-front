@@ -15,6 +15,7 @@ export const useBlocker = (blocker, when = true) => {
         const originalPush = navigator.push;
         const originalReplace = navigator.replace;
 
+        // push/replace 동작을 가로채어 조건을 확인
         navigator.push = (...args) => {
             if (!blocker()) {
                 originalPush(...args);
@@ -32,4 +33,16 @@ export const useBlocker = (blocker, when = true) => {
             navigator.replace = originalReplace;
         };
     }, [navigator, blocker, when]);
+
+    useEffect(() => {
+        const handleBeforeUnload = event => {
+            if (blocker()) {
+                event.preventDefault();
+                event.returnValue = ''; // 크롬 브라우저에서 동작
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [blocker]);
 };

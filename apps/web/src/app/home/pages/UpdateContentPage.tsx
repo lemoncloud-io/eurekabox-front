@@ -105,18 +105,6 @@ export const UpdateContentPage = () => {
     usePageLeaveBlocker(hasChangesRef.current, checkForChanges);
 
     useEffect(() => {
-        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            if (hasChangesRef.current && checkForChanges()) {
-                e.preventDefault();
-                return (e.returnValue = '저장되지 않은 변경사항이 있습니다. 페이지를 나가시겠습니까?');
-            }
-        };
-
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [checkForChanges]);
-
-    useEffect(() => {
         setIsLoading(loading);
 
         if (loading) {
