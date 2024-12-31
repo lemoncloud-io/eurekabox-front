@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MARKS, plugins, saveSelection, TOOLS } from '../utils';
 import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
-import { useEditorContent } from '../hooks';
+import { useEditorContent, usePageLeaveBlocker } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { contentsKeys } from '@eurekabox/contents';
 import { useGlobalLoader } from '@eurekabox/shared';
@@ -15,6 +15,8 @@ export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState<string>('Untitled');
 
     const editor = useMemo(() => createYooptaEditor(), []);
@@ -26,31 +28,6 @@ export const UpdateContentPage = () => {
     const hasChangesRef = useRef(false);
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
-
-    useEffect(() => {
-        if (error) {
-            toast({
-                variant: 'destructive',
-                title: 'ERROR',
-                description: `${error.toString()}`,
-            });
-        }
-    }, [error]);
-
-    // 컨텐츠가 처음 로드될 때 lastSavedContent 초기화
-    useEffect(() => {
-        if (content) {
-            const currentContent = editor.getEditorValue();
-            lastSavedContentRef.current = JSON.stringify(currentContent);
-            hasChangesRef.current = false;
-        }
-    }, [content, editor]);
-
-    useEffect(() => {
-        if (content?.title) {
-            setTitle(content.title);
-        }
-    }, [content]);
 
     const focusBlockWithOptions = useCallback((editor: YooEditor, blockId: string) => {
         if (!editor || !blockId) {
@@ -94,6 +71,52 @@ export const UpdateContentPage = () => {
     }, []);
 
     useEffect(() => {
+        if (error) {
+            toast({
+                variant: 'destructive',
+                title: 'ERROR',
+                description: `${error.toString()}`,
+            });
+        }
+    }, [error]);
+
+    // 컨텐츠가 처음 로드될 때 lastSavedContent 초기화
+    useEffect(() => {
+        if (content) {
+            const currentContent = editor.getEditorValue();
+            lastSavedContentRef.current = JSON.stringify(currentContent);
+            hasChangesRef.current = false;
+        }
+    }, [content, editor]);
+
+    useEffect(() => {
+        if (content?.title) {
+            setTitle(content.title);
+        }
+    }, [content]);
+
+    const checkForChanges = useCallback(() => {
+        const currentContent = editor.getEditorValue();
+        const currentContentStr = JSON.stringify(currentContent);
+        return currentContentStr !== lastSavedContentRef.current || title !== content?.title;
+    }, [editor, title, content?.title]);
+
+    // 페이지 이탈 방지
+    usePageLeaveBlocker(hasChangesRef.current, checkForChanges);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            if (hasChangesRef.current && checkForChanges()) {
+                e.preventDefault();
+                return (e.returnValue = '저장되지 않은 변경사항이 있습니다. 페이지를 나가시겠습니까?');
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [checkForChanges]);
+
+    useEffect(() => {
         setIsLoading(loading);
 
         if (loading) {
@@ -117,7 +140,7 @@ export const UpdateContentPage = () => {
     }, [loading, setIsLoading, editor, focusBlockWithOptions]);
 
     const saveContent = useCallback(async () => {
-        if (!hasChangesRef.current) {
+        if (!hasChangesRef.current || !checkForChanges()) {
             return;
         }
 
