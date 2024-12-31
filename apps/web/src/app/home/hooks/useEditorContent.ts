@@ -156,10 +156,7 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                     } else {
                         // 기존 블록 - 변경사항 확인
                         const prevElement = elementTrackerRef.current[elementId];
-                        console.log('prevElement', elementId, elementTrackerRef.current, prevElement);
                         if (prevElement) {
-                            console.log(serializedHtml);
-                            console.log(prevElement.text);
                             const currentContent = extractContent(serializedHtml);
                             const prevContent = extractContent(prevElement.text);
 
@@ -177,40 +174,43 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 }
 
                 // 3. 변경사항 적용
-                // 3.1. 삭제
-                for (const elementId of toDelete) {
-                    await deleteElement(elementId);
-                    delete elementTrackerRef.current[elementId];
-                }
-
-                // 3.2. 생성
-                for (const { blockId, block } of toCreate) {
-                    const created = await createElement({
-                        contentId,
-                        name: block.type,
-                        text: html.serialize(editor, { [blockId]: block }),
-                        depth: block.meta.depth,
-                    });
-
-                    updatedValue[blockId] = {
-                        ...block,
-                        meta: {
-                            ...block.meta,
-                            elementId: created.id,
-                        },
-                    };
-                }
-
-                console.log('toUpdate', toUpdate);
-                // 3.3. 업데이트
-                for (const update of toUpdate) {
-                    await updateElement({
+                // 3.1 병렬로 변경사항 적용
+                const deletePromises = toDelete.map(elementId => deleteElement(elementId));
+                const updatePromises = toUpdate.map(update =>
+                    updateElement({
                         elementId: update.id,
                         text: update.text,
                         name: update.type,
                         depth: update.depth,
-                    });
-                }
+                    })
+                );
+                const createPromises = toCreate.map(({ block }) =>
+                    createElement({
+                        contentId,
+                        name: block.type,
+                        text: html.serialize(editor, { [block.id]: block }),
+                        depth: block.meta.depth,
+                    })
+                );
+
+                // 모든 변경사항을 병렬로 처리
+                const [deletedResults, updatedResults, createdResults] = await Promise.all([
+                    Promise.all(deletePromises),
+                    Promise.all(updatePromises),
+                    Promise.all(createPromises),
+                ]);
+
+                // 생성된 블록들의 elementId 업데이트
+                createdResults.forEach((created, index) => {
+                    const { blockId } = toCreate[index];
+                    updatedValue[blockId] = {
+                        ...currentValue[blockId],
+                        meta: {
+                            ...currentValue[blockId].meta,
+                            elementId: created.id,
+                        },
+                    };
+                });
 
                 // 4. elementIds 업데이트 (실제 순서 변경이 있는 경우에만) && title 변경사항 확인
                 const orderedElementIds = Object.entries(updatedValue)
