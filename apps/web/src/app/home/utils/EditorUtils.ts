@@ -194,3 +194,26 @@ export const convertElementToEditorValue = (
 
     return { value };
 };
+
+export const saveSelection = () => {
+    try {
+        const domSelection = window.getSelection();
+        if (!domSelection || domSelection.rangeCount === 0) {
+            // rangeCount도 체크 추가
+            return null;
+        }
+
+        const range = domSelection.getRangeAt(0);
+        if (!range || !range.startContainer || !range.endContainer) {
+            return null;
+        }
+
+        return {
+            start: range.startOffset,
+            end: range.endOffset,
+        };
+    } catch (error) {
+        console.log('Selection save failed:', error);
+        return null;
+    }
+};

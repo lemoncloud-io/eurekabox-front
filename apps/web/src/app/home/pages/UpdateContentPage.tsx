@@ -1,47 +1,21 @@
 import { useParams } from 'react-router-dom';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MARKS, plugins, TOOLS } from '../utils';
+import { MARKS, plugins, saveSelection, TOOLS } from '../utils';
 import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
 import { useEditorContent } from '../hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { contentsKeys } from '@eurekabox/contents';
-import { useGlobalLoader, useLocalStorage } from '@eurekabox/shared';
-import debounce from 'lodash/debounce';
-import { AutoSaveToggle } from '../components';
+import { useGlobalLoader } from '@eurekabox/shared';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { markdown } from '@yoopta/exports';
-
-export const saveSelection = () => {
-    try {
-        const domSelection = window.getSelection();
-        if (!domSelection || domSelection.rangeCount === 0) {
-            // rangeCount도 체크 추가
-            return null;
-        }
-
-        const range = domSelection.getRangeAt(0);
-        if (!range || !range.startContainer || !range.endContainer) {
-            return null;
-        }
-
-        return {
-            start: range.startOffset,
-            end: range.endOffset,
-        };
-    } catch (error) {
-        console.log('Selection save failed:', error);
-        return null;
-    }
-};
 
 export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
     const [title, setTitle] = useState<string>('Untitled');
-    const [autoSave, setAutoSave] = useLocalStorage('editor-autosave', true);
 
     const editor = useMemo(() => createYooptaEditor(), []);
     const selectionRef = useRef(null);
@@ -142,17 +116,8 @@ export const UpdateContentPage = () => {
         return () => setIsLoading(false);
     }, [loading, setIsLoading, editor, focusBlockWithOptions]);
 
-    // 현재 content와 마지막 저장된 content를 비교하는 함수
-    const checkForChanges = useCallback(() => {
-        const currentContent = editor.getEditorValue();
-        const currentContentStr = JSON.stringify(currentContent);
-
-        // content 변경 또는 title 변경 체크
-        return currentContentStr !== lastSavedContentRef.current || title !== content?.title;
-    }, [editor, title, content?.title]);
-
     const saveContent = useCallback(async () => {
-        if (!hasChangesRef.current || !checkForChanges()) {
+        if (!hasChangesRef.current) {
             return;
         }
 
@@ -167,7 +132,7 @@ export const UpdateContentPage = () => {
             hasChangesRef.current = false;
 
             if (contentId) {
-                queryClient.setQueryData(contentsKeys.list({ limit: 10, page: 0 }), (oldData: any) => {
+                queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
                     if (!oldData) {
                         return oldData;
                     }
@@ -183,12 +148,11 @@ export const UpdateContentPage = () => {
                 });
             }
 
-            setTitle(title);
-
             toast({
                 title: '저장 완료',
                 description: '문서가 성공적으로 저장되었습니다.',
             });
+
             // 저장 완료 후 이전 path로 복원
             if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
@@ -206,50 +170,19 @@ export const UpdateContentPage = () => {
                 description: '문서 저장 중 오류가 발생했습니다. 다시 시도해주세요.',
             });
         }
-    }, [handleSave, queryClient, contentId, title, editor, checkForChanges, focusBlockWithOptions, toast]);
-
-    const debouncedSave = useMemo(
-        () =>
-            debounce(() => {
-                if (hasChangesRef.current && checkForChanges()) {
-                    saveContent();
-                }
-            }, 3 * 1000), // 마지막 변경 후 3초가 지나면 자동 저장
-        [saveContent, checkForChanges]
-    );
-
-    // // 자동 저장만을 위한 useEffect
-    // useEffect(() => {
-    //     if (!autoSave){
-    //         return;
-    //     }
-    //
-    //     const intervalId = setInterval(() => {
-    //         if (hasChangesRef.current && checkForChanges()) {
-    //             saveContent();
-    //         }
-    //     }, 5 * 1000);
-    //
-    //     return () => clearInterval(intervalId);
-    // }, [autoSave, saveContent, checkForChanges]);
+    }, [handleSave, queryClient, contentId, title, editor]);
 
     // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
         const handleEditorChange = () => {
-            if (checkForChanges()) {
-                hasChangesRef.current = true;
-                if (autoSave) {
-                    debouncedSave();
-                }
-            }
+            hasChangesRef.current = true;
         };
 
         editor.on('change', handleEditorChange);
         return () => {
             editor.off('change', handleEditorChange);
-            debouncedSave.cancel();
         };
-    }, [editor, autoSave, debouncedSave, checkForChanges]);
+    }, [editor]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -293,16 +226,15 @@ export const UpdateContentPage = () => {
         }
     }, [title, editor]);
 
-    const handleTitleChange = useCallback(
-        (newTitle: string) => {
-            setTitle(newTitle);
-            hasChangesRef.current = true;
-            if (autoSave) {
-                debouncedSave();
-            }
-        },
-        [autoSave, debouncedSave]
-    );
+    const handleTitleChange = useCallback((newTitle: string) => {
+        setTitle(newTitle);
+        hasChangesRef.current = true;
+    }, []);
+
+    useEffect(() => {
+        setIsLoading(loading);
+        return () => setIsLoading(false);
+    }, [loading, setIsLoading]);
 
     return (
         <>
@@ -316,7 +248,6 @@ export const UpdateContentPage = () => {
                     </AlertDescription>
                 </Alert>
             )}
-            <AutoSaveToggle checked={autoSave} onCheckedChange={setAutoSave} />
             <EditorLayout
                 title={title}
                 isLoading={loading}
