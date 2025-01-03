@@ -1,4 +1,4 @@
-import { LemonOAuthToken } from '@lemoncloud/lemon-web-core';
+import type { LemonOAuthToken } from '@lemoncloud/lemon-web-core';
 
 import { OAUTH_ENDPOINT, webCore } from '../core';
 

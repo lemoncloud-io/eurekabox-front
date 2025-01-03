@@ -47,27 +47,27 @@ module.exports = [
             'import/order': [
                 'error',
                 {
-                    groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'type', 'unknown'],
+                    groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'unknown'],
                     pathGroups: [
                         {
-                            pattern: 'react*',
+                            pattern: 'react**', // react-dom, react-query 등
                             group: 'external',
                             position: 'before',
                         },
                         {
-                            pattern: '@yoopta/*',
-                            group: 'internal',
+                            pattern: '@yoopta/**',
+                            group: 'external',
                             position: 'after',
                         },
                         {
-                            pattern: '@lemoncloud/*',
-                            group: 'internal',
+                            pattern: '@lemoncloud/**',
+                            group: 'external',
                             position: 'after',
                         },
                         {
-                            pattern: '@eurekabox/*',
+                            pattern: '@eurekabox/**',
                             group: 'internal',
-                            position: 'after',
+                            position: 'before',
                         },
                     ],
                     pathGroupsExcludedImportTypes: ['@tanstack*'],

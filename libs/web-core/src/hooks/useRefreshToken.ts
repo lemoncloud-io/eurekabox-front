@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { RefreshTokenBody } from '@lemoncloud/lemon-web-core';
+import type { RefreshTokenBody } from '@lemoncloud/lemon-web-core';
 
 import { useProfile } from './useProfile';
 import { OAUTH_ENDPOINT, webCore } from '../core';

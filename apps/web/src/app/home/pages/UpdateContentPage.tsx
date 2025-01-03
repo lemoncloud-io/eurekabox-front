@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
-import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import YooptaEditor, { Tools, YooEditor, createYooptaEditor } from '@yoopta/editor';
+
+import type { Tools, YooEditor } from '@yoopta/editor';
+import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
 import { markdown } from '@yoopta/exports';
 
 import { contentsKeys } from '@eurekabox/contents';
+import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';

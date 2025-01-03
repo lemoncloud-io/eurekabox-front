@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { cn } from '@eurekabox/lib/utils';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
+
+import { cn } from '@eurekabox/lib/utils';
 
 const Switch = React.forwardRef<
     React.ElementRef<typeof SwitchPrimitives.Root>,
