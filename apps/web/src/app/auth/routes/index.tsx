@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { LoginPage, OAuthResponsePage, LogoutPage } from '../pages';
+import { LoginPage, LogoutPage, OAuthResponsePage } from '../pages';
 
 export const AuthRoutes = () => {
     return (

@@ -1,7 +1,9 @@
-import { EditorLayout } from '../layouts/EditorLayout';
 import { useState } from 'react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@eurekabox/ui-kit/components/ui/card';
+
 import { ActivityFeed, Overview, RecentDocuments, UserStats } from '../components/dashboard';
+import { EditorLayout } from '../layouts/EditorLayout';
 
 export const DashboardPage = () => {
     const [title, setTitle] = useState<string>('TODO: Create Dashboard');
