@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-01-03] - root@0.7.2, @eurekabox/web@0.7.2
+
+### Other
+
+-   style: set curly rule
+
 ## [2025-01-03] - root@0.7.1, @eurekabox/web@0.7.1
 
 ### Chores
