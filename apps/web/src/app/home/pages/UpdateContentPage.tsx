@@ -1,15 +1,18 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { EditorLayout } from '../layouts/EditorLayout';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { exportToHTML, MARKS, plugins, saveSelection, TOOLS } from '../utils';
-import YooptaEditor, { createYooptaEditor, Tools, YooEditor } from '@yoopta/editor';
-import { useEditorContent, usePageLeaveBlocker } from '../hooks';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import YooptaEditor, { Tools, YooEditor, createYooptaEditor } from '@yoopta/editor';
+import { markdown } from '@yoopta/exports';
+
 import { contentsKeys } from '@eurekabox/contents';
 import { useGlobalLoader } from '@eurekabox/shared';
-import { toast } from '@eurekabox/lib/hooks/use-toast';
-import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
-import { markdown } from '@yoopta/exports';
+
+import { useEditorContent, usePageLeaveBlocker } from '../hooks';
+import { EditorLayout } from '../layouts/EditorLayout';
+import { MARKS, TOOLS, exportToHTML, plugins, saveSelection } from '../utils';
 
 export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();

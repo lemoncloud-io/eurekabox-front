@@ -1,6 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
+
 import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { useQueryClient } from '@tanstack/react-query';
+
 import { contentsKeys } from '@eurekabox/contents';
 
 export const useContentCache = () => {
@@ -41,7 +43,9 @@ export const useContentCache = () => {
     const removeContentFromInfiniteCache = useCallback(
         (contentId: string) => {
             queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
-                if (!oldData) return oldData;
+                if (!oldData) {
+                    return oldData;
+                }
 
                 const newPages = oldData.pages.map(page => ({
                     ...page,

@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
 
 /**
@@ -10,7 +10,9 @@ export const useBlocker = (blocker, when = true) => {
     const { navigator } = useContext(NavigationContext);
 
     useEffect(() => {
-        if (!when) return;
+        if (!when) {
+            return;
+        }
 
         const originalPush = navigator.push;
         const originalReplace = navigator.replace;

@@ -1,5 +1,6 @@
-import { OAUTH_ENDPOINT, webCore } from '../core';
 import { LemonOAuthToken } from '@lemoncloud/lemon-web-core';
+
+import { OAUTH_ENDPOINT, webCore } from '../core';
 
 export const createCredentialsByProvider = async (provider = 'google', code: string) => {
     const { data } = await webCore

@@ -1,8 +1,10 @@
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { Images } from '@eurekabox/assets';
-import { Card } from '@eurekabox/ui-kit/components/ui/card';
-import { useGlobalLoader } from '@eurekabox/shared';
 import { useLocation } from 'react-router-dom';
+
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { Card } from '@eurekabox/ui-kit/components/ui/card';
+
+import { Images } from '@eurekabox/assets';
+import { useGlobalLoader } from '@eurekabox/shared';
 
 export const LoginPage = () => {
     const { setIsLoading } = useGlobalLoader();

@@ -1,8 +1,9 @@
 import { ComponentType } from 'react';
+import { FallbackProps } from 'react-error-boundary';
+
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { Card } from '@eurekabox/ui-kit/components/ui/card';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { FallbackProps } from 'react-error-boundary';
 
 export const ErrorFallback: ComponentType<FallbackProps> = ({ error, resetErrorBoundary }) => {
     return (

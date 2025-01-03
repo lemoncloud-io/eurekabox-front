@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@eurekabox/contents';
+
 import { convertElementToEditorValue, extractContent } from '../utils';
-import { toast } from '@eurekabox/lib/hooks/use-toast';
 
 export interface ElementStructure {
     depth: number;
@@ -256,7 +257,9 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     );
 
     useEffect(() => {
-        if (!contentId || fetchedRef.current === contentId) return;
+        if (!contentId || fetchedRef.current === contentId) {
+            return;
+        }
 
         fetchedRef.current = contentId;
         loadContent(contentId);

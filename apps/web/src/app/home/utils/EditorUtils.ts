@@ -1,5 +1,3 @@
-import { ElementStructure } from '../hooks';
-
 import Accordion from '@yoopta/accordion';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
 import Blockquote from '@yoopta/blockquote';
@@ -9,6 +7,7 @@ import Divider from '@yoopta/divider';
 import { YooEditor } from '@yoopta/editor';
 import { YooptaBlockData, YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import Embed from '@yoopta/embed';
+import { html } from '@yoopta/exports';
 import File from '@yoopta/file';
 import { HeadingOne, HeadingThree, HeadingTwo } from '@yoopta/headings';
 import Image from '@yoopta/image';
@@ -22,7 +21,8 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import Video from '@yoopta/video';
 
 import { uploadImage } from '@eurekabox/contents';
-import { html } from '@yoopta/exports';
+
+import { ElementStructure } from '../hooks';
 
 export const plugins = [
     Paragraph,
@@ -147,7 +147,9 @@ export const extractContent = (htmlString: string) => {
     const doc = parser.parseFromString(htmlString, 'text/html');
     const mainElement = doc.body.firstElementChild;
 
-    if (!mainElement) return '';
+    if (!mainElement) {
+        return '';
+    }
 
     // body의 data-editor-id만 제거
     doc.body.removeAttribute('id');

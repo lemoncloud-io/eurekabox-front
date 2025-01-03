@@ -1,9 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { useWebCoreStore } from '@eurekabox/web-core';
+
+import { CommonRoutes } from './common';
 import { ProtectedRoutes } from './protected';
 import { PublicRoutes } from './public';
-import { CommonRoutes } from './common';
 
 export const Router = () => {
     const isAuthenticated = useWebCoreStore(state => state.isAuthenticated);
