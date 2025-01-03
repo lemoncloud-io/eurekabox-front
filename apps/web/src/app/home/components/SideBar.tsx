@@ -1,11 +1,14 @@
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { FileText, Plus } from 'lucide-react';
-import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
-import { useInfiniteContents } from '@eurekabox/contents';
 import { useEffect, useMemo, useRef } from 'react';
-import { Loader } from '@eurekabox/shared';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
+import { ContentView } from '@lemoncloud/lemon-contents-api';
+import { FileText, Plus } from 'lucide-react';
+
+import { useInfiniteContents } from '@eurekabox/contents';
+import { Loader } from '@eurekabox/shared';
+
 import { useCreateContentWithCache } from '../hooks';
 
 export const SideBar = () => {
