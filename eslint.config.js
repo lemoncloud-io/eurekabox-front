@@ -42,6 +42,8 @@ module.exports = [
             '@typescript-eslint/no-explicit-any': 'off',
             'no-unused-vars': 'off',
             curly: ['error', 'multi-line'],
+            '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             'import/order': [
                 'error',
                 {
@@ -51,6 +53,16 @@ module.exports = [
                             pattern: 'react*',
                             group: 'external',
                             position: 'before',
+                        },
+                        {
+                            pattern: '@yoopta/*',
+                            group: 'internal',
+                            position: 'after',
+                        },
+                        {
+                            pattern: '@lemoncloud/*',
+                            group: 'internal',
+                            position: 'after',
                         },
                         {
                             pattern: '@eurekabox/*',
