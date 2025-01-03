@@ -257,7 +257,9 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     );
 
     useEffect(() => {
-        if (!contentId || fetchedRef.current === contentId) return;
+        if (!contentId || fetchedRef.current === contentId) {
+            return;
+        }
 
         fetchedRef.current = contentId;
         loadContent(contentId);
