@@ -1,11 +1,12 @@
-import { ContentBody, ContentView, ElementBody, ElementView } from '@lemoncloud/lemon-contents-api';
-import { Params } from '@lemoncloud/lemon-web-core';
-import { AxiosRequestConfig, GenericAbortSignal } from 'axios';
+import type { AxiosRequestConfig, GenericAbortSignal } from 'axios';
 
-import { ListResult } from '@eurekabox/shared';
+import type { ContentBody, ContentView, ElementBody, ElementView } from '@lemoncloud/lemon-contents-api';
+import type { Params } from '@lemoncloud/lemon-web-core';
+
+import type { ListResult } from '@eurekabox/shared';
 import { webCore } from '@eurekabox/web-core';
 
-import { UpdateContentDTO, UpdateElementDTO } from '../types';
+import type { UpdateContentDTO, UpdateElementDTO } from '../types';
 
 const CONTENT_ENDPOINT = import.meta.env.VITE_CONTENT_ENDPOINT.toLowerCase();
 const IMAGE_API_ENDPOINT = import.meta.env.VITE_IMAGE_API_ENDPOINT.toLowerCase();

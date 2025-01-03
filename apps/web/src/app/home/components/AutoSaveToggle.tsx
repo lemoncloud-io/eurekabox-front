@@ -1,6 +1,5 @@
 import { Switch } from '@eurekabox/lib/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
-
 import { useLocalStorage } from '@eurekabox/shared';
 
 interface AutoSaveToggleProps {

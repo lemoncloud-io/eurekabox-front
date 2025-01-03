@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 
-import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { useQueryClient } from '@tanstack/react-query';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
 import { contentsKeys } from '@eurekabox/contents';
 

@@ -1,6 +1,13 @@
-import { ReactNode, useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
+
+import type { CreateContentDTO } from '@eurekabox/contents';
+import { useCreateContent, useDeleteContent } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,6 +16,7 @@ import {
 } from '@eurekabox/lib/components/ui/dropdown-menu';
 import { Separator } from '@eurekabox/lib/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
+import { Loader } from '@eurekabox/shared';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,11 +30,6 @@ import {
 } from '@eurekabox/ui-kit/components/ui/alert-dialog';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
-
-import { CreateContentDTO, useCreateContent, useDeleteContent } from '@eurekabox/contents';
-import { Loader } from '@eurekabox/shared';
 
 import { SideBar, ThemeToggle } from '../components';
 import { SearchDialog } from '../components';

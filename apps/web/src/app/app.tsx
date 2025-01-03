@@ -2,12 +2,12 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 
-import { Toaster } from '@eurekabox/ui-kit/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { ErrorFallback, GlobalLoader, LoadingFallback } from '@eurekabox/shared';
 import { ThemeProvider } from '@eurekabox/theme';
+import { Toaster } from '@eurekabox/ui-kit/components/ui/toaster';
 import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';

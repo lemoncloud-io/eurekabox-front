@@ -1,4 +1,4 @@
-import { ContentBody, ElementBody } from '@lemoncloud/lemon-contents-api';
+import type { ContentBody, ElementBody } from '@lemoncloud/lemon-contents-api';
 
 export type CreateContentDTO = ContentBody;
 
