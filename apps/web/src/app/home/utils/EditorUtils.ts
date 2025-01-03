@@ -147,7 +147,9 @@ export const extractContent = (htmlString: string) => {
     const doc = parser.parseFromString(htmlString, 'text/html');
     const mainElement = doc.body.firstElementChild;
 
-    if (!mainElement) return '';
+    if (!mainElement) {
+        return '';
+    }
 
     // body의 data-editor-id만 제거
     doc.body.removeAttribute('id');

@@ -41,6 +41,7 @@ module.exports = [
             '@typescript-eslint/no-empty-interface': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
             'no-unused-vars': 'off',
+            curly: ['error', 'multi-line'],
             'import/order': [
                 'error',
                 {
