@@ -1,5 +1,15 @@
 # Changelog
 
+## [2025-01-03] - root@0.7.1, @eurekabox/web@0.7.1
+
+### Chores
+
+-   update @yoopta packages
+
+### Other
+
+-   style: set eslint-import plugin
+
 ## [2024-12-31] - root@0.7.0, @eurekabox/web@0.7.0
 
 ### Features
