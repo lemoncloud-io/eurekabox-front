@@ -10,7 +10,9 @@ export const useBlocker = (blocker, when = true) => {
     const { navigator } = useContext(NavigationContext);
 
     useEffect(() => {
-        if (!when) return;
+        if (!when) {
+            return;
+        }
 
         const originalPush = navigator.push;
         const originalReplace = navigator.replace;

@@ -43,7 +43,9 @@ export const useContentCache = () => {
     const removeContentFromInfiniteCache = useCallback(
         (contentId: string) => {
             queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
-                if (!oldData) return oldData;
+                if (!oldData) {
+                    return oldData;
+                }
 
                 const newPages = oldData.pages.map(page => ({
                     ...page,
