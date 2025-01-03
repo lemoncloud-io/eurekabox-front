@@ -1,5 +1,15 @@
 # Changelog
 
+## [2025-01-03] - root@0.7.3, @eurekabox/web@0.7.3
+
+### Chores
+
+-   improve eslint rules
+
+### Other
+
+-   style: set eslint new rule
+
 ## [2025-01-03] - root@0.7.2, @eurekabox/web@0.7.2
 
 ### Other
