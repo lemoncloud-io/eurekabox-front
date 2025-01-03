@@ -42,20 +42,32 @@ module.exports = [
             '@typescript-eslint/no-explicit-any': 'off',
             'no-unused-vars': 'off',
             curly: ['error', 'multi-line'],
+            '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             'import/order': [
                 'error',
                 {
-                    groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'type', 'unknown'],
+                    groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'unknown'],
                     pathGroups: [
                         {
-                            pattern: 'react*',
+                            pattern: 'react**', // react-dom, react-query 등
                             group: 'external',
                             position: 'before',
                         },
                         {
-                            pattern: '@eurekabox/*',
-                            group: 'internal',
+                            pattern: '@yoopta/**',
+                            group: 'external',
                             position: 'after',
+                        },
+                        {
+                            pattern: '@lemoncloud/**',
+                            group: 'external',
+                            position: 'after',
+                        },
+                        {
+                            pattern: '@eurekabox/**',
+                            group: 'internal',
+                            position: 'before',
                         },
                     ],
                     pathGroupsExcludedImportTypes: ['@tanstack*'],

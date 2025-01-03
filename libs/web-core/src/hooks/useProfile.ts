@@ -1,5 +1,6 @@
 import { OAUTH_ENDPOINT, webCore } from '../core';
-import { UserProfile, useWebCoreStore } from '../stores';
+import type { UserProfile } from '../stores';
+import { useWebCoreStore } from '../stores';
 
 export const useProfile = () => {
     const setProfile = useWebCoreStore(state => state.setProfile);

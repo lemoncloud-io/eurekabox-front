@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
-import { CreateContentDTO, useCreateContent } from '@eurekabox/contents';
+import type { CreateContentDTO } from '@eurekabox/contents';
+import { useCreateContent } from '@eurekabox/contents';
 
 import { useContentCache } from './useContentCache';
 

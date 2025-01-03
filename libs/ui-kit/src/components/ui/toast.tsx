@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { cn } from '@eurekabox/ui-kit/utils';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { X } from 'lucide-react';
+
+import { cn } from '@eurekabox/ui-kit/utils';
 
 const ToastProvider = ToastPrimitives.Provider;
 

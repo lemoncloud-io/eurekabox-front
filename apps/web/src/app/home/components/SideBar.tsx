@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { FileText, Plus } from 'lucide-react';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
 import { useInfiniteContents } from '@eurekabox/contents';
 import { Loader } from '@eurekabox/shared';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
 import { useCreateContentWithCache } from '../hooks';
 

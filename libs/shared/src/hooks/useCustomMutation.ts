@@ -1,4 +1,5 @@
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
+import type { UseMutationOptions } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 /**
  * useMutation을 래핑한 커스텀 훅으로, 타입 안전성과 일관된 에러 처리를 제공합니다.
