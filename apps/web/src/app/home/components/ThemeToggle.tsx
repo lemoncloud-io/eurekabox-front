@@ -1,6 +1,8 @@
-import { Moon, Sun } from 'lucide-react';
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { useEffect, useState } from 'react';
+
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { Moon, Sun } from 'lucide-react';
+
 import { useTheme } from '@eurekabox/theme';
 
 export function ThemeToggle() {

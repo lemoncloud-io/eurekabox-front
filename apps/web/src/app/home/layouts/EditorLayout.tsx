@@ -1,11 +1,14 @@
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
 import { ReactNode, useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { SideBar, ThemeToggle } from '../components';
-import { Loader } from '@eurekabox/shared';
-import { CreateContentDTO, useCreateContent, useDeleteContent } from '@eurekabox/contents';
-import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@eurekabox/lib/components/ui/dropdown-menu';
+import { Separator } from '@eurekabox/lib/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,17 +20,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@eurekabox/ui-kit/components/ui/alert-dialog';
-import { useContentCache, useCreateContentWithCache } from '../hooks';
-import { SearchDialog } from '../components';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { Separator } from '@eurekabox/lib/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@eurekabox/lib/components/ui/dropdown-menu';
+import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+
+import { CreateContentDTO, useCreateContent, useDeleteContent } from '@eurekabox/contents';
+import { Loader } from '@eurekabox/shared';
+
+import { SideBar, ThemeToggle } from '../components';
+import { SearchDialog } from '../components';
+import { useContentCache, useCreateContentWithCache } from '../hooks';
 
 interface EditorLayoutProps {
     children: ReactNode;

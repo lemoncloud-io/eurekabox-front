@@ -6,11 +6,11 @@ import { Toaster } from '@eurekabox/ui-kit/components/ui/toaster';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import { ErrorFallback, GlobalLoader, LoadingFallback } from '@eurekabox/shared';
+import { ThemeProvider } from '@eurekabox/theme';
 import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';
-import { ErrorFallback, LoadingFallback, GlobalLoader } from '@eurekabox/shared';
-import { ThemeProvider } from '@eurekabox/theme';
 
 export function App() {
     const queryClient = new QueryClient({

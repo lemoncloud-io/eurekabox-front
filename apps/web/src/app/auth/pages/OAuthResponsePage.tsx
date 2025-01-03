@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useWebCoreStore, createCredentialsByProvider } from '@eurekabox/web-core';
-import { LoadingFallback } from '@eurekabox/shared';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
+
+import { LoadingFallback } from '@eurekabox/shared';
+import { createCredentialsByProvider, useWebCoreStore } from '@eurekabox/web-core';
 
 export const OAuthResponsePage = () => {
     const setIsAuthenticated = useWebCoreStore(state => state.setIsAuthenticated);

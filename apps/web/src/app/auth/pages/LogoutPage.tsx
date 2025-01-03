@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useWebCoreStore } from '@eurekabox/web-core';
 import { LoadingFallback } from '@eurekabox/shared';
+import { useWebCoreStore } from '@eurekabox/web-core';
 
 export const LogoutPage = () => {
     const isAuthenticated = useWebCoreStore(state => state.isAuthenticated);

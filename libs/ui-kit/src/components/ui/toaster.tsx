@@ -1,4 +1,3 @@
-import { useToast } from '@eurekabox/ui-kit/hooks/use-toast';
 import {
     Toast,
     ToastClose,
@@ -7,6 +6,7 @@ import {
     ToastTitle,
     ToastViewport,
 } from '@eurekabox/ui-kit/components/ui/toast';
+import { useToast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 export function Toaster() {
     const { toasts } = useToast();
