@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-01-07] - root@0.7.4, @eurekabox/web@0.7.4
+
+### Refactor
+
+-   side nav style, darkmode style
+
 ## [2025-01-03] - root@0.7.3, @eurekabox/web@0.7.3
 
 ### Chores
