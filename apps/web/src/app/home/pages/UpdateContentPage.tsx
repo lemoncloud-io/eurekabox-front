@@ -291,7 +291,7 @@ export const UpdateContentPage = () => {
                 handleExport={handleClickExport}
             >
                 <div
-                    className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"
+                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex justify-center max-w-screen-xl mx-auto"
                     ref={selectionRef}
                 >
                     <YooptaEditor
