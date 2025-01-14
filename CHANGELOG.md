@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-01-14] - root@0.8.0, @eurekabox/web@0.8.0
+
+### Features
+
+-   add token-transfer lib
+-   increase timeout for storage transfer
+
 ## [2025-01-07] - root@0.7.4, @eurekabox/web@0.7.4
 
 ### Refactor
