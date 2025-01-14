@@ -69,8 +69,6 @@ export const useStorageReceiver = (sourceDomain: string) => {
 
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
-            if (event.origin !== sourceDomain) return;
-
             if (event.data.type === 'TRANSFER_STORAGE') {
                 processReceivedData(event.data.data);
             }

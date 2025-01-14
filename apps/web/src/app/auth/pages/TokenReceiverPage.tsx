@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { LoadingFallback } from '@eurekabox/shared';
-import type { StorageData} from '@eurekabox/storage-transfer';
+import type { StorageData } from '@eurekabox/storage-transfer';
 import { useStorageReceiver } from '@eurekabox/storage-transfer';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { useWebCoreStore, webCore } from '@eurekabox/web-core';
@@ -35,8 +35,8 @@ export const TokenReceiverPage = () => {
                 return;
             }
 
-            // toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
-            // navigate('/auth/login');
+            toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
+            navigate('/auth/login');
         };
 
         buildCredentialsByStorage(receivedData);
@@ -52,7 +52,7 @@ export const TokenReceiverPage = () => {
                 });
                 navigate('/auth/login', { replace: true });
             }
-        }, 5000); // 5초 타임아웃
+        }, 10000);
 
         return () => clearTimeout(timeoutId);
     }, [isDataReceived, hasError]);
