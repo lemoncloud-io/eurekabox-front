@@ -1,0 +1,9 @@
+{
+    "name": "storage-transfer",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/storage-transfer/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project storage-transfer --web",
+    "targets": {}
+}
