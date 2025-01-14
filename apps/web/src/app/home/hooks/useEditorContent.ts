@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { toast } from '@eurekabox/lib/hooks/use-toast';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { YooEditor } from '@yoopta/editor';
+import type { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
+
 import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@eurekabox/contents';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 
 import { convertElementToEditorValue, extractContent } from '../utils';
 

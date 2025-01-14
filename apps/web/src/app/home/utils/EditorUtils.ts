@@ -4,14 +4,15 @@ import Blockquote from '@yoopta/blockquote';
 import Callout from '@yoopta/callout';
 import Code from '@yoopta/code';
 import Divider from '@yoopta/divider';
-import { YooEditor } from '@yoopta/editor';
-import { YooptaBlockData, YooptaContentValue } from '@yoopta/editor/dist/editor/types';
+import type { YooEditor } from '@yoopta/editor';
+import type { YooptaBlockData, YooptaContentValue } from '@yoopta/editor/dist/editor/types';
 import Embed from '@yoopta/embed';
 import { html } from '@yoopta/exports';
 import File from '@yoopta/file';
 import { HeadingOne, HeadingThree, HeadingTwo } from '@yoopta/headings';
 import Image from '@yoopta/image';
-import Link, { LinkElementProps } from '@yoopta/link';
+import type { LinkElementProps } from '@yoopta/link';
+import Link from '@yoopta/link';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { BulletedList, NumberedList, TodoList } from '@yoopta/lists';
 import { Bold, CodeMark, Highlight, Italic, Strike, Underline } from '@yoopta/marks';
@@ -22,7 +23,7 @@ import Video from '@yoopta/video';
 
 import { uploadImage } from '@eurekabox/contents';
 
-import { ElementStructure } from '../hooks';
+import type { ElementStructure } from '../hooks';
 
 export const plugins = [
     Paragraph,

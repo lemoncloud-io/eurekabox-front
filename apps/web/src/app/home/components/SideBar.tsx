@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
 import { FileText, Plus } from 'lucide-react';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
 import { useInfiniteContents } from '@eurekabox/contents';
 import { Loader } from '@eurekabox/shared';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
 import { useCreateContentWithCache } from '../hooks';
 
-export const SideBar = () => {
+export const SideBar = ({ setSidebarOpen }: { setSidebarOpen: (open: boolean) => void }) => {
     const navigate = useNavigate();
     const { contentId } = useParams<{ contentId: string }>();
     const scrollAreaRef = useRef(null);
@@ -65,11 +66,20 @@ export const SideBar = () => {
     };
 
     return (
-        <div className={`w-64 flex flex-col border-r border-border h-full glassmorphism`}>
+        <div className={`w-[296px] flex flex-col  h-full glassmorphism`}>
             <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h1 className="text-2xl font-bold mb-4 gradient-text cursor-pointer" onClick={() => navigate('/home')}>
-                    EurekaBox
-                </h1>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-2xl font-bold  gradient-text cursor-pointer" onClick={() => navigate('/home')}>
+                        EurekaBox
+                    </h1>
+                    <button
+                        className="text-xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 md:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                        aria-label="Close Sidebar"
+                    >
+                        ✕
+                    </button>
+                </div>
                 <Button
                     className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
                     disabled={isCreatePending}
@@ -86,7 +96,7 @@ export const SideBar = () => {
                 </Button>
             </div>
             <ScrollArea className="flex-grow" ref={scrollAreaRef}>
-                <div className="p-4 space-y-2 w-64">
+                <div className="p-4 space-y-2 w-[296px]">
                     {isLoading && <Loader />}
                     {!isLoading && myContents.length === 0 && (
                         <Button

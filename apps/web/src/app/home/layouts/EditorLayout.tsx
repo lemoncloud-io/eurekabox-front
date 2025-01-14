@@ -1,6 +1,13 @@
-import { ReactNode, useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
+
+import type { CreateContentDTO } from '@eurekabox/contents';
+import { useCreateContent, useDeleteContent } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,6 +16,7 @@ import {
 } from '@eurekabox/lib/components/ui/dropdown-menu';
 import { Separator } from '@eurekabox/lib/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
+import { Loader } from '@eurekabox/shared';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,11 +30,6 @@ import {
 } from '@eurekabox/ui-kit/components/ui/alert-dialog';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
-
-import { CreateContentDTO, useCreateContent, useDeleteContent } from '@eurekabox/contents';
-import { Loader } from '@eurekabox/shared';
 
 import { SideBar, ThemeToggle } from '../components';
 import { SearchDialog } from '../components';
@@ -149,15 +152,19 @@ export const EditorLayout = ({
 
     return (
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
-            <div className="flex h-screen">
+            <div className="h-screen flex flex-col">
                 <div
-                    className={`transition-all duration-300 ease-in-out ${
-                        sidebarOpen ? 'w-64' : 'w-0'
+                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-10 border-r border-border ${
+                        sidebarOpen ? 'w-[295px]' : 'w-0'
                     } overflow-hidden`}
                 >
-                    <SideBar />
+                    <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 </div>
-                <div className="flex-1 flex flex-col">
+                <div
+                    className={`w-full flex-1 flex flex-col overflow-auto duration-300 ease-in-out transition-padding ${
+                        sidebarOpen ? 'pl-[295px] max-md:pl-0' : 'pl-0'
+                    }`}
+                >
                     <header className="flex items-center justify-between p-4 glassmorphism">
                         <div className="flex items-center gap-4 w-full">
                             <Button
@@ -181,7 +188,7 @@ export const EditorLayout = ({
                                 />
                             )}
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 max-md:gap-0">
                             {!isDashboard && (
                                 <>
                                     <DropdownMenu>
@@ -290,7 +297,7 @@ export const EditorLayout = ({
                             </Link>
                         </div>
                     </header>
-                    <main className="flex-1 p-6 overflow-auto">{children}</main>
+                    <main className="flex-1 overflow-auto">{children}</main>
                 </div>
             </div>
             <Button

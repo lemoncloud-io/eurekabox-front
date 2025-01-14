@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
-import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
-import YooptaEditor, { Tools, YooEditor, createYooptaEditor } from '@yoopta/editor';
+
+import type { Tools, YooEditor } from '@yoopta/editor';
+import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
 import { markdown } from '@yoopta/exports';
 
 import { contentsKeys } from '@eurekabox/contents';
+import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
@@ -289,7 +291,7 @@ export const UpdateContentPage = () => {
                 handleExport={handleClickExport}
             >
                 <div
-                    className="md:py-[100px] md:pl-[200px] md:pr-[80px] px-[20px] pt-[50px] pb-[40px] flex justify-center max-w-screen-xl"
+                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex justify-center max-w-screen-xl mx-auto"
                     ref={selectionRef}
                 >
                     <YooptaEditor

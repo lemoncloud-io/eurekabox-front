@@ -101,19 +101,36 @@ body {
             background-color: #1f1f1f;
         }
 
+        #action-menu-list-portal,
+        #highlight-color-portal,
+        #toolbar-portal,
+        .yoopta-extended-block-actions,
+        .yoopta-mark-code,
+        [data-floating-ui-portal] {
+            color: #000;
+        }
+
+        [data-radix-select-viewport] {
+            @apply bg-[#1f1f1f] !important;
+
+            button:hover {
+                @apply bg-hover/10 !important;
+            }
+        }
+
         .yoopta-block-options-menu-content {
-            @apply bg-accent !important;
+            @apply bg-[#1f1f1f] text-foreground !important;
 
             .yoopta-block-options-button:hover {
-                @apply bg-hover/20 !important;
+                @apply bg-hover/10 !important;
             }
         }
 
         .yoopta-action-menu-list-content {
-            @apply bg-accent !important;
+            @apply bg-[#1f1f1f] text-foreground !important;
 
             .yoopta-button:hover {
-                @apply bg-hover/20 !important;
+                @apply bg-hover/10 !important;
             }
 
             .yoo-action-menu-flex {
@@ -125,8 +142,25 @@ body {
             }
         }
 
-        .yoopta-mark-code {
-            @apply bg-accent !important;
+        .yoopta-link-tool {
+            @apply bg-[#1f1f1f] text-foreground !important;
+
+            input {
+                @apply bg-[#1f1f1f] text-foreground !important;
+            }
+        }
+
+        .yoopta-toolbar-item:hover,
+        .yoopta-toolbar-item-mark:hover {
+            @apply bg-hover/10 !important;
+
+            svg {
+                @apply text-foreground !important;
+            }
+        }
+
+        .yoopta-link-preview {
+            @apply bg-[#1f1f1f] text-foreground !important;
         }
     }
 }

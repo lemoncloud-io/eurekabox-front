@@ -1,14 +1,15 @@
 import { useState } from 'react';
 
+import { FileText } from 'lucide-react';
+
+import type { ContentView } from '@lemoncloud/lemon-contents-api';
+
+import { useSearchContents } from '@eurekabox/contents';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { ScrollArea } from '@eurekabox/lib/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
-import { ContentView } from '@lemoncloud/lemon-contents-api';
-import { FileText } from 'lucide-react';
-
-import { useSearchContents } from '@eurekabox/contents';
 import { Loader, useDebounce } from '@eurekabox/shared';
+import { Dialog, DialogContent, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
 
 interface SearchDialogProps {
     open: boolean;

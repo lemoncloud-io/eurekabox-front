@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
-
 import { LoadingFallback } from '@eurekabox/shared';
+import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { createCredentialsByProvider, useWebCoreStore } from '@eurekabox/web-core';
 
 export const OAuthResponsePage = () => {
