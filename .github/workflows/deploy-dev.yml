@@ -123,6 +123,7 @@ jobs:
         runs-on: ubuntu-latest
         name: Build and Deploy
         strategy:
+            fail-fast: false
             matrix:
                 project: [web]
                 include:
