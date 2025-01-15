@@ -176,7 +176,7 @@ jobs:
             - name: Prepare Slack message
               id: slack-message
               run: |
-                  BASE_MESSAGE=":codes: *EUREKABOX 운영 환경 배포 완료*\n\n"
+                  BASE_MESSAGE=":eurekabox: *EurekaBox 운영 환경 배포 완료*\n\n"
                   DEPLOY_MESSAGE=""
 
                   if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
