@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 import { setMultipleItems } from '../functions';
-import type { StorageData, TransferStatus } from '../types';
+import type { MessagePayload, StorageData, TransferStatus } from '../types';
 
 interface ReceiverState extends TransferStatus {
     receivedData: StorageData;
@@ -14,7 +13,6 @@ interface ReceiverState extends TransferStatus {
 }
 
 export const useStorageReceiver = (sourceDomain: string) => {
-    console.log(sourceDomain);
     const [state, setState] = useState<ReceiverState>({
         isTransferring: false,
         status: '',
@@ -25,16 +23,27 @@ export const useStorageReceiver = (sourceDomain: string) => {
         hasError: false,
     });
 
+    // receiver가 준비되었음을 sender에게 알림
+    useEffect(() => {
+        if (window.opener) {
+            window.opener.postMessage(
+                {
+                    type: 'RECEIVER_READY',
+                } as MessagePayload,
+                sourceDomain
+            );
+        }
+    }, [sourceDomain]);
+
     const processReceivedData = useCallback(async (data: StorageData) => {
         try {
             setState(prev => ({
                 ...prev,
                 isTransferring: true,
                 status: 'Receiving...',
+                hasError: false,
+                errorMessage: undefined,
             }));
-
-            await createAsyncDelay(500);
-            setState(prev => ({ ...prev, status: 'Saving...' }));
 
             setMultipleItems(data);
 
@@ -45,8 +54,6 @@ export const useStorageReceiver = (sourceDomain: string) => {
                 status: 'Receive completed!',
                 isDataReceived: true,
             }));
-
-            await createAsyncDelay(500);
         } catch (error) {
             const err = error instanceof Error ? error : new Error('Unknown error');
             setState(prev => ({
@@ -57,12 +64,10 @@ export const useStorageReceiver = (sourceDomain: string) => {
                 hasError: true,
                 errorMessage: error instanceof Error ? error.message : '데이터 처리 중 오류가 발생했습니다.',
             }));
-            await createAsyncDelay(500);
         } finally {
             setState(prev => ({
                 ...prev,
                 isTransferring: false,
-                status: '',
             }));
         }
     }, []);
