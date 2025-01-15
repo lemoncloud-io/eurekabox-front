@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-01-15] - root@0.9.1, @eurekabox/web@0.9.1
+
+### Bug Fixes
+
+-   disable fail-fast strategy in deploy workflows
+
 ## [2025-01-15] - root@0.9.0, @eurekabox/web@0.9.0
 
 ### Features
