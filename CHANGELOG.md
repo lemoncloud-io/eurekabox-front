@@ -1,5 +1,15 @@
 # Changelog
 
+## [2025-01-15] - root@0.9.0, @eurekabox/web@0.9.0
+
+### Features
+
+-   ensure data transfer reliability
+
+### Chores
+
+-   update Slack message icon
+
 ## [2025-01-14] - root@0.8.0, @eurekabox/web@0.8.0
 
 ### Features
