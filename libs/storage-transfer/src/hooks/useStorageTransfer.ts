@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 
-
 import { webCore } from '@eurekabox/web-core';
 
-import { getAllStorageData, transferData } from '../functions/index';
+import { getAllStorageData, getOriginFromUrl, transferData } from '../functions/index';
 import type { StorageTransferResult, TransferStatus } from '../types';
 
 export const useStorageTransfer = (targetDomain: string) => {
+    const targetOrigin = getOriginFromUrl(targetDomain);
+
     const [transferStatus, setTransferStatus] = useState<TransferStatus>({
         isTransferring: false,
         status: '',
@@ -24,8 +25,9 @@ export const useStorageTransfer = (targetDomain: string) => {
             const newWindow = window.open(targetDomain, '_blank');
             const token = await webCore.getSavedToken();
             const dataToShare = getAllStorageData(token);
+
             setTransferStatus(prev => ({ ...prev, status: 'Waiting for receiver ready...' }));
-            await transferData(newWindow, targetDomain, dataToShare);
+            await transferData(newWindow, targetOrigin, dataToShare);
 
             setTransferStatus(prev => ({ ...prev, status: 'Transfer complete!' }));
             return { success: true };
