@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-01-16] - root@0.9.2, @eurekabox/web@0.9.2
+
+### Bug Fixes
+
+-   update code to correctly handle storage receiver initialization
+
 ## [2025-01-15] - root@0.9.1, @eurekabox/web@0.9.1
 
 ### Bug Fixes
