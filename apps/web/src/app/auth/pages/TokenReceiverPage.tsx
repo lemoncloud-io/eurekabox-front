@@ -1,46 +1,40 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { LoadingFallback } from '@eurekabox/shared';
-import type { StorageData } from '@eurekabox/storage-transfer';
 import { useStorageReceiver } from '@eurekabox/storage-transfer';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { useWebCoreStore, webCore } from '@eurekabox/web-core';
 
 export const TokenReceiverPage = () => {
     const setIsAuthenticated = useWebCoreStore(state => state.setIsAuthenticated);
-    const location = useLocation();
     const navigate = useNavigate();
     const checkResultCalled = useRef(false);
 
-    const { receivedData, isTransferring, status, isDataReceived, hasError, errorMessage } = useStorageReceiver(
+    const { receivedData, status, isDataReceived, hasError, errorMessage, isInitialized } = useStorageReceiver(
         import.meta.env.VITE_CODES_HOST.toLowerCase()
     );
 
-    // 받은 데이터 활용
     useEffect(() => {
-        console.log(isDataReceived, hasError);
-        // 이미 처리했거나 아직 데이터를 받지 않았고 에러도 없는 경우 스킵
-        if (checkResultCalled.current || (!isDataReceived && !hasError)) {
+        // isDataReceived가 true일 때만 처리 시작
+        if (checkResultCalled.current || !isDataReceived) {
             return;
         }
         checkResultCalled.current = true;
 
-        const buildCredentialsByStorage = async (receivedData: StorageData) => {
-            if (Object.keys(receivedData).length > 0) {
+        const buildCredentialsByStorage = async () => {
+            try {
                 await webCore.buildCredentialsByStorage();
                 setIsAuthenticated(true);
-                const redirectTo = '/home';
-                navigate(redirectTo, { replace: true });
-                return;
+                navigate('/home', { replace: true });
+            } catch (error) {
+                toast({ description: '인증 처리 중 오류가 발생했습니다.', variant: 'destructive' });
+                navigate('/auth/login', { replace: true });
             }
-
-            toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
-            navigate('/auth/login');
         };
 
-        buildCredentialsByStorage(receivedData);
-    }, [receivedData, isDataReceived, hasError, errorMessage]);
+        buildCredentialsByStorage();
+    }, [receivedData, isDataReceived, hasError]);
 
     // 타임아웃 처리
     useEffect(() => {
@@ -52,12 +46,12 @@ export const TokenReceiverPage = () => {
                 });
                 navigate('/auth/login', { replace: true });
             }
-        }, 10000);
+        }, 20000);
 
         return () => clearTimeout(timeoutId);
     }, [isDataReceived, hasError]);
 
-    if (hasError) {
+    if (hasError && isInitialized) {
         return <LoadingFallback message={errorMessage || '오류가 발생했습니다.'} />;
     }
 

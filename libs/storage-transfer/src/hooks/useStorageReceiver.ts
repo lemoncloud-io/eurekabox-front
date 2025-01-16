@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-
-import { setMultipleItems } from '../functions';
+import { getOriginFromUrl, normalizeUrl, setMultipleItems } from '../functions';
 import type { MessagePayload, StorageData, TransferStatus } from '../types';
 
 interface ReceiverState extends TransferStatus {
@@ -10,29 +9,53 @@ interface ReceiverState extends TransferStatus {
     isDataReceived: boolean;
     hasError: boolean;
     errorMessage?: string;
+    isInitialized: boolean;
 }
 
 export const useStorageReceiver = (sourceDomain: string) => {
+    const normalizedSourceDomain = normalizeUrl(sourceDomain);
+
     const [state, setState] = useState<ReceiverState>({
         isTransferring: false,
-        status: '',
+        status: 'Waiting for data...',
         error: null,
         receivedData: {},
         lastUpdated: null,
         isDataReceived: false,
         hasError: false,
+        isInitialized: false,
     });
 
     // receiver가 준비되었음을 sender에게 알림
     useEffect(() => {
-        if (window.opener) {
-            window.opener.postMessage(
-                {
-                    type: 'RECEIVER_READY',
-                } as MessagePayload,
-                sourceDomain
-            );
-        }
+        let retryCount = 0;
+        const maxRetries = 10; // 최대 시도 횟수
+        const retryInterval = 500; // 0.5초 간격
+
+        const sendReadySignal = () => {
+            const intervalId = setInterval(() => {
+                if (window.opener) {
+                    window.opener.postMessage(
+                        {
+                            type: 'RECEIVER_READY',
+                        } as MessagePayload,
+                        sourceDomain
+                    );
+                    clearInterval(intervalId);
+                } else {
+                    retryCount++;
+                    if (retryCount >= maxRetries) {
+                        clearInterval(intervalId);
+                        console.error('Failed to find window.opener after multiple attempts');
+                    }
+                }
+            }, retryInterval);
+
+            return () => clearInterval(intervalId);
+        };
+
+        const cleanup = sendReadySignal();
+        return cleanup;
     }, [sourceDomain]);
 
     const processReceivedData = useCallback(async (data: StorageData) => {
@@ -74,6 +97,28 @@ export const useStorageReceiver = (sourceDomain: string) => {
 
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
+            const eventOrigin = getOriginFromUrl(event.origin);
+            const expectedOrigin = getOriginFromUrl(sourceDomain);
+
+            if (eventOrigin !== expectedOrigin) {
+                if (state.isInitialized) {
+                    setState(prev => ({
+                        ...prev,
+                        hasError: true,
+                        errorMessage: '잘못된 출처에서의 요청입니다.',
+                        status: '오류 발생!',
+                    }));
+                }
+                return;
+            }
+
+            if (!state.isInitialized) {
+                setState(prev => ({
+                    ...prev,
+                    isInitialized: true,
+                }));
+            }
+
             if (event.data.type === 'TRANSFER_STORAGE') {
                 processReceivedData(event.data.data);
             }
@@ -81,7 +126,7 @@ export const useStorageReceiver = (sourceDomain: string) => {
 
         window.addEventListener('message', handleMessage);
         return () => window.removeEventListener('message', handleMessage);
-    }, [sourceDomain, processReceivedData]);
+    }, [normalizedSourceDomain, processReceivedData]);
 
     return state;
 };
