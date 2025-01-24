@@ -24,6 +24,7 @@ export const TokenReceiverPage = () => {
 
         const buildCredentialsByStorage = async () => {
             try {
+                console.log('buildCredentialsByStorage');
                 await webCore.buildCredentialsByStorage();
                 setIsAuthenticated(true);
                 navigate('/home', { replace: true });
