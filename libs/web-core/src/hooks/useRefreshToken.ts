@@ -9,14 +9,17 @@ import { useWebCoreStore } from '../stores';
 const REFRESH_POLLING_TIME = 1000 * 60 * 1; // 1 minutes
 
 const useTokenRefresh = () => {
-    const logout = useWebCoreStore(state => state.logout);
-
     const refreshAuthToken = async () => {
         try {
             const { current, signature, authId, originToken } = await webCore.getTokenSignature();
             const body: RefreshTokenBody = { current, signature };
 
-            const response = await webCore.signedRequest('POST', `${OAUTH_ENDPOINT}/oauth/${authId}/refresh`, {}, body);
+            const response = await webCore
+                .signedRequest('POST', `${OAUTH_ENDPOINT}/oauth/${authId}/refresh`, {}, body)
+                .catch(e => {
+                    console.error(e);
+                    window.location.href = '/auth/logout';
+                });
 
             const refreshToken = {
                 ...response.data.Token,
@@ -27,7 +30,7 @@ const useTokenRefresh = () => {
             await webCore.buildCredentialsByToken(refreshToken);
         } catch (error) {
             console.error('Failed to refresh token:', error);
-            await logout();
+            window.location.href = '/auth/logout';
         }
     };
 
