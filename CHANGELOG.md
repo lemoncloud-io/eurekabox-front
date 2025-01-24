@@ -1,5 +1,15 @@
 # Changelog
 
+## [2025-01-24] - root@0.9.3, @eurekabox/web@0.9.3
+
+### Bug Fixes
+
+-   handle refresh token error
+
+### Chores
+
+-   update favicon
+
 ## [2025-01-16] - root@0.9.2, @eurekabox/web@0.9.2
 
 ### Bug Fixes
