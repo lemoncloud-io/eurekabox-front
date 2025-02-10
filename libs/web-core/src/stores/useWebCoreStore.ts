@@ -41,6 +41,7 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
             const e = error as Error;
             console.log(e);
             set({ error: e, isInitialized: false });
+            await webCore.logout();
         }
     },
     logout: async () => {

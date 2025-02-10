@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { FileText } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
-import { useSearchContents } from '@eurekabox/contents';
-import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
+import { useContents } from '@eurekabox/contents';
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { ScrollArea } from '@eurekabox/lib/components/ui/scroll-area';
 import { Loader, useDebounce } from '@eurekabox/shared';
@@ -17,16 +16,40 @@ interface SearchDialogProps {
     onContentSelect: (content: ContentView) => void;
 }
 
+const HighlightedText = ({ text, searchTerm }: { text: string; searchTerm: string }) => {
+    if (!searchTerm) return <>{text}</>;
+
+    const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
+    return (
+        <>
+            {parts.map((part, i) =>
+                part.toLowerCase() === searchTerm.toLowerCase() ? (
+                    <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded">
+                        {part}
+                    </mark>
+                ) : (
+                    part
+                )
+            )}
+        </>
+    );
+};
+
 export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDialogProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
+    const { data: contentsData, isLoading } = useContents({ limit: -1 });
 
-    const { data, isLoading, error, refetch } = useSearchContents({
-        limit: 100,
-        keyword: debouncedSearchTerm || '',
-    });
+    const filteredResults = useMemo(() => {
+        if (!debouncedSearchTerm || !contentsData?.data) return [];
 
-    const results = data?.data || [];
+        const searchTermLower = debouncedSearchTerm.toLowerCase();
+        return contentsData.data.filter(
+            content =>
+                content.title?.toLowerCase().includes(searchTermLower) ||
+                content.readme?.toLowerCase().includes(searchTermLower)
+        );
+    }, [contentsData?.data, debouncedSearchTerm]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,22 +69,10 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                     <ScrollArea className="flex-grow">
                         <div className="p-4 space-y-4">
                             {isLoading ? (
-                                <Loader message={'Searching...'} />
-                            ) : error ? (
-                                <Alert variant="destructive" className="mx-4">
-                                    <AlertDescription className="ml-2">
-                                        {error.toString() || '검색 중 오류가 발생했습니다.'}
-                                        <button
-                                            onClick={() => refetch()}
-                                            className="ml-2 text-sm underline hover:no-underline"
-                                        >
-                                            Retry
-                                        </button>
-                                    </AlertDescription>
-                                </Alert>
+                                <Loader message={'Loading...'} />
                             ) : (
                                 <>
-                                    {results.map(result => (
+                                    {filteredResults.map(result => (
                                         <div
                                             key={result.id}
                                             onClick={() => {
@@ -72,12 +83,24 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                         >
                                             <FileText className="w-6 h-6 mt-1 text-blue-500" />
                                             <div>
-                                                <h3 className="font-semibold">{result.title}</h3>
-                                                <p className="text-sm text-muted-foreground">{result.subject}</p>
+                                                <h3 className="font-semibold">
+                                                    <HighlightedText
+                                                        text={result.title || 'Untitled'}
+                                                        searchTerm={debouncedSearchTerm}
+                                                    />
+                                                </h3>
+                                                {result.readme && (
+                                                    <p className="text-sm text-muted-foreground">
+                                                        <HighlightedText
+                                                            text={result.readme}
+                                                            searchTerm={debouncedSearchTerm}
+                                                        />
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
-                                    {results.length === 0 && debouncedSearchTerm && (
+                                    {filteredResults.length === 0 && debouncedSearchTerm && (
                                         <p className="text-center text-muted-foreground">검색 결과가 없습니다.</p>
                                     )}
                                 </>
