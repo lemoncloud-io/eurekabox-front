@@ -1,10 +1,11 @@
 import { useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { FileText, Plus } from 'lucide-react';
+import { ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
+import { Images } from '@eurekabox/assets';
 import { useContents } from '@eurekabox/contents';
 import { Loader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
@@ -16,45 +17,19 @@ type SideBarProps = {
     setSidebarOpen: (open: boolean) => void;
 };
 
-const SideBarHeader = ({
-    onClose,
-    onCreateContent,
-    isCreating,
-}: {
-    onClose: () => void;
-    onCreateContent: () => void;
-    isCreating: boolean;
-}) => {
+const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onClickNewPage: () => void }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold gradient-text cursor-pointer" onClick={() => navigate('/home')}>
-                    EurekaBox
-                </h1>
-                <button
-                    className="text-xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 md:hidden"
-                    onClick={onClose}
-                    aria-label="Close Sidebar"
-                >
-                    ✕
-                </button>
-            </div>
-            <Button
-                className="w-full justify-start text-left font-normal hover:bg-primary hover:text-primary-foreground"
-                disabled={isCreating}
-                onClick={onCreateContent}
-            >
-                {isCreating ? (
-                    <Loader className="text-white" message={'Creating...'} />
-                ) : (
-                    <>
-                        <Plus className="mr-2 h-4 w-4" />
-                        New page
-                    </>
-                )}
-            </Button>
+        <div className="p-4 flex items-center space-x-4">
+            <img src={Images.boxBlackLogo} alt="EurekaBox Logo" className="w-8 h-8" />
+            <h1 className="text-xl font-semibold flex-1">EurekaBox</h1>
+            <button className="p-1 hover:bg-gray-100 rounded-md" onClick={onClose} aria-label="Toggle Sidebar">
+                <ChevronsLeft className="h-5 w-5" />
+            </button>
+            <button className="p-1 hover:bg-gray-100 rounded-md" aria-label="Edit" onClick={onClickNewPage}>
+                <SquarePen className="h-5 w-5" />
+            </button>
         </div>
     );
 };
@@ -68,20 +43,20 @@ const ContentList = ({
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
 }) => (
-    <>
+    <div className="space-y-1">
         {contents.map(content => (
             <Button
                 key={content.id}
                 variant="ghost"
-                className={`w-full justify-start font-normal hover:bg-primary/10 dark:hover:bg-primary/20
-                    ${content.id === currentContentId ? 'bg-primary/20' : ''}`}
+                className={`w-full justify-start font-normal text-gray-700 hover:bg-gray-100
+                    ${content.id === currentContentId ? 'bg-gray-100' : ''}`}
                 onClick={() => onContentClick(content)}
             >
                 <FileText className="mr-2 h-4 w-4" />
                 <span className="truncate">{content.title || 'Untitled'}</span>
             </Button>
         ))}
-    </>
+    </div>
 );
 
 export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
@@ -91,7 +66,6 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const { data: contentsData, isLoading } = useContents({ limit: -1 });
 
-    const totalContents = useMemo(() => contentsData?.total || 0, [contentsData]);
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
     const handleContentClick = (content: ContentView) => {
@@ -99,35 +73,54 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     };
 
     return (
-        <div className="w-[296px] flex flex-col h-full glassmorphism">
-            <SideBarHeader
-                onClose={() => setSidebarOpen(false)}
-                onCreateContent={handleCreate}
-                isCreating={isCreatePending}
-            />
-            <ScrollArea className="flex-grow" ref={scrollAreaRef}>
-                <div className="p-4 space-y-2 w-[296px]">
-                    {isLoading && <Loader />}
-                    {!isLoading && contents.length === 0 && (
+        <div className="w-[296px] flex flex-col h-full bg-white border-r">
+            <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
+
+            <ScrollArea className="flex-grow">
+                <div className="px-3 py-2">
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start text-gray-700 hover:bg-gray-100"
+                        onClick={() => navigate('/home')}
+                    >
+                        <Search className="mr-2 h-4 w-4" />
+                        Search
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start text-gray-700 hover:bg-gray-100"
+                        onClick={() => navigate('/home')}
+                    >
+                        <Home className="mr-2 h-4 w-4" />
+                        Home
+                    </Button>
+
+                    <div className="mt-6">
+                        <h2 className="px-3 text-sm font-medium text-gray-500 mb-2">Page</h2>
                         <Button
                             variant="ghost"
-                            className="w-full justify-start font-normal hover:bg-primary/10 dark:hover:bg-primary/20"
+                            className="w-full justify-start text-gray-700 hover:bg-gray-100 mb-2"
+                            onClick={handleCreate}
+                            disabled={isCreatePending}
                         >
-                            No Contents
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Page
                         </Button>
-                    )}
-                    {!isLoading && (
-                        <ContentList
-                            contents={contents}
-                            currentContentId={contentId}
-                            onContentClick={handleContentClick}
-                        />
-                    )}
+
+                        {isLoading && <Loader />}
+                        {!isLoading && contents.length === 0 && (
+                            <div className="px-3 text-sm text-gray-500">No Pages</div>
+                        )}
+                        {!isLoading && (
+                            <ContentList
+                                contents={contents}
+                                currentContentId={contentId}
+                                onContentClick={handleContentClick}
+                            />
+                        )}
+                    </div>
                 </div>
             </ScrollArea>
-            <div className="p-3 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
-                Total Contents: {totalContents}
-            </div>
         </div>
     );
 };
