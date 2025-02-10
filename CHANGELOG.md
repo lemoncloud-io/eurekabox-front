@@ -1,5 +1,14 @@
 # Changelog
 
+## [2025-02-10] - root@0.11.0, @eurekabox/web@0.11.0
+
+### Features
+
+-   add eureka box logo to login page
+-   improve sidebar UI and functionality
+-   add search dialog to side bar
+-   highlight home button when on home page
+
 ## [2025-02-10] - root@0.10.0, @eurekabox/web@0.10.0
 
 ### Features
