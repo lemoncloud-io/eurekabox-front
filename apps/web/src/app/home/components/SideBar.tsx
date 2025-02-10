@@ -92,7 +92,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const { data: contentsData, isLoading } = useContents({ limit: -1 });
 
     const totalContents = useMemo(() => contentsData?.total || 0, [contentsData]);
-    const contents = useMemo(() => contentsData?.list || [], [contentsData]);
+    const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
     const handleContentClick = (content: ContentView) => {
         navigate(`/home/${content.id}`);
