@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
@@ -7,11 +7,13 @@ import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
 import { Images } from '@eurekabox/assets';
 import { useContents } from '@eurekabox/contents';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Loader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
 import { useCreateContentWithCache } from '../hooks';
+import { SearchDialog } from './SearchDialog';
 
 type SideBarProps = {
     setSidebarOpen: (open: boolean) => void;
@@ -62,13 +64,23 @@ const ContentList = ({
 export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const navigate = useNavigate();
     const { contentId } = useParams<{ contentId: string }>();
-    const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const { data: contentsData, isLoading } = useContents({ limit: -1 });
 
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
     const handleContentClick = (content: ContentView) => {
+        navigate(`/home/${content.id}`);
+    };
+
+    const handleContentSelect = (content: ContentView) => {
+        if (!content || !content.id) {
+            toast({ description: `No Content!`, variant: 'destructive' });
+            return;
+        }
         navigate(`/home/${content.id}`);
     };
 
@@ -81,7 +93,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     <Button
                         variant="ghost"
                         className="w-full justify-start text-gray-700 hover:bg-gray-100"
-                        onClick={() => navigate('/home')}
+                        onClick={() => setIsSearchOpen(true)}
                     >
                         <Search className="mr-2 h-4 w-4" />
                         Search
@@ -121,6 +133,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     </div>
                 </div>
             </ScrollArea>
+            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
         </div>
     );
 };
