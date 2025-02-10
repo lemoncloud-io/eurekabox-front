@@ -1,5 +1,18 @@
 # Changelog
 
+## [2025-02-10] - root@0.10.0, @eurekabox/web@0.10.0
+
+### Features
+
+-   fetch all contents at once
+-   improve search dialog with highlighting
+-   update contents list after content update
+
+### Bug Fixes
+
+-   logout on init error to prevent loop
+-   update content title in query cache
+
 ## [2025-01-24] - root@0.9.3, @eurekabox/web@0.9.3
 
 ### Bug Fixes
