@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
 
@@ -63,6 +63,7 @@ const ContentList = ({
 
 export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -84,6 +85,8 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
         navigate(`/home/${content.id}`);
     };
 
+    const isHomePage = location.pathname === '/home';
+
     return (
         <div className="w-[296px] flex flex-col h-full bg-white border-r">
             <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
@@ -100,7 +103,9 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     </Button>
                     <Button
                         variant="ghost"
-                        className="w-full justify-start text-gray-700 hover:bg-gray-100"
+                        className={`w-full justify-start text-gray-700 hover:bg-gray-100 ${
+                            isHomePage ? 'bg-gray-100' : ''
+                        }`}
                         onClick={() => navigate('/home')}
                     >
                         <Home className="mr-2 h-4 w-4" />
