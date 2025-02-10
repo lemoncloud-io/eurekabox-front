@@ -10,7 +10,7 @@ import { useContentCache } from './useContentCache';
 
 export const useCreateContentWithCache = () => {
     const navigate = useNavigate();
-    const { prependContentToInfiniteCache } = useContentCache();
+    const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
 
     const handleCreate = useCallback(async () => {
@@ -22,11 +22,11 @@ export const useCreateContentWithCache = () => {
 
         await createContent.mutateAsync(newContent, {
             onSuccess: (response: ContentView) => {
-                prependContentToInfiniteCache(response);
+                prependContentToCache(response);
                 navigate(`/home/${response.id}`);
             },
         });
-    }, [createContent, navigate, prependContentToInfiniteCache]);
+    }, [createContent, navigate, prependContentToCache]);
 
     return {
         handleCreate,

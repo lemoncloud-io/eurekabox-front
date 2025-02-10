@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import type { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
-import { createElement, deleteElement, fetchContentById, updateContent, updateElement } from '@eurekabox/contents';
+import {
+    contentsKeys,
+    createElement,
+    deleteElement,
+    fetchContentById,
+    updateContent,
+    updateElement,
+} from '@eurekabox/contents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 
 import { convertElementToEditorValue, extractContent } from '../utils';
@@ -38,6 +47,8 @@ interface ElementTracker {
 }
 
 export const useEditorContent = (contentId: string | undefined, editor: YooEditor) => {
+    const queryClient = useQueryClient();
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const elementTrackerRef = useRef<ElementTracker>({});
@@ -225,12 +236,32 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 const isTitleChanged = title !== contentRef.current.title;
 
                 if (isElementIdsChanged || isTitleChanged) {
-                    await updateContent({
+                    const updated = await updateContent({
                         contentId,
                         readme: markdown.serialize(editor, currentValue),
                         ...(isElementIdsChanged && { elementIds: orderedElementIds }),
                         ...(isTitleChanged && { title }),
                     });
+
+                    if (updated) {
+                        queryClient.setQueryData(contentsKeys.list({ limit: -1 }), (oldData: any) => {
+                            if (!oldData) {
+                                return oldData;
+                            }
+                            const res = {
+                                ...oldData,
+                                data: oldData.data.map(item =>
+                                    item.id === contentId ? { ...item, ...updated } : item
+                                ),
+                                list: oldData.list.map(item =>
+                                    item.id === contentId ? { ...item, ...updated } : item
+                                ),
+                            };
+                            console.log(updated, oldData, res);
+
+                            return res;
+                        });
+                    }
                 }
 
                 // 5. 트래커 업데이트

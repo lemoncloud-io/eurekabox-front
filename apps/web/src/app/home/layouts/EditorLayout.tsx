@@ -61,9 +61,9 @@ export const EditorLayout = ({
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-    const { removeContentFromInfiniteCache } = useContentCache();
+    const { removeContentFromCache } = useContentCache();
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
-    const { prependContentToInfiniteCache } = useContentCache();
+    const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
 
@@ -108,7 +108,7 @@ export const EditorLayout = ({
 
             await createContent.mutateAsync(newContent, {
                 onSuccess: (response: ContentView) => {
-                    prependContentToInfiniteCache(response);
+                    prependContentToCache(response);
                     navigate(`/home/${response.id}`);
                 },
             });
@@ -135,7 +135,7 @@ export const EditorLayout = ({
         }
         await deleteContent.mutateAsync(contentId, {
             onSuccess: async () => {
-                removeContentFromInfiniteCache(contentId);
+                removeContentFromCache(contentId);
                 toast({ description: `Successfully deleted.` });
                 navigate('/home');
             },

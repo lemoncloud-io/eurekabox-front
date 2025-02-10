@@ -9,53 +9,38 @@ import { contentsKeys } from '@eurekabox/contents';
 export const useContentCache = () => {
     const queryClient = useQueryClient();
 
-    const prependContentToInfiniteCache = useCallback(
+    const prependContentToCache = useCallback(
         (content: ContentView) => {
-            queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
+            queryClient.setQueryData(contentsKeys.list({ limit: -1 }), (oldData: any) => {
+                console.log(content, oldData);
                 if (!oldData) {
-                    return {
-                        pages: [
-                            {
-                                list: [content],
-                                page: 0,
-                                total: 1,
-                            },
-                        ],
-                        pageParams: [0],
-                    };
+                    return { total: 1, data: [content] };
                 }
-
-                const newPages = [...oldData.pages];
-                newPages[0] = {
-                    ...newPages[0],
-                    list: [content, ...newPages[0].list],
-                    total: newPages[0].total + 1,
-                };
 
                 return {
                     ...oldData,
-                    pages: newPages,
+                    data: [content, ...oldData.data],
+                    list: [content, ...oldData.list],
+                    total: oldData.total + 1,
                 };
             });
         },
         [queryClient]
     );
 
-    const removeContentFromInfiniteCache = useCallback(
+    const removeContentFromCache = useCallback(
         (contentId: string) => {
-            queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
+            queryClient.setQueryData(contentsKeys.list({ limit: -1 }), (oldData: any) => {
+                console.log(contentId, oldData);
                 if (!oldData) {
                     return oldData;
                 }
 
-                const newPages = oldData.pages.map(page => ({
-                    ...page,
-                    list: page.list.filter(item => item.id !== contentId),
-                    total: page.total - 1,
-                }));
                 return {
                     ...oldData,
-                    pages: newPages,
+                    data: oldData.data.filter(origin => origin.id !== contentId),
+                    list: oldData.list.filter(origin => origin.id !== contentId),
+                    total: oldData.total - 1,
                 };
             });
         },
@@ -63,7 +48,7 @@ export const useContentCache = () => {
     );
 
     return {
-        prependContentToInfiniteCache,
-        removeContentFromInfiniteCache,
+        prependContentToCache,
+        removeContentFromCache,
     };
 };

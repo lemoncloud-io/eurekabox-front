@@ -148,18 +148,14 @@ export const UpdateContentPage = () => {
             hasChangesRef.current = false;
 
             if (contentId) {
-                queryClient.setQueryData(contentsKeys.list({ limit: 50, page: 0 }), (oldData: any) => {
+                queryClient.setQueryData(contentsKeys.list({ limit: -1 }), (oldData: any) => {
                     if (!oldData) {
                         return oldData;
                     }
-                    const newPages = oldData.pages.map(page => ({
-                        ...page,
-                        list: page.list.map(item => (item.id === contentId ? { ...item, title } : item)),
-                    }));
-
                     return {
                         ...oldData,
-                        pages: newPages,
+                        data: oldData.data.map(item => (item.id === contentId ? { ...item, title } : item)),
+                        list: oldData.list.map(item => (item.id === contentId ? { ...item, title } : item)),
                     };
                 });
             }
