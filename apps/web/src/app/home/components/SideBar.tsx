@@ -74,7 +74,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
     const handleContentClick = (content: ContentView) => {
-        navigate(`/home/${content.id}`);
+        navigate(`/${content.id}`);
     };
 
     const handleContentSelect = (content: ContentView) => {
@@ -82,7 +82,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
             toast({ description: `No Content!`, variant: 'destructive' });
             return;
         }
-        navigate(`/home/${content.id}`);
+        navigate(`/${content.id}`);
     };
 
     const isHomePage = location.pathname === '/home';
