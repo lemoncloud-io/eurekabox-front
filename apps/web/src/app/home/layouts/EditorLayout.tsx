@@ -2,7 +2,16 @@ import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { FileDown, FileType, FileUp, Menu, Plus, Save, Search, Trash2 } from 'lucide-react';
+import {
+    Download,
+    EllipsisVertical,
+    FileUp,
+    LogOut,
+    Menu,
+    Plus,
+    Save,
+    Trash2,
+} from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
@@ -12,17 +21,15 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@eurekabox/lib/components/ui/dropdown-menu';
-import { Separator } from '@eurekabox/lib/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 import { Loader } from '@eurekabox/shared';
 import {
     AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -154,26 +161,26 @@ export const EditorLayout = ({
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
             <div className="h-screen flex flex-col">
                 <div
-                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-10 border-r border-border ${
-                        sidebarOpen ? 'w-[295px]' : 'w-0'
+                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-10 ${
+                        sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >
                     <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 </div>
                 <div
                     className={`w-full flex-1 flex flex-col overflow-auto duration-300 ease-in-out transition-padding ${
-                        sidebarOpen ? 'pl-[295px] max-md:pl-0' : 'pl-0'
+                        sidebarOpen ? 'pl-[248px] max-md:pl-0' : 'pl-0'
                     }`}
                 >
-                    <header className="flex items-center justify-between p-4 glassmorphism">
-                        <div className="flex items-center gap-4 w-full">
+                    <header className="h-[54px] flex items-center justify-between p-5">
+                        <div className="flex items-center w-full gap-2">
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="hover:text-primary"
+                                onClick={() => setSidebarOpen(true)}
+                                className={`${sidebarOpen ? 'hidden' : ''}`}
                             >
-                                <Menu className="h-5 w-5" />
+                                <Menu className="h-4 w-4" />
                                 <span className="sr-only">Toggle sidebar</span>
                             </Button>
                             {isLoading ? (
@@ -183,103 +190,105 @@ export const EditorLayout = ({
                                     type="text"
                                     value={title}
                                     onChange={e => onTitleChange?.(e.target.value)}
-                                    className="w-full text-xl font-semibold gradient-text border-none focus:outline-none caret-black dark:caret-white"
+                                    className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
                                     placeholder="New Page"
                                 />
                             )}
                         </div>
-                        <div className="flex items-center gap-4 max-md:gap-0">
+                        <div className="flex items-center gap-2">
                             {!isDashboard && (
                                 <>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon" className="hover:text-primary">
-                                                <FileDown className="h-5 w-5" />
-                                                <span className="sr-only">내보내기</span>
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleClickExport('markdown')}>
-                                                <FileType className="mr-2 h-4 w-4" />
-                                                <span>Markdown으로 내보내기</span>
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleClickExport('html')}>
-                                                <FileType className="mr-2 h-4 w-4" />
-                                                <span>HTML로 내보내기</span>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
                                     <Button
                                         variant="ghost"
-                                        size="icon"
-                                        className="hover:text-primary"
+                                        className="h-[26px] px-[6px] rounded-sm gap-[6px] text-text-800 border border-text-800"
                                         onClick={handleSaveClick}
                                         disabled={isLoading}
                                     >
-                                        <Save className="h-5 w-5" />
-                                        <span className="sr-only">저장</span>
+                                        <Save className="h-4 w-4" />
+                                        <span>Save</span>
                                     </Button>
-                                    <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                                        <AlertDialogTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="hover:text-destructive"
-                                                onClick={handleDelete}
+                                    {/* TODO: bookmark */}
+                                    {/* <button>
+                                        <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
+                                    </button> */}
+                                </>
+                            )}
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <EllipsisVertical className="w-4 h-4" />
+                                        <span className="sr-only">더보기</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2">
+                                    <div className="py-1 flex items-center justify-center mb-1">
+                                        <ThemeToggle />
+                                    </div>
+
+                                    {!isDashboard && (
+                                        <>
+                                            <DropdownMenuItem onClick={() => handleClickExport('markdown')}>
+                                                <Download className="h-4 w-4" />
+                                                <span>Export as Markdown</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleClickExport('html')}>
+                                                <Download className="h-4 w-4" />
+                                                <span>Export as HTML</span>
+                                            </DropdownMenuItem>
+                                            <div className="p-2 py-1 rounded-[4px] hover:bg-accent">
+                                                <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button
+                                                            className="w-full flex items-center gap-2"
+                                                            onClick={handleDelete}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            <span>Trash</span>
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you want to delete this document?
+                                                            </AlertDialogTitle>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={confirmDelete}>
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
+                                            </div>
+                                            {/*<DropdownMenuSeparator />
+                                             <DropdownMenuItem>
+                                                <Settings className="w-4 h-4" />
+                                                <span>Settings</span>
+                                            </DropdownMenuItem> */}
+                                            <DropdownMenuSeparator />
+                                        </>
+                                    )}
+                                    {isDashboard && (
+                                        <DropdownMenuItem>
+                                            <input
+                                                type="file"
+                                                accept=".md,.html"
+                                                onChange={handleImportMarkdownClick}
+                                                style={{ display: 'none' }}
+                                                id="markdown-upload"
+                                            />
+                                            <button
+                                                className="w-full flex items-center gap-2"
+                                                onClick={() => document.getElementById('markdown-upload')?.click()}
                                             >
-                                                <Trash2 className="h-5 w-5" />
-                                                <span className="sr-only">삭제</span>
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>
-                                                    Are you sure you want to delete this document?
-                                                </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be undone. The document will be permanently
-                                                    deleted.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>취소</AlertDialogCancel>
-                                                <AlertDialogAction onClick={confirmDelete}>삭제</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                    <Separator orientation="vertical" className="h-6" />
-                                </>
-                            )}
-                            {isDashboard && (
-                                <>
-                                    <input
-                                        type="file"
-                                        accept=".md,.html"
-                                        onChange={handleImportMarkdownClick}
-                                        style={{ display: 'none' }}
-                                        id="markdown-upload"
-                                    />
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="hover:text-primary"
-                                                    onClick={() => document.getElementById('markdown-upload')?.click()}
-                                                >
-                                                    <FileUp className="h-5 w-5" />
-                                                    <span className="sr-only">import</span>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Markdown, HTML 가져오기</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </>
-                            )}
-                            <Button
+                                                <FileUp className="h-4 w-4" />
+                                                <span>Markdown, HTML 가져오기</span>
+                                            </button>
+                                        </DropdownMenuItem>
+                                    )}
+                                    {/* <Button
                                 variant="ghost"
                                 size="icon"
                                 className="hover:text-primary"
@@ -287,14 +296,17 @@ export const EditorLayout = ({
                             >
                                 <Search className="h-5 w-5" />
                                 <span className="sr-only">Search</span>
-                            </Button>
-
-                            <ThemeToggle />
-                            <Link to="/auth/logout">
-                                <Button variant="ghost" className="hover:text-primary">
-                                    Logout
-                                </Button>
-                            </Link>
+                            </Button> */}
+                                    <DropdownMenuItem>
+                                        <Link to="/auth/logout" className="w-full">
+                                            <div className="w-full flex items-center gap-2">
+                                                <LogOut className="w-4 h-4" />
+                                                <span>Log out</span>
+                                            </div>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </header>
                     <main className="flex-1 overflow-auto">{children}</main>
