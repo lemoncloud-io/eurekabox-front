@@ -2,16 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {
-    Download,
-    EllipsisVertical,
-    FileUp,
-    LogOut,
-    Menu,
-    Plus,
-    Save,
-    Trash2,
-} from 'lucide-react';
+import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
@@ -174,7 +165,6 @@ export const EditorLayout = ({
                 >
                     <header className="h-[54px] flex items-center justify-between p-5">
                         <div className="flex items-center w-full gap-2">
-                          {!sidebarOpen && (
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -184,7 +174,6 @@ export const EditorLayout = ({
                                 <Menu className="h-4 w-4" />
                                 <span className="sr-only">Toggle sidebar</span>
                             </Button>
-                             )}
                             {isLoading ? (
                                 <Loader message={''} />
                             ) : (
