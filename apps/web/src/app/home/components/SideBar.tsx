@@ -54,7 +54,7 @@ const ContentList = ({
                 onClick={() => onContentClick(content)}
             >
                 <FileText className="mr-2 h-4 w-4" />
-                <span className="truncate">{content.title || 'Untitled'}</span>
+                <span className="truncate">{content.title || 'New Page'}</span>
             </Button>
         ))}
     </div>

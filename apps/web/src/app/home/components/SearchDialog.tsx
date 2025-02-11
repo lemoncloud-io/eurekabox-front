@@ -85,7 +85,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                             <div>
                                                 <h3 className="font-semibold">
                                                     <HighlightedText
-                                                        text={result.title || 'Untitled'}
+                                                        text={result.title || 'New Page'}
                                                         searchTerm={debouncedSearchTerm}
                                                     />
                                                 </h3>

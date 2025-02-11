@@ -22,7 +22,7 @@ export const UpdateContentPage = () => {
     const { contentId } = useParams<{ contentId: string }>();
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState<string>('Untitled');
+    const [title, setTitle] = useState<string>('New Page');
 
     const editor = useMemo(() => createYooptaEditor(), []);
     const selectionRef = useRef(null);
