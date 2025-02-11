@@ -7,19 +7,14 @@ export const Images = {
     loader: new URL('./images/loader.png', import.meta.url).href,
 } as const;
 
-export const ToolbarImages = {
-    blockquote: new URL('./images/toolbar/blockquote.png', import.meta.url).href,
-    bulletedList: new URL('./images/toolbar/bulletedList.png', import.meta.url).href,
-    callout: new URL('./images/toolbar/callout.png', import.meta.url).href,
-    code: new URL('./images/toolbar/code.png', import.meta.url).href,
-    divider: new URL('./images/toolbar/divider.png', import.meta.url).href,
-    embed: new URL('./images/toolbar/embed.png', import.meta.url).href,
-    file: new URL('./images/toolbar/file.png', import.meta.url).href,
-    headerOne: new URL('./images/toolbar/headerOne.png', import.meta.url).href,
-    image: new URL('./images/toolbar/image.png', import.meta.url).href,
-    numberedList: new URL('./images/toolbar/numberedList.png', import.meta.url).href,
-    table: new URL('./images/toolbar/table.png', import.meta.url).href,
-    text: new URL('./images/toolbar/text.png', import.meta.url).href,
-    todoList: new URL('./images/toolbar/todoList.png', import.meta.url).href,
-    video: new URL('./images/toolbar/video.png', import.meta.url).href,
+export const Logo = {
+    black1: new URL('./logo/box-black-logo1.png', import.meta.url).href,
+    black2: new URL('./logo/box-black-logo2.png', import.meta.url).href,
+    blackSymbol: new URL('./logo/box-black-symbol.png', import.meta.url).href,
+    purple1: new URL('./logo/box-purple-logo1.png', import.meta.url).href,
+    purple2: new URL('./logo/box-purple-logo2.png', import.meta.url).href,
+    purpleSymbol: new URL('./logo/box-purple-symbol.png', import.meta.url).href,
+    white1: new URL('./logo/box-white-logo1.png', import.meta.url).href,
+    white2: new URL('./logo/box-white-logo2.png', import.meta.url).href,
+    whiteSymbol: new URL('./logo/box-white-symbol.png', import.meta.url).href,
 } as const;

@@ -5,7 +5,7 @@ import { ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-re
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
-import { Images } from '@eurekabox/assets';
+import { Logo } from '@eurekabox/assets';
 import { useContents } from '@eurekabox/contents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Loader } from '@eurekabox/shared';
@@ -24,8 +24,7 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
 
     return (
         <div className="p-4 flex items-center space-x-4">
-            <img src={Images.boxBlackLogo} alt="EurekaBox Logo" className="w-8 h-8" />
-            <h1 className="text-xl font-semibold flex-1">EurekaBox</h1>
+            <img src={Logo.black1} alt="EurekaBox Logo" className="h-8" />
             <button className="p-1 hover:bg-gray-100 rounded-md" onClick={onClose} aria-label="Toggle Sidebar">
                 <ChevronsLeft className="h-5 w-5" />
             </button>
@@ -74,7 +73,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
     const handleContentClick = (content: ContentView) => {
-        navigate(`/home/${content.id}`);
+        navigate(`/${content.id}`);
     };
 
     const handleContentSelect = (content: ContentView) => {
@@ -82,7 +81,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
             toast({ description: `No Content!`, variant: 'destructive' });
             return;
         }
-        navigate(`/home/${content.id}`);
+        navigate(`/${content.id}`);
     };
 
     const isHomePage = location.pathname === '/home';
