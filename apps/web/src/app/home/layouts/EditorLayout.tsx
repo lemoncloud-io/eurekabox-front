@@ -38,7 +38,6 @@ interface EditorLayoutProps {
     isDashboard?: boolean;
     title: string;
     isLoading: boolean;
-    onTitleChange?: (title: string) => void;
     handleSave?: () => void;
     handleExport?: () => void;
 }
@@ -49,7 +48,6 @@ export const EditorLayout = ({
     isDashboard = false,
     title,
     isLoading = false,
-    onTitleChange,
     handleSave,
     handleExport,
 }: EditorLayoutProps) => {
@@ -174,17 +172,13 @@ export const EditorLayout = ({
                                 <Menu className="h-4 w-4" />
                                 <span className="sr-only">Toggle sidebar</span>
                             </Button>
-                            {isLoading ? (
-                                <Loader message={''} />
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={e => onTitleChange?.(e.target.value)}
-                                    className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
-                                    placeholder="New Page"
-                                />
-                            )}
+                            <input
+                                type="text"
+                                value={title}
+                                disabled={true}
+                                className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
+                                placeholder="New Page"
+                            />
                         </div>
                         <div className="flex items-center gap-2">
                             {!isDashboard && (

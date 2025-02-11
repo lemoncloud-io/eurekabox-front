@@ -22,7 +22,7 @@ export const UpdateContentPage = () => {
     const { contentId } = useParams<{ contentId: string }>();
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState<string>('New Page');
+    const [title, setTitle] = useState<string>('');
 
     const editor = useMemo(() => createYooptaEditor(), []);
     const selectionRef = useRef(null);
@@ -281,32 +281,29 @@ export const UpdateContentPage = () => {
             <EditorLayout
                 title={title}
                 isLoading={loading}
-                onTitleChange={handleTitleChange}
                 contentId={contentId}
                 handleSave={handleClickSave}
                 handleExport={handleClickExport}
             >
-                <div
-                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto"
-                    ref={selectionRef}
-                >
-                    <div className="ml-[2px]">
-                        <input
-                            type="text"
-                            className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
-                            placeholder="New Page"
+                <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto">
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={e => handleTitleChange(e.target.value)}
+                        className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
+                        placeholder="New Page"
+                    />
+                    <div ref={selectionRef}>
+                        <YooptaEditor
+                            selectionBoxRoot={selectionRef}
+                            editor={editor}
+                            plugins={plugins}
+                            tools={TOOLS as Partial<Tools>}
+                            marks={MARKS}
+                            width="100%"
+                            autoFocus={true}
                         />
                     </div>
-
-                    <YooptaEditor
-                        selectionBoxRoot={selectionRef}
-                        editor={editor}
-                        plugins={plugins}
-                        tools={TOOLS as Partial<Tools>}
-                        marks={MARKS}
-                        width="100%"
-                        autoFocus={true}
-                    />
                 </div>
             </EditorLayout>
         </>
