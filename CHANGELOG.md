@@ -1,5 +1,19 @@
 # Changelog
 
+## [2025-02-11] - root@0.14.0, @eurekabox/web@0.14.0
+
+### Features
+
+-   add error-case.json to public directory
+
+### Bug Fixes
+
+-   hide menu button when sidebar is open
+
+### Refactor
+
+-   redirect to home from root path
+
 ## [2025-02-11] - root@0.13.1, @eurekabox/web@0.13.1
 
 ### Refactor
