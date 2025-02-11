@@ -21,17 +21,23 @@ export const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-            <div className="text-center mb-8 justify-items-center">
-                <img src={Logo.purpleSymbol} alt="EurekaBox Logo" className="w-16 h-16 mb-4" />
-                <h1 className="text-2xl font-semibold mb-2">Welcome to EurekaBox</h1>
+            <div className="mb-7 flex flex-col justify-center items-center gap-2">
+                <img src={Logo.purpleSymbol} alt="EurekaBox Logo" className="w-[76px]" />
+                <h1 className="text-xl text-text font-medium">Welcome to EurekaBox</h1>
             </div>
 
             <Button
-                className="w-[360px] h-[48px] flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
+                className="relative w-[350px] h-[52px] flex items-center justify-center px-[18px] bg-background hover:border-[#8F19F6] dark:hover:border-[#7522BD] rounded-[8px] border  border-[#53555B]"
                 onClick={() => onClickLogin('google')}
             >
-                <img src={Images.googleLogo} alt="Google Logo" width={20} height={20} />
-                <span>Log in with Google account</span>
+                <img
+                    className="absolute left-[18px]"
+                    src={Images.googleLogo}
+                    alt="Google Logo"
+                    width={21}
+                    height={21}
+                />
+                <span className="text-text font-medium">Log in with Google account</span>
             </Button>
         </div>
     );
