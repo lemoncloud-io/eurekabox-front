@@ -109,7 +109,7 @@ export const EditorLayout = ({
             await createContent.mutateAsync(newContent, {
                 onSuccess: (response: ContentView) => {
                     prependContentToCache(response);
-                    navigate(`/home/${response.id}`);
+                    navigate(`/${response.id}`);
                 },
             });
         } catch (error) {
@@ -147,7 +147,7 @@ export const EditorLayout = ({
             toast({ description: `No Content!`, variant: 'destructive' });
             return;
         }
-        navigate(`/home/${content.id}`);
+        navigate(`/${content.id}`);
     };
 
     return (

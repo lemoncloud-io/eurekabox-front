@@ -10,7 +10,6 @@ import { useGlobalLoader } from '@eurekabox/shared';
 
 import { useContentCache } from './useContentCache';
 
-
 export const useCreateContentWithCache = () => {
     const navigate = useNavigate();
     const { prependContentToCache } = useContentCache();
@@ -29,7 +28,7 @@ export const useCreateContentWithCache = () => {
             await createContent.mutateAsync(newContent, {
                 onSuccess: (response: ContentView) => {
                     prependContentToCache(response);
-                    navigate(`/home/${response.id}`);
+                    navigate(`/${response.id}`);
                 },
             });
         } catch (e) {

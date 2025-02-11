@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-import { Images } from '@eurekabox/assets';
+import { Images, Logo } from '@eurekabox/assets';
 import { useGlobalLoader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 
@@ -22,7 +22,7 @@ export const LoginPage = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background">
             <div className="text-center mb-8 justify-items-center">
-                <img src={Images.boxLogo} alt="EurekaBox Logo" className="w-16 h-16 mb-4" />
+                <img src={Logo.purpleSymbol} alt="EurekaBox Logo" className="w-16 h-16 mb-4" />
                 <h1 className="text-2xl font-semibold mb-2">Welcome to EurekaBox</h1>
             </div>
 
