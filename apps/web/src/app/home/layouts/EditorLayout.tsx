@@ -2,16 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import {
-    Download,
-    EllipsisVertical,
-    FileUp,
-    LogOut,
-    Menu,
-    Plus,
-    Save,
-    Trash2,
-} from 'lucide-react';
+import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
