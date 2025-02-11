@@ -9,6 +9,7 @@ const AuthRedirect = () => {
 
 export const PublicRoutes = [
     { path: `/auth/*`, element: <AuthRoutes /> },
+    { path: '/', element: <AuthRedirect /> },
     {
         path: '*',
         element: <AuthRedirect />,
