@@ -287,9 +287,17 @@ export const UpdateContentPage = () => {
                 handleExport={handleClickExport}
             >
                 <div
-                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex justify-center max-w-screen-xl mx-auto"
+                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto"
                     ref={selectionRef}
                 >
+                    <div className="ml-[2px]">
+                        <input
+                            type="text"
+                            className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
+                            placeholder="New Page"
+                        />
+                    </div>
+
                     <YooptaEditor
                         selectionBoxRoot={selectionRef}
                         editor={editor}

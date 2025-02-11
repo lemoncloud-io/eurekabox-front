@@ -15,5 +15,12 @@
         "src/**/*.test.jsx",
         "jest.config.ts"
     ],
-    "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../../vite-env.d.ts"]
+    "include": [
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "../../vite-env.d.ts",
+        "src/app/home/pages/HomePagetsx"
+    ]
 }

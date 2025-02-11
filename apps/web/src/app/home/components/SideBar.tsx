@@ -12,6 +12,12 @@ import { Loader } from '@eurekabox/shared';
 import { useTheme } from '@eurekabox/theme';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@eurekabox/ui-kit/components/ui/tree-accordion';
 
 import { useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
@@ -58,14 +64,34 @@ const ContentList = ({
             <Button
                 key={content.id}
                 variant="ghost"
-                className={`w-[225px] h-[29px] justify-start font-normal text-text-700
-                    ${content.id === currentContentId ? 'bg-accent text-text font-medium' : ''}`}
+                className={`w-[225px] h-[29px] justify-start font-normal text-text-700 hover:bg-sidebar-hover
+                    ${content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''}`}
                 onClick={() => onContentClick(content)}
             >
                 <FileText className="h-4 w-4" />
                 <span className="truncate">{content.title || 'New Page'}</span>
             </Button>
         ))}
+        {/* TODO: tree nav */}
+        <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+                <AccordionTrigger showIcon={false} className="group flex items-center justify-between">
+                    <div className="flex-1">Page Title1</div>
+                    <button>
+                        <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </button>
+                </AccordionTrigger>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+                <AccordionTrigger className="group flex items-center justify-between">
+                    <div className="flex-1">Page Title1</div>
+                    <button>
+                        <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    </button>
+                </AccordionTrigger>
+                <AccordionContent>Page Title2</AccordionContent>
+            </AccordionItem>
+        </Accordion>
     </div>
 );
 
@@ -96,7 +122,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const isHomePage = location.pathname === '/home';
 
     return (
-        <div className="w-[248px] flex flex-col h-full bg-side-bar">
+        <div className="w-[248px] flex flex-col h-full bg-sidebar">
             <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
             <ScrollArea className="flex-grow">
                 <div className="px-3">
@@ -110,8 +136,8 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     </Button>
                     <Button
                         variant="ghost"
-                        className={`w-full h-[29px] justify-start text-text-700 ${
-                            isHomePage ? 'bg-accent text-text font-medium' : ''
+                        className={`w-full h-[29px] justify-start text-text-700 hover:bg-sidebar-hover ${
+                            isHomePage ? 'bg-sidebar-hover text-text font-medium' : ''
                         }`}
                         onClick={() => navigate('/home')}
                     >

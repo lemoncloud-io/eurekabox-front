@@ -62,14 +62,14 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                 <ChevronLeft />
                             </button>
                         </DialogClose>
-                        <div className="w-full h-[37px] bg-input dark:bg-white p-2 rounded-[6px] flex items-center">
-                            <Search className="h-4 w-4" />
+                        <div className="w-full h-[37px] bg-input  p-2 rounded-[6px] flex items-center">
+                            <Search className="h-4 w-4 text-text" />
                             <Input
                                 type="text"
                                 placeholder="Enter search term"
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="border-none "
+                                className="border-none text-text"
                                 autoFocus
                             />
                         </div>
