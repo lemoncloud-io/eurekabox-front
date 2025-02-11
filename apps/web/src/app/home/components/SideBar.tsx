@@ -24,7 +24,12 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
 
     return (
         <div className="p-4 flex items-center space-x-4">
-            <img src={Logo.black1} alt="EurekaBox Logo" className="h-8" />
+            <img
+                src={Logo.black1}
+                alt="EurekaBox Logo"
+                className="h-8 cursor-pointer"
+                onClick={() => navigate('/home')}
+            />
             <button className="p-1 hover:bg-gray-100 rounded-md" onClick={onClose} aria-label="Toggle Sidebar">
                 <ChevronsLeft className="h-5 w-5" />
             </button>
