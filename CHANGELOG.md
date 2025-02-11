@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-02-11] - root@0.12.0, @eurekabox/web@0.12.0
+
+### Features
+
+-   update routes for cleaner URLs
+-   update eureka box logo
+
 ## [2025-02-10] - root@0.11.0, @eurekabox/web@0.11.0
 
 ### Features
