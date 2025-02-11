@@ -1,5 +1,14 @@
 # Changelog
 
+## [2025-02-11] - root@0.13.0, @eurekabox/web@0.13.0
+
+### Features
+
+-   change default title to 'New Page'
+-   move 'New Page' button to bottom
+-   make logo clickable to navigate home
+-   support dark theme in Sidebar
+
 ## [2025-02-11] - root@0.12.0, @eurekabox/web@0.12.0
 
 ### Features
