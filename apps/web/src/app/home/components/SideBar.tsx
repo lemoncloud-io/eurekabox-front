@@ -113,16 +113,6 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
 
                     <div className="mt-6">
                         <h2 className="px-3 text-sm font-medium text-gray-500 mb-2">Page</h2>
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start text-gray-700 hover:bg-gray-100 mb-2"
-                            onClick={handleCreate}
-                            disabled={isCreatePending}
-                        >
-                            <Plus className="mr-2 h-4 w-4" />
-                            New Page
-                        </Button>
-
                         {isLoading && <Loader />}
                         {!isLoading && contents.length === 0 && (
                             <div className="px-3 text-sm text-gray-500">No Pages</div>
@@ -134,6 +124,15 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                                 onContentClick={handleContentClick}
                             />
                         )}
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start text-gray-700 hover:bg-gray-100 mt-2 border border-gray-800"
+                            onClick={handleCreate}
+                            disabled={isCreatePending}
+                        >
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Page
+                        </Button>
                     </div>
                 </div>
             </ScrollArea>
