@@ -9,6 +9,7 @@ import { Logo } from '@eurekabox/assets';
 import { useContents } from '@eurekabox/contents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Loader } from '@eurekabox/shared';
+import { useTheme } from '@eurekabox/theme';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
@@ -21,10 +22,16 @@ type SideBarProps = {
 
 const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onClickNewPage: () => void }) => {
     const navigate = useNavigate();
+    const { isDarkTheme } = useTheme();
 
     return (
         <div className="p-4 flex items-center space-x-4">
-            <img src={Logo.black1} alt="EurekaBox Logo" className="h-8" />
+            <img
+                src={isDarkTheme ? Logo.purple1 : Logo.black1}
+                alt="EurekaBox Logo"
+                className="h-8 cursor-pointer"
+                onClick={() => navigate('/home')}
+            />
             <button className="p-1 hover:bg-gray-100 rounded-md" onClick={onClose} aria-label="Toggle Sidebar">
                 <ChevronsLeft className="h-5 w-5" />
             </button>
@@ -49,12 +56,12 @@ const ContentList = ({
             <Button
                 key={content.id}
                 variant="ghost"
-                className={`w-full justify-start font-normal text-gray-700 hover:bg-gray-100
-                    ${content.id === currentContentId ? 'bg-gray-100' : ''}`}
+                className={`w-full justify-start font-normal text-foreground hover:bg-accent
+                    ${content.id === currentContentId ? 'bg-accent' : ''}`}
                 onClick={() => onContentClick(content)}
             >
                 <FileText className="mr-2 h-4 w-4" />
-                <span className="truncate">{content.title || 'Untitled'}</span>
+                <span className="truncate">{content.title || 'New Page'}</span>
             </Button>
         ))}
     </div>
@@ -64,6 +71,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
+    const { isDarkTheme } = useTheme();
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -87,14 +95,14 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const isHomePage = location.pathname === '/home';
 
     return (
-        <div className="w-[296px] flex flex-col h-full bg-white border-r">
+        <div className={`w-[296px] flex flex-col h-full border-r ${isDarkTheme ? 'bg-background' : 'bg-white'}`}>
             <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
 
             <ScrollArea className="flex-grow">
                 <div className="px-3 py-2">
                     <Button
                         variant="ghost"
-                        className="w-full justify-start text-gray-700 hover:bg-gray-100"
+                        className="w-full justify-start text-foreground hover:bg-accent"
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <Search className="mr-2 h-4 w-4" />
@@ -102,8 +110,8 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     </Button>
                     <Button
                         variant="ghost"
-                        className={`w-full justify-start text-gray-700 hover:bg-gray-100 ${
-                            isHomePage ? 'bg-gray-100' : ''
+                        className={`w-full justify-start text-foreground hover:bg-accent ${
+                            isHomePage ? 'bg-accent' : ''
                         }`}
                         onClick={() => navigate('/home')}
                     >
@@ -112,20 +120,10 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                     </Button>
 
                     <div className="mt-6">
-                        <h2 className="px-3 text-sm font-medium text-gray-500 mb-2">Page</h2>
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start text-gray-700 hover:bg-gray-100 mb-2"
-                            onClick={handleCreate}
-                            disabled={isCreatePending}
-                        >
-                            <Plus className="mr-2 h-4 w-4" />
-                            New Page
-                        </Button>
-
+                        <h2 className="px-3 text-sm font-medium text-muted-foreground mb-2">Page</h2>
                         {isLoading && <Loader />}
                         {!isLoading && contents.length === 0 && (
-                            <div className="px-3 text-sm text-gray-500">No Pages</div>
+                            <div className="px-3 text-sm text-muted-foreground">No Pages</div>
                         )}
                         {!isLoading && (
                             <ContentList
@@ -134,6 +132,15 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                                 onContentClick={handleContentClick}
                             />
                         )}
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start text-foreground hover:bg-accent mt-2 border border-border"
+                            onClick={handleCreate}
+                            disabled={isCreatePending}
+                        >
+                            <Plus className="mr-2 h-4 w-4" />
+                            New Page
+                        </Button>
                     </div>
                 </div>
             </ScrollArea>

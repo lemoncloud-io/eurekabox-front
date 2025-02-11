@@ -20,7 +20,7 @@ export const useCreateContentWithCache = () => {
         setIsLoading(true);
         const newContent: CreateContentDTO = {
             name: '',
-            title: 'Untitled',
+            title: 'New Page',
             subject: '',
         };
 
