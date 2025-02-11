@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
 import { useTheme } from '@eurekabox/theme';
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
 
 export function ThemeToggle() {
     const { theme, setTheme } = useTheme();
@@ -18,14 +17,12 @@ export function ThemeToggle() {
     }
 
     return (
-        <Button
-            variant="ghost"
-            size="icon"
+        <button
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className="hover:text-primary"
+            className="w-7 h-7 rounded-[4px] flex items-center justify-center hover:bg-accent"
         >
-            {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            {theme === 'light' ? <Moon width={24} height={24} /> : <Sun width={24} height={24} />}
             <span className="sr-only">Toggle theme</span>
-        </Button>
+        </button>
     );
 }

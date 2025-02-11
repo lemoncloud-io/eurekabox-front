@@ -25,19 +25,21 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
     const { isDarkTheme } = useTheme();
 
     return (
-        <div className="p-4 flex items-center space-x-4">
+        <div className="h-[54px] px-4 flex items-center justify-between">
             <img
                 src={isDarkTheme ? Logo.purple1 : Logo.black1}
                 alt="EurekaBox Logo"
-                className="h-8 cursor-pointer"
+                className="h-[30px] cursor-pointer"
                 onClick={() => navigate('/home')}
             />
-            <button className="p-1 hover:bg-gray-100 rounded-md" onClick={onClose} aria-label="Toggle Sidebar">
-                <ChevronsLeft className="h-5 w-5" />
-            </button>
-            <button className="p-1 hover:bg-gray-100 rounded-md" aria-label="Edit" onClick={onClickNewPage}>
-                <SquarePen className="h-5 w-5" />
-            </button>
+            <div className="flex items-center gap-[9px]">
+                <button onClick={onClose} aria-label="Toggle Sidebar">
+                    <ChevronsLeft className="h-[18px] w-[18px] hover:text-[#BABCC0]" />
+                </button>
+                <button aria-label="Edit" onClick={onClickNewPage}>
+                    <SquarePen className="h-[18px] w-[18px] hover:text-[#BABCC0]" />
+                </button>
+            </div>
         </div>
     );
 };
@@ -51,16 +53,16 @@ const ContentList = ({
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
 }) => (
-    <div className="space-y-1">
+    <div className="space-y-1 mt-1">
         {contents.map(content => (
             <Button
                 key={content.id}
                 variant="ghost"
-                className={`w-full justify-start font-normal text-foreground hover:bg-accent
-                    ${content.id === currentContentId ? 'bg-accent' : ''}`}
+                className={`w-[225px] h-[29px] justify-start font-normal text-text-700
+                    ${content.id === currentContentId ? 'bg-accent text-text font-medium' : ''}`}
                 onClick={() => onContentClick(content)}
             >
-                <FileText className="mr-2 h-4 w-4" />
+                <FileText className="h-4 w-4" />
                 <span className="truncate">{content.title || 'New Page'}</span>
             </Button>
         ))}
@@ -71,7 +73,6 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
-    const { isDarkTheme } = useTheme();
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -95,36 +96,45 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
     const isHomePage = location.pathname === '/home';
 
     return (
-        <div className={`w-[296px] flex flex-col h-full border-r ${isDarkTheme ? 'bg-background' : 'bg-white'}`}>
+        <div className="w-[248px] flex flex-col h-full bg-side-bar">
             <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
-
             <ScrollArea className="flex-grow">
-                <div className="px-3 py-2">
+                <div className="px-3">
                     <Button
                         variant="ghost"
-                        className="w-full justify-start text-foreground hover:bg-accent"
+                        className="w-full justify-start text-text-700 hover:bg-transparent"
                         onClick={() => setIsSearchOpen(true)}
                     >
-                        <Search className="mr-2 h-4 w-4" />
+                        <Search className="h-4 w-4" />
                         Search
                     </Button>
                     <Button
                         variant="ghost"
-                        className={`w-full justify-start text-foreground hover:bg-accent ${
-                            isHomePage ? 'bg-accent' : ''
+                        className={`w-full h-[29px] justify-start text-text-700 ${
+                            isHomePage ? 'bg-accent text-text font-medium' : ''
                         }`}
                         onClick={() => navigate('/home')}
                     >
-                        <Home className="mr-2 h-4 w-4" />
+                        <Home className="h-4 w-4" />
                         Home
                     </Button>
-
-                    <div className="mt-6">
-                        <h2 className="px-3 text-sm font-medium text-muted-foreground mb-2">Page</h2>
+                    {/* TODO: bookmark */}
+                    {/* <div className="mt-[22px]">
+                        <h2 className="px-2 text-xs text-dim font-medium">Bookmark</h2>
+                        <Button variant="ghost" className=" h-[29px] justify-between font-normal text-text-700">
+                            <div className="w-[175px] flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                <span className="truncate">page</span>
+                            </div>
+                            <button>
+                                <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
+                            </button>
+                        </Button>
+                    </div> */}
+                    <div className="mt-[22px]">
+                        <h2 className="px-2 text-xs text-dim font-medium">Page</h2>
                         {isLoading && <Loader />}
-                        {!isLoading && contents.length === 0 && (
-                            <div className="px-3 text-sm text-muted-foreground">No Pages</div>
-                        )}
+                        {!isLoading && contents.length === 0 && <div className="px-4 text-sm text-dim">No Pages</div>}
                         {!isLoading && (
                             <ContentList
                                 contents={contents}
@@ -132,15 +142,17 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                                 onContentClick={handleContentClick}
                             />
                         )}
-                        <Button
-                            variant="ghost"
-                            className="w-full justify-start text-foreground hover:bg-accent mt-2 border border-border"
-                            onClick={handleCreate}
-                            disabled={isCreatePending}
-                        >
-                            <Plus className="mr-2 h-4 w-4" />
-                            New Page
-                        </Button>
+                        <div className="px-2">
+                            <Button
+                                variant="ghost"
+                                className="mt-[22px] dark:bg-[#3A3C40] dark:border-[#53555B] w-full h-[33px] text-text-800 border border-text-700 font-medium"
+                                onClick={handleCreate}
+                                disabled={isCreatePending}
+                            >
+                                <Plus className="h-4 w-4 text-text-800" />
+                                New Page
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </ScrollArea>
