@@ -167,15 +167,17 @@ export const EditorLayout = ({
                 >
                     <header className="flex items-center justify-between p-4 glassmorphism">
                         <div className="flex items-center gap-4 w-full">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setSidebarOpen(!sidebarOpen)}
-                                className="hover:text-primary"
-                            >
-                                <Menu className="h-5 w-5" />
-                                <span className="sr-only">Toggle sidebar</span>
-                            </Button>
+                            {!sidebarOpen && (
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                                    className="hover:text-primary"
+                                >
+                                    <Menu className="h-5 w-5" />
+                                    <span className="sr-only">Toggle sidebar</span>
+                                </Button>
+                            )}
                             {isLoading ? (
                                 <Loader message={''} />
                             ) : (
