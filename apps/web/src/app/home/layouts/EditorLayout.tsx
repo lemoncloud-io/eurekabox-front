@@ -195,8 +195,14 @@ export const EditorLayout = ({
                                         onClick={handleSaveClick}
                                         disabled={isLoading}
                                     >
-                                        <Save className="h-4 w-4" />
-                                        <span>Save</span>
+                                        {isLoading ? (
+                                            <Loader message={''} />
+                                        ) : (
+                                            <>
+                                                <Save className="h-4 w-4" />
+                                                <span>Save</span>
+                                            </>
+                                        )}
                                     </Button>
                                     {/* TODO: bookmark */}
                                     {/* <button>
