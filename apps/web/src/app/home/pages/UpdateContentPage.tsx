@@ -25,6 +25,7 @@ export const UpdateContentPage = () => {
     const [title, setTitle] = useState<string>('');
 
     const editor = useMemo(() => createYooptaEditor(), []);
+    const titleInputRef = useRef<HTMLInputElement>(null);
     const selectionRef = useRef(null);
     const savedSelectionRef = useRef<{ start: number; end: number } | null>(null); // to restore cursor
 
@@ -288,6 +289,7 @@ export const UpdateContentPage = () => {
                 <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto">
                     <input
                         type="text"
+                        ref={titleInputRef}
                         value={title}
                         onChange={e => handleTitleChange(e.target.value)}
                         className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
