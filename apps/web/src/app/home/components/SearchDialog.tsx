@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { FileText } from 'lucide-react';
+import { ChevronLeft, FileText, Search } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
@@ -8,7 +8,7 @@ import { useContents } from '@eurekabox/contents';
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { ScrollArea } from '@eurekabox/lib/components/ui/scroll-area';
 import { Loader, useDebounce } from '@eurekabox/shared';
-import { Dialog, DialogContent, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
 
 interface SearchDialogProps {
     open: boolean;
@@ -54,20 +54,28 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTitle></DialogTitle>
-            <DialogContent className="sm:max-w-[700px] p-0">
-                <div className="flex flex-col h-[80vh]">
-                    <div className="p-4 border-b">
-                        <Input
-                            type="text"
-                            placeholder="검색어를 입력하세요..."
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                            className="text-lg"
-                            autoFocus
-                        />
+            <DialogContent className="max-w-[650px] p-0">
+                <div className="flex flex-col h-[240px] p-3">
+                    <div className="flex items-center gap-[6px]">
+                        <DialogClose asChild>
+                            <button className="text-text">
+                                <ChevronLeft />
+                            </button>
+                        </DialogClose>
+                        <div className="w-full h-[37px] bg-input dark:bg-white p-2 rounded-[6px] flex items-center">
+                            <Search className="h-4 w-4" />
+                            <Input
+                                type="text"
+                                placeholder="Enter search term"
+                                value={searchTerm}
+                                onChange={e => setSearchTerm(e.target.value)}
+                                className="border-none "
+                                autoFocus
+                            />
+                        </div>
                     </div>
-                    <ScrollArea className="flex-grow">
-                        <div className="p-4 space-y-4">
+                    <ScrollArea className="flex-grow mt-[18px]">
+                        <div className="space-y-1">
                             {isLoading ? (
                                 <Loader message={'Loading...'} />
                             ) : (
@@ -79,18 +87,18 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                                 onContentSelect(result);
                                                 onOpenChange(false);
                                             }}
-                                            className="flex items-start space-x-4 p-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
+                                            className="flex space-x-2 p-1 rounded-[4px] hover:bg-accent transition-colors cursor-pointer"
                                         >
-                                            <FileText className="w-6 h-6 mt-1 text-blue-500" />
+                                            <FileText className="w-4 h-4 mt-[2px] text-text" />
                                             <div>
-                                                <h3 className="font-semibold">
+                                                <h3 className="text-text">
                                                     <HighlightedText
                                                         text={result.title || 'New Page'}
                                                         searchTerm={debouncedSearchTerm}
                                                     />
                                                 </h3>
                                                 {result.readme && (
-                                                    <p className="text-sm text-muted-foreground">
+                                                    <p className="text-xs text-dim">
                                                         <HighlightedText
                                                             text={result.readme}
                                                             searchTerm={debouncedSearchTerm}
@@ -101,7 +109,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                         </div>
                                     ))}
                                     {filteredResults.length === 0 && debouncedSearchTerm && (
-                                        <p className="text-center text-muted-foreground">검색 결과가 없습니다.</p>
+                                        <p className="text-center text-dim py-[50px]">검색 결과가 없습니다.</p>
                                     )}
                                 </>
                             )}
