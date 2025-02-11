@@ -184,7 +184,7 @@ export const EditorLayout = ({
                                     value={title}
                                     onChange={e => onTitleChange?.(e.target.value)}
                                     className="w-full text-xl font-semibold gradient-text border-none focus:outline-none caret-black dark:caret-white"
-                                    placeholder="Untitled"
+                                    placeholder="New Page"
                                 />
                             )}
                         </div>
