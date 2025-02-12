@@ -177,7 +177,7 @@ export const EditorLayout = ({
                                 value={title}
                                 disabled={true}
                                 className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
-                                placeholder="New Page"
+                                placeholder={isDashboard ? '' : 'New Page'}
                             />
                         </div>
                         <div className="flex items-center gap-2">
