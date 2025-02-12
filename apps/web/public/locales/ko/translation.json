@@ -1,0 +1,20 @@
+{
+    "login": {
+        "welcome": "EurekaBox에 오신 것을 환영합니다",
+        "googleButton": "Google 계정으로 로그인"
+    },
+    "oauth": {
+        "signing": "로그인 중...",
+        "error": {
+            "general": "에러가 발생했습니다.",
+            "stateParam": "상태 파라미터 파싱 실패:"
+        }
+    },
+    "tokenReceiver": {
+        "error": {
+            "auth": "인증 처리 중 오류가 발생했습니다.",
+            "timeout": "데이터 수신 시간이 초과되었습니다.",
+            "general": "오류가 발생했습니다."
+        }
+    }
+}

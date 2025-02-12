@@ -1,0 +1,20 @@
+{
+    "login": {
+        "welcome": "Welcome to EurekaBox",
+        "googleButton": "Log in with Google account"
+    },
+    "oauth": {
+        "signing": "Signing...",
+        "error": {
+            "general": "An error occurred.",
+            "stateParam": "Failed to parse state parameter:"
+        }
+    },
+    "tokenReceiver": {
+        "error": {
+            "auth": "An error occurred during authentication.",
+            "timeout": "Data reception time has expired.",
+            "general": "An error occurred."
+        }
+    }
+}

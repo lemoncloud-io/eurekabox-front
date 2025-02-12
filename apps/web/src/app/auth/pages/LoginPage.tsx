@@ -1,10 +1,18 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+
+import i18n from 'i18next';
 
 import { Images, Logo } from '@eurekabox/assets';
 import { useGlobalLoader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 
+
 export const LoginPage = () => {
+    const { t } = useTranslation();
+    const [language, setLanguage] = useState<string>(i18n.language || 'en');
+
     const { setIsLoading } = useGlobalLoader();
     const location = useLocation();
     const from = location.state?.from || '/home';
@@ -19,11 +27,17 @@ export const LoginPage = () => {
         window.location.replace(`${SOCIAL_OAUTH}/oauth/${provider}/authorize?redirect=${redirectUrl}`);
     };
 
+    const toggleLanguage = () => {
+        const newLanguage = language === 'en' ? 'ko' : 'en';
+        setLanguage(newLanguage);
+        i18n.changeLanguage(newLanguage);
+    };
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background">
             <div className="mb-7 flex flex-col justify-center items-center gap-2">
                 <img src={Logo.purpleSymbol} alt="EurekaBox Logo" className="w-[76px]" />
-                <h1 className="text-xl text-text font-medium">Welcome to EurekaBox</h1>
+                <h1 className="text-xl text-text font-medium">{t('login.welcome')}</h1>
             </div>
 
             <Button
@@ -37,7 +51,7 @@ export const LoginPage = () => {
                     width={21}
                     height={21}
                 />
-                <span className="text-text font-medium">Log in with Google account</span>
+                <span className="text-text font-medium">{t('login.googleButton')}</span>
             </Button>
         </div>
     );
