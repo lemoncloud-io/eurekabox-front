@@ -117,13 +117,14 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 });
 
                 editor.setEditorValue(value);
+                return !hasNoElement;
             } catch (err) {
                 console.error('Failed to load content:', err);
                 setError(err as Error);
+                return false;
             } finally {
                 loadingRef.current = false;
                 setLoading(false);
-                editor.focus();
             }
         },
         [contentId, editor]

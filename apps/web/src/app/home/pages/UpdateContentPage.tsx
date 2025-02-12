@@ -40,39 +40,41 @@ export const UpdateContentPage = () => {
             console.log('Invalid editor or blockId');
             return;
         }
-
-        const baseOptions = {
-            waitExecution: true,
-            waitExecutionMs: 0,
-        };
-
-        // selection이 유효한지 한번 더 체크
-        const isValidSelection =
-            savedSelectionRef.current &&
-            typeof savedSelectionRef.current?.start === 'number' &&
-            typeof savedSelectionRef.current?.end === 'number';
-
-        console.log(savedSelectionRef.current);
-
-        const focusOptions =
-            isValidSelection && savedSelectionRef.current?.start === savedSelectionRef.current?.end
-                ? {
-                      ...baseOptions,
-                      focusAt: {
-                          path: [0],
-                          offset: savedSelectionRef.current?.end,
-                      },
-                  }
-                : baseOptions;
-
         try {
-            editor.focusBlock(blockId, focusOptions);
+            setTimeout(() => {
+                try {
+                    const baseOptions = {
+                        waitExecution: true,
+                        waitExecutionMs: 0,
+                    };
+
+                    // selection이 유효한지 한번 더 체크
+                    const isValidSelection =
+                        savedSelectionRef.current &&
+                        typeof savedSelectionRef.current?.start === 'number' &&
+                        typeof savedSelectionRef.current?.end === 'number';
+
+                    const focusOptions =
+                        isValidSelection && savedSelectionRef.current?.start === savedSelectionRef.current?.end
+                            ? {
+                                  ...baseOptions,
+                                  focusAt: {
+                                      path: [0],
+                                      offset: savedSelectionRef.current?.end,
+                                  },
+                              }
+                            : baseOptions;
+                    editor.focusBlock(blockId, focusOptions);
+                } catch (innerError) {
+                    console.log('Focus block failed in timeout:', innerError);
+                    editor.focus(); // fallback: 에디터 자체에 포커스
+                } finally {
+                    savedSelectionRef.current = null;
+                }
+            }, 0);
         } catch (error) {
             console.log('Focus block failed:', error);
-            // fallback: 기본 옵션으로 다시 시도
-            editor.focusBlock(blockId, baseOptions);
-        } finally {
-            savedSelectionRef.current = null;
+            editor.focus(); // fallback: 에디터 자체에 포커스
         }
     }, []);
 
@@ -98,6 +100,8 @@ export const UpdateContentPage = () => {
     useEffect(() => {
         if (content?.title) {
             setTitle(content.title);
+        } else {
+            setTitle('');
         }
     }, [content]);
 
@@ -116,7 +120,12 @@ export const UpdateContentPage = () => {
         if (loading) {
             savedSelectionRef.current = saveSelection();
             editor.blur();
+        } else if (titleInputRef.current && !content?.element$$?.length) {
+            // If no content, focus on title input
+            titleInputRef.current.focus();
+            titleInputRef.current.select();
         } else {
+            // If has content, focus on editor
             const currentContent = editor.getEditorValue();
             const currentPath = editor.path;
 
@@ -127,6 +136,8 @@ export const UpdateContentPage = () => {
                 }
                 const blockId = previousBlock[0];
                 focusBlockWithOptions(editor, blockId);
+            } else {
+                editor.focus();
             }
         }
 
@@ -140,6 +151,7 @@ export const UpdateContentPage = () => {
 
         const currentPath = editor.path;
         savedSelectionRef.current = saveSelection();
+        const isTitleFocused = document.activeElement === titleInputRef.current;
 
         try {
             await handleSave(title);
@@ -166,8 +178,10 @@ export const UpdateContentPage = () => {
                 description: '문서가 성공적으로 저장되었습니다.',
             });
 
-            // 저장 완료 후 이전 path로 복원
-            if (currentPath.current !== null) {
+            // 저장 완료 후 이전 포커스 상태 복원
+            if (isTitleFocused && titleInputRef.current) {
+                titleInputRef.current.focus();
+            } else if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
                 if (!previousBlock || previousBlock.length === 0) {
                     return;
