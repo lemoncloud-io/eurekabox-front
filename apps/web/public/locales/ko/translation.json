@@ -6,6 +6,7 @@
     },
     "oauth": {
         "signing": "로그인 중...",
+        "logout": "로그아웃하였습니다.",
         "error": {
             "general": "에러가 발생했습니다.",
             "stateParam": "상태 파라미터 파싱 실패:"

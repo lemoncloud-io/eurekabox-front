@@ -6,6 +6,7 @@
     },
     "oauth": {
         "signing": "Signing...",
+        "logout": "You have been successfully logged out.",
         "error": {
             "general": "An error occurred.",
             "stateParam": "Failed to parse state parameter:"
