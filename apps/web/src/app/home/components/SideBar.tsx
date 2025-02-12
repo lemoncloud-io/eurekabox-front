@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
+import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
@@ -10,14 +10,14 @@ import { useContents } from '@eurekabox/contents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Loader } from '@eurekabox/shared';
 import { useTheme } from '@eurekabox/theme';
-import { Button } from '@eurekabox/ui-kit/components/ui/button';
-import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from '@eurekabox/ui-kit/components/ui/tree-accordion';
+} from '@eurekabox/ui-kit/components/ui/accordion';
+import { Button } from '@eurekabox/ui-kit/components/ui/button';
+import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
 import { useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
@@ -64,32 +64,49 @@ const ContentList = ({
             <Button
                 key={content.id}
                 variant="ghost"
-                className={`w-[225px] h-[29px] justify-start font-normal text-text-700 hover:bg-sidebar-hover
+                className={`w-full h-[29px] justify-start font-normal text-text-700 hover:bg-sidebar-hover
                     ${content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''}`}
                 onClick={() => onContentClick(content)}
             >
-                <FileText className="h-4 w-4" />
-                <span className="truncate">{content.title || 'New Page'}</span>
+                <FileText className="h-4 w-4 shrink-0" />
+                <span className="truncate flex-1 w-0 text-left">{content.title || 'New Page'}</span>
             </Button>
         ))}
         {/* TODO: tree nav */}
         <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
-                <AccordionTrigger showIcon={false} className="group flex items-center justify-between">
-                    <div className="flex-1">Page Title1</div>
+                <AccordionTrigger className="group flex items-center justify-between">
+                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
+                    <div className="flex-1 flex items-center gap-1 min-w-0">
+                        <FileText className="h-4 w-4 shrink-0" />
+                        <div className="w-0 flex-1 truncate">Page Title1</div>
+                    </div>
                     <button>
                         <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                     </button>
                 </AccordionTrigger>
             </AccordionItem>
+
             <AccordionItem value="item-2">
                 <AccordionTrigger className="group flex items-center justify-between">
-                    <div className="flex-1">Page Title1</div>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                    <div className="flex-1 flex items-center gap-1 min-w-0">
+                        <FileText className="h-4 w-4" />
+                        <div className="flex-1">Page Title2</div>
+                    </div>
                     <button>
                         <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                     </button>
                 </AccordionTrigger>
-                <AccordionContent>Page Title2</AccordionContent>
+                <AccordionContent>
+                    <div className="p-1 flex items-center">
+                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                        <div className="flex-1 flex items-center gap-1 min-w-0">
+                            <FileText className="h-4 w-4" />
+                            <div className="flex-1">Page Title2-1</div>
+                        </div>
+                    </div>
+                </AccordionContent>
             </AccordionItem>
         </Accordion>
     </div>

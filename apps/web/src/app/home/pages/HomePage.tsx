@@ -8,7 +8,6 @@ import { Separator } from '@eurekabox/lib/components/ui/separator';
 
 import { EditorLayout } from '../layouts/EditorLayout';
 
-
 export const HomePage = () => {
     const [title, setTitle] = useState<string>('TODO: Create Home');
 
@@ -24,7 +23,7 @@ export const HomePage = () => {
                             className="w-full h-[29px] justify-start font-normal text-text-700 px-1"
                         >
                             <FileText className="h-4 w-4" />
-                            <span className="truncate">New Page</span>
+                            <span className="flex-1 text-left truncate w-0">New Page</span>
                         </Button>
                         <Separator className="my-[6px]" />
                         <Button
@@ -32,7 +31,7 @@ export const HomePage = () => {
                             className="w-full h-[29px] justify-start font-normal text-text-700 px-1"
                         >
                             <FileText className="h-4 w-4" />
-                            <span className="truncate">New Page</span>
+                            <span className="flex-1 text-left truncate w-0">New Page</span>
                         </Button>
                         <button className="underline text-text-700 mt-[10px] ml-1">View more</button>
                     </Card>
