@@ -1,16 +1,22 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { LoadingFallback } from '@eurekabox/shared';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
 export const LogoutPage = () => {
+    const { t } = useTranslation();
     const isAuthenticated = useWebCoreStore(state => state.isAuthenticated);
     const logout = useWebCoreStore(state => state.logout);
     const navigate = useNavigate();
 
     useEffect(() => {
-        logout();
+        toast({ description: t('oauth.logout') });
+        setTimeout(() => {
+            logout();
+        }, 2000);
     }, []);
 
     useEffect(() => {
@@ -19,5 +25,5 @@ export const LogoutPage = () => {
         }
     }, [isAuthenticated]);
 
-    return <LoadingFallback message={'Sign Out'} />;
+    return <LoadingFallback message={t('editor.logout')} />;
 };
