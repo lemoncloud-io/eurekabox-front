@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
@@ -108,6 +109,7 @@ const ContentList = ({
 );
 
 export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
@@ -125,7 +127,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
 
     const handleContentSelect = (content: ContentView) => {
         if (!content || !content.id) {
-            toast({ description: `No Content!`, variant: 'destructive' });
+            toast({ description: t('sidebar.toast.noContent'), variant: 'destructive' });
             return;
         }
         navigate(`/${content.id}`);
@@ -148,7 +150,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <Search className="h-4 w-4" />
-                        Search
+                        {t('sidebar.search')}
                     </Button>
                     <Button
                         variant="ghost"
@@ -158,11 +160,11 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         onClick={() => navigate('/home')}
                     >
                         <Home className="h-4 w-4" />
-                        Home
+                        {t('sidebar.home')}
                     </Button>
                     {/* TODO: bookmark */}
                     {/* <div className="mt-[22px]">
-                        <h2 className="px-2 text-xs text-dim font-medium">Bookmark</h2>
+                        <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.bookmark')}</h2>
                         <Button variant="ghost" className=" h-[29px] justify-between font-normal text-text-700">
                             <div className="w-[175px] flex items-center gap-2">
                                 <FileText className="h-4 w-4" />
@@ -174,9 +176,11 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         </Button>
                     </div> */}
                     <div className="mt-[22px]">
-                        <h2 className="px-2 text-xs text-dim font-medium">Page</h2>
+                        <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.page')}</h2>
                         {isLoading && <Loader />}
-                        {!isLoading && contents.length === 0 && <div className="px-4 text-sm text-dim">No Pages</div>}
+                        {!isLoading && contents.length === 0 && (
+                            <div className="px-4 text-sm text-dim">{t('sidebar.noPages')}</div>
+                        )}
                         {!isLoading && (
                             <ContentList
                                 currentContentTitle={currentContentTitle}
@@ -194,7 +198,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                                 disabled={isCreatePending}
                             >
                                 <Plus className="h-4 w-4 text-text-800" />
-                                New Page
+                                {t('sidebar.newPage')}
                             </Button>
                         </div>
                     </div>

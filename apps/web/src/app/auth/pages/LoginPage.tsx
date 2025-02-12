@@ -1,17 +1,13 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import i18n from 'i18next';
 
 import { Images, Logo } from '@eurekabox/assets';
 import { useGlobalLoader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 
-
 export const LoginPage = () => {
     const { t } = useTranslation();
-    const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const { setIsLoading } = useGlobalLoader();
     const location = useLocation();
@@ -25,12 +21,6 @@ export const LoginPage = () => {
         const redirectUrl = `${HOST}/auth/oauth-response?state=${state}`;
 
         window.location.replace(`${SOCIAL_OAUTH}/oauth/${provider}/authorize?redirect=${redirectUrl}`);
-    };
-
-    const toggleLanguage = () => {
-        const newLanguage = language === 'en' ? 'ko' : 'en';
-        setLanguage(newLanguage);
-        i18n.changeLanguage(newLanguage);
     };
 
     return (

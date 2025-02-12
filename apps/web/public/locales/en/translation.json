@@ -1,4 +1,5 @@
 {
+    "generalError": "An error occurred.",
     "login": {
         "welcome": "Welcome to EurekaBox",
         "googleButton": "Log in with Google account"
@@ -16,5 +17,87 @@
             "timeout": "Data reception time has expired.",
             "general": "An error occurred."
         }
+    },
+    "search": {
+        "placeholder": "Enter search term",
+        "loading": "Loading...",
+        "newPage": "New Page",
+        "noResults": "Please enter the page name."
+    },
+    "sidebar": {
+        "search": "Search",
+        "home": "Home",
+        "sections": {
+            "page": "Page",
+            "bookmark": "Bookmark"
+        },
+        "noPages": "No Pages",
+        "newPage": "New Page",
+        "toast": {
+            "noContent": "No Content!"
+        }
+    },
+    "editor": {
+        "newPage": "New Page",
+        "save": "Save",
+        "more": "More",
+        "export": {
+            "markdown": "Export as Markdown",
+            "html": "Export as HTML"
+        },
+        "import": {
+            "title": "Import Markdown, HTML",
+            "success": {
+                "title": "File Upload Success",
+                "description": "File has been loaded successfully."
+            },
+            "error": {
+                "invalidFormat": "Only .md and .html files are allowed.",
+                "uploadFailed": "Error occurred while reading the markdown file.",
+                "wrongFormat": "Invalid file format"
+            }
+        },
+        "delete": {
+            "button": "Trash",
+            "title": "Are you sure you want to delete this document?",
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "success": "Successfully deleted."
+        },
+        "toggleSidebar": "Toggle sidebar",
+        "noContent": "No Content!",
+        "logout": "Log out"
+    },
+    "home": {
+        "title": "Home",
+        "myPage": "My Page",
+        "noPages": "No Pages",
+        "viewMore": "View more",
+        "viewLess": "View less"
+    },
+    "editorPage": {
+        "newPage": "New Page",
+        "save": {
+            "complete": "Save Complete",
+            "success": "Document has been saved successfully.",
+            "failed": "Save Failed",
+            "error": "An error occurred while saving the document. Please try again."
+        },
+        "export": {
+            "complete": "Export Complete",
+            "markdown": "Markdown file has been created.",
+            "html": "HTML file has been created.",
+            "failed": "Export Failed"
+        },
+        "load": {
+            "error": "An error occurred while loading the document.",
+            "refresh": "Refresh"
+        },
+        "error": {
+            "title": "ERROR"
+        }
+    },
+    "pageLeave": {
+        "unsavedChanges": "There are unsaved changes. Do you want to leave the page?"
     }
 }

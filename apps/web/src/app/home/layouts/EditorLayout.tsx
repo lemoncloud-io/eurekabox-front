@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
+import i18n from 'i18next';
 import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
@@ -51,7 +53,9 @@ export const EditorLayout = ({
     handleSave,
     handleExport,
 }: EditorLayoutProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
+    const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -62,6 +66,12 @@ export const EditorLayout = ({
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
+
+    const toggleLanguage = () => {
+        const newLanguage = language === 'en' ? 'ko' : 'en';
+        setLanguage(newLanguage);
+        i18n.changeLanguage(newLanguage);
+    };
 
     const handleSaveClick = async () => {
         if (handleSave) {
@@ -78,16 +88,14 @@ export const EditorLayout = ({
     const handleImportMarkdownClick = useCallback(async () => {
         // eslint-disable-next-line no-restricted-globals
         const file = event.target.files?.[0];
-        if (!file) {
-            return;
-        }
+        if (!file) return;
 
         try {
             if (!(file.name.endsWith('.md') || file.name.endsWith('.html'))) {
                 toast({
                     variant: 'destructive',
-                    title: '잘못된 파일 형식',
-                    description: '.md, .html 파일만 업로드 가능합니다.',
+                    title: t('editor.import.error.wrongFormat'),
+                    description: t('editor.import.error.invalidFormat'),
                 });
                 return;
             }
@@ -112,8 +120,8 @@ export const EditorLayout = ({
             console.error('Markdown upload failed:', error);
             toast({
                 variant: 'destructive',
-                title: '파일 업로드 실패',
-                description: '마크다운 파일을 읽는 중 오류가 발생했습니다.',
+                title: t('editor.import.error.wrongFormat'),
+                description: t('editor.import.error.uploadFailed'),
             });
         }
 
@@ -140,7 +148,7 @@ export const EditorLayout = ({
 
     const handleContentSelect = (content: ContentView) => {
         if (!content || !content.id) {
-            toast({ description: `No Content!`, variant: 'destructive' });
+            toast({ description: t('editor.noContent'), variant: 'destructive' });
             return;
         }
         navigate(`/${content.id}`);
@@ -177,7 +185,7 @@ export const EditorLayout = ({
                                 value={title}
                                 disabled={true}
                                 className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
-                                placeholder={isDashboard ? '' : 'New Page'}
+                                placeholder={isDashboard ? '' : t('editor.newPage')}
                             />
                         </div>
                         <div className="flex items-center gap-2">
@@ -194,7 +202,7 @@ export const EditorLayout = ({
                                         ) : (
                                             <>
                                                 <Save className="h-4 w-4" />
-                                                <span>Save</span>
+                                                <span>{t('editor.save')}</span>
                                             </>
                                         )}
                                     </Button>
@@ -209,23 +217,24 @@ export const EditorLayout = ({
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon">
                                         <EllipsisVertical className="w-4 h-4" />
-                                        <span className="sr-only">더보기</span>
+                                        <span className="sr-only">{t('editor.more')}</span>
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2">
                                     <div className="py-1 flex items-center justify-center mb-1">
                                         <ThemeToggle />
+                                        <button onClick={toggleLanguage}>Lang</button>
                                     </div>
 
                                     {!isDashboard && (
                                         <>
                                             <DropdownMenuItem onClick={() => handleClickExport('markdown')}>
                                                 <Download className="h-4 w-4" />
-                                                <span>Export as Markdown</span>
+                                                <span>{t('editor.export.markdown')}</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => handleClickExport('html')}>
                                                 <Download className="h-4 w-4" />
-                                                <span>Export as HTML</span>
+                                                <span>{t('editor.export.html')}</span>
                                             </DropdownMenuItem>
                                             <div className="p-2 py-1 rounded-[4px] hover:bg-accent">
                                                 <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -241,13 +250,15 @@ export const EditorLayout = ({
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                Are you sure you want to delete this document?
+                                                                {t('editor.delete.title')}
                                                             </AlertDialogTitle>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogCancel>
+                                                                {t('editor.delete.cancel')}
+                                                            </AlertDialogCancel>
                                                             <AlertDialogAction onClick={confirmDelete}>
-                                                                Delete
+                                                                {t('editor.delete.confirm')}
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
@@ -275,7 +286,7 @@ export const EditorLayout = ({
                                                 onClick={() => document.getElementById('markdown-upload')?.click()}
                                             >
                                                 <FileUp className="h-4 w-4" />
-                                                <span>Markdown, HTML 가져오기</span>
+                                                <span>{t('editor.import.title')}</span>
                                             </button>
                                         </DropdownMenuItem>
                                     )}
@@ -292,7 +303,7 @@ export const EditorLayout = ({
                                         <Link to="/auth/logout" className="w-full">
                                             <div className="w-full flex items-center gap-2">
                                                 <LogOut className="w-4 h-4" />
-                                                <span>Log out</span>
+                                                <span>{t('editor.logout')}</span>
                                             </div>
                                         </Link>
                                     </DropdownMenuItem>

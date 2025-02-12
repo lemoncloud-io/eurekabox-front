@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { FileText } from 'lucide-react';
@@ -13,10 +14,10 @@ import { Loader } from '@eurekabox/shared';
 
 import { EditorLayout } from '../layouts/EditorLayout';
 
-
 const DISPLAY_COUNT = 5;
 
 export const HomePage = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [title, setTitle] = useState<string>('');
     const [displayCount, setDisplayCount] = useState(DISPLAY_COUNT);
@@ -46,8 +47,8 @@ export const HomePage = () => {
         <EditorLayout isDashboard={true} title={title} isLoading={false} onTitleChange={setTitle}>
             <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex justify-center max-w-screen-xl mx-auto">
                 <div className="w-full">
-                    <div className="text-[28px] font-semibold mb-4">Home</div>
-                    <div className="text-text-800 mb-[10px]">My Page</div>
+                    <div className="text-[28px] font-semibold mb-4">{t('home.title')}</div>
+                    <div className="text-text-800 mb-[10px]">{t('home.myPage')}</div>
                     <Card className="p-2 rounded-[6px]">
                         {isLoading && <Loader />}
                         {!isLoading && contents.length === 0 && (
@@ -55,7 +56,7 @@ export const HomePage = () => {
                                 variant="ghost"
                                 className="w-full h-[29px] justify-start font-normal text-text-700 px-1"
                             >
-                                <span className="flex-1 text-left truncate w-0">No Pages</span>
+                                <span className="flex-1 text-left truncate w-0">{t('home.noPages')}</span>
                             </Button>
                         )}
                         {!isLoading &&
@@ -77,7 +78,7 @@ export const HomePage = () => {
                                 onClick={showViewMore ? handleViewMore : handleViewLess}
                                 className="underline text-text-700 mt-[10px] ml-1 hover:text-text-800"
                             >
-                                {showViewMore ? 'View more' : 'View less'}
+                                {showViewMore ? t('home.viewMore') : t('home.viewLess')}
                             </button>
                         )}
                     </Card>
