@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-02-12] - root@0.14.1, @eurekabox/web@0.14.1
+
+### Refactor
+
+-   add home page
+-   nav style, input remove btn
+
 ## [2025-02-11] - root@0.14.0, @eurekabox/web@0.14.0
 
 ### Features
