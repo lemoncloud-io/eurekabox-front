@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-02-12] - root@0.16.1, @eurekabox/web@0.16.1
+
+### Refactor
+
+-   language button style
+
 ## [2025-02-12] - root@0.16.0, @eurekabox/web@0.16.0
 
 ### Features
