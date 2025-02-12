@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-02-12] - root@0.16.0, @eurekabox/web@0.16.0
+
+### Features
+
+-   show logout message after logout
+
 ## [2025-02-12] - root@0.15.0, @eurekabox/web@0.15.0
 
 ### Features
