@@ -1,6 +1,6 @@
 {
     "name": "@eurekabox/source",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "license": "MIT",
     "scripts": {
         "clean:cache": "(rm -rf ./node_modules/.vite ./node_modules/.cache || true) && (rm -rf ./.nx || true)",
