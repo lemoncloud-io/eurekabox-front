@@ -62,7 +62,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                 <ChevronLeft />
                             </button>
                         </DialogClose>
-                        <div className="w-full h-[37px] bg-input  p-2 rounded-[6px] flex items-center">
+                        <div className="w-full h-[37px] bg-input p-2 rounded-[6px] flex items-center">
                             <Search className="h-4 w-4 text-text" />
                             <Input
                                 type="text"
@@ -106,7 +106,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                                     />
                                                 </h3>
                                                 {result.readme && (
-                                                    <p className="text-xs text-dim">
+                                                    <p className="text-xs text-dim line-clamp-2">
                                                         <HighlightedText
                                                             text={result.readme}
                                                             searchTerm={debouncedSearchTerm}
