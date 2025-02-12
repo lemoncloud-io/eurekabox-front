@@ -23,6 +23,7 @@ import { useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
 
 type SideBarProps = {
+    currentContentTitle?: string;
     setSidebarOpen: (open: boolean) => void;
 };
 
@@ -51,11 +52,13 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
 };
 
 const ContentList = ({
+    currentContentTitle,
     contents,
     currentContentId,
     onContentClick,
     onCreateChildContentClick,
 }: {
+    currentContentTitle?: string;
     contents: ContentView[];
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
@@ -74,7 +77,9 @@ const ContentList = ({
                         <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
                         <div className="flex-1 flex items-center gap-1 min-w-0">
                             <FileText className="h-4 w-4 shrink-0" />
-                            <div className="w-0 flex-1 truncate">{content.title}</div>
+                            <div className="w-0 flex-1 truncate">
+                                {content.id === currentContentId ? currentContentTitle : content.title}
+                            </div>
                         </div>
                         <button
                             onClick={e => {
@@ -102,7 +107,7 @@ const ContentList = ({
     </div>
 );
 
-export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
+export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
@@ -174,6 +179,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                         {!isLoading && contents.length === 0 && <div className="px-4 text-sm text-dim">No Pages</div>}
                         {!isLoading && (
                             <ContentList
+                                currentContentTitle={currentContentTitle}
                                 contents={contents}
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
