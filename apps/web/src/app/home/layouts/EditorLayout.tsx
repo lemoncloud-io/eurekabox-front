@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import i18n from 'i18next';
-import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Trash2 } from 'lucide-react';
+import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Star, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
+import { Images } from '@eurekabox/assets';
 import type { CreateContentDTO } from '@eurekabox/contents';
 import { useCreateContent, useDeleteContent } from '@eurekabox/contents';
 import {
@@ -17,7 +18,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@eurekabox/lib/components/ui/dropdown-menu';
+import { Image } from '@eurekabox/lib/components/ui/image';
 import { Loader } from '@eurekabox/shared';
+import { useTheme } from '@eurekabox/theme';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -55,6 +58,7 @@ export const EditorLayout = ({
 }: EditorLayoutProps) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { theme, setTheme } = useTheme();
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -207,9 +211,9 @@ export const EditorLayout = ({
                                         )}
                                     </Button>
                                     {/* TODO: bookmark */}
-                                    {/* <button>
+                                    <button>
                                         <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
-                                    </button> */}
+                                    </button>
                                 </>
                             )}
 
@@ -223,7 +227,19 @@ export const EditorLayout = ({
                                 <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2">
                                     <div className="py-1 flex items-center justify-center mb-1">
                                         <ThemeToggle />
-                                        <button onClick={toggleLanguage}>Lang</button>
+                                        <button className="relative" onClick={toggleLanguage}>
+                                            <Image
+                                                className="w-6 h-6 block hover:opacity-0"
+                                                src={language === 'en' ? Images.kr : Images.en}
+                                                darkSrc={language === 'en' ? Images.krDark : Images.enDark}
+                                                alt={language === 'en' ? 'Korean' : 'English'}
+                                            />
+                                            <Image
+                                                className="w-6 h-6 absolute top-0 left-0 opacity-0 hover:opacity-100"
+                                                src={language === 'en' ? Images.krHover : Images.enHover}
+                                                alt={language === 'en' ? 'Korean' : 'English'}
+                                            />
+                                        </button>
                                     </div>
 
                                     {!isDashboard && (
@@ -244,7 +260,7 @@ export const EditorLayout = ({
                                                             onClick={handleDelete}
                                                         >
                                                             <Trash2 className="h-4 w-4" />
-                                                            <span>Trash</span>
+                                                            <span>{t('editor.delete.button')}</span>
                                                         </button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
