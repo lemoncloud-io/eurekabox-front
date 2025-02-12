@@ -1,5 +1,22 @@
 # Changelog
 
+## [2025-02-12] - root@0.15.0, @eurekabox/web@0.15.0
+
+### Features
+
+-   show loader while saving
+-   disable title edit in editor layout
+-   add title input ref
+-   improve editor focus handling
+-   update focus logic on content update page
+-   add child content creation to side bar
+-   improve search dialog UI and UX
+-   update dashboard page to display contents
+-   display current content title in sidebar
+-   add i18n support
+-   support language in all pages
+-   add language toggle button with images
+
 ## [2025-02-12] - root@0.14.1, @eurekabox/web@0.14.1
 
 ### Refactor
