@@ -120,38 +120,25 @@ export const UpdateContentPage = () => {
         if (loading) {
             savedSelectionRef.current = saveSelection();
             editor.blur();
-        } else if (titleInputRef.current && !content?.element$$?.length) {
-            // If no content, focus on title input
-            titleInputRef.current.focus();
-            titleInputRef.current.select();
         } else {
-            // If has content, focus on editor
-            const currentContent = editor.getEditorValue();
-            const currentPath = editor.path;
-
-            if (currentPath.current !== null) {
-                const previousBlock = Object.entries(currentContent)[currentPath.current];
-                if (!previousBlock || previousBlock.length === 0) {
-                    return;
-                }
-                const blockId = previousBlock[0];
-                focusBlockWithOptions(editor, blockId);
+            // 초기 로드 시에만 포커스 처리
+            if (titleInputRef.current && (!content?.title || !content?.element$$?.length)) {
+                titleInputRef.current.focus();
+                titleInputRef.current.select();
             } else {
                 editor.focus();
             }
         }
-
         return () => setIsLoading(false);
-    }, [loading, setIsLoading, editor, focusBlockWithOptions]);
+    }, [loading, setIsLoading, editor, content]);
 
     const saveContent = useCallback(async () => {
         if (!hasChangesRef.current || !checkForChanges()) {
             return;
         }
-
+        const isTitleFocused = document.activeElement === titleInputRef.current;
         const currentPath = editor.path;
         savedSelectionRef.current = saveSelection();
-        const isTitleFocused = document.activeElement === titleInputRef.current;
 
         try {
             await handleSave(title);
@@ -178,16 +165,18 @@ export const UpdateContentPage = () => {
                 description: '문서가 성공적으로 저장되었습니다.',
             });
 
-            // 저장 완료 후 이전 포커스 상태 복원
+            // Post-save focus logic
             if (isTitleFocused && titleInputRef.current) {
                 titleInputRef.current.focus();
             } else if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
-                if (!previousBlock || previousBlock.length === 0) {
-                    return;
+                if (previousBlock?.length) {
+                    focusBlockWithOptions(editor, previousBlock[0]);
+                } else {
+                    editor.focus();
                 }
-                const blockId = previousBlock[0];
-                focusBlockWithOptions(editor, blockId);
+            } else {
+                editor.focus();
             }
         } catch (error) {
             console.error('Save failed:', error);
