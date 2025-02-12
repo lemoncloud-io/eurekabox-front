@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { LoadingFallback } from '@eurekabox/shared';
@@ -6,6 +7,7 @@ import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { createCredentialsByProvider, useWebCoreStore } from '@eurekabox/web-core';
 
 export const OAuthResponsePage = () => {
+    const { t } = useTranslation();
     const setIsAuthenticated = useWebCoreStore(state => state.setIsAuthenticated);
     const location = useLocation();
     const navigate = useNavigate();
@@ -28,26 +30,24 @@ export const OAuthResponsePage = () => {
                 await createCredentialsByProvider(provider, code);
                 setIsAuthenticated(true);
 
-                // state 파라미터에서 원래 경로 추출
                 let redirectTo = '/home';
                 try {
                     const stateObj = JSON.parse(decodeURIComponent(stateParam));
                     redirectTo = stateObj.from || '/home';
                 } catch (e) {
-                    console.warn('Failed to parse state parameter:', e);
+                    console.warn(t('oauth.error.stateParam'), e);
                 }
 
                 navigate(redirectTo, { replace: true });
                 return;
             }
 
-            // Error occurred!
-            toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
+            toast({ description: t('oauth.error.general'), variant: 'destructive' });
             navigate('/auth/login');
         };
 
         checkLoginResult();
-    }, [location.search]);
+    }, [location.search, t]);
 
-    return <LoadingFallback message={'Signing...'} />;
+    return <LoadingFallback message={t('oauth.signing')} />;
 };

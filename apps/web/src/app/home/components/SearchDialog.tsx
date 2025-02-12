@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ChevronLeft, FileText, Search, X } from 'lucide-react';
 
@@ -36,6 +37,7 @@ const HighlightedText = ({ text, searchTerm }: { text: string; searchTerm: strin
 };
 
 export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDialogProps) => {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
     const { data: contentsData, isLoading } = useContents({ limit: -1 });
@@ -62,11 +64,11 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                 <ChevronLeft />
                             </button>
                         </DialogClose>
-                        <div className="w-full h-[37px] bg-input  p-2 rounded-[6px] flex items-center">
+                        <div className="w-full h-[37px] bg-input p-2 rounded-[6px] flex items-center">
                             <Search className="h-4 w-4 text-text" />
                             <Input
                                 type="text"
-                                placeholder="Enter search term"
+                                placeholder={t('search.placeholder')}
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                                 className="border-none text-text"
@@ -101,12 +103,12 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                             <div>
                                                 <h3 className="text-text">
                                                     <HighlightedText
-                                                        text={result.title || 'New Page'}
+                                                        text={result.title || t('search.newPage')}
                                                         searchTerm={debouncedSearchTerm}
                                                     />
                                                 </h3>
                                                 {result.readme && (
-                                                    <p className="text-xs text-dim">
+                                                    <p className="text-xs text-dim line-clamp-2">
                                                         <HighlightedText
                                                             text={result.readme}
                                                             searchTerm={debouncedSearchTerm}
@@ -117,7 +119,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                                         </div>
                                     ))}
                                     {filteredResults.length === 0 && debouncedSearchTerm && (
-                                        <p className="text-center text-dim py-[50px]">Please enter the page name.</p>
+                                        <p className="text-center text-dim py-[50px]">{t('search.noResults')}</p>
                                     )}
                                 </>
                             )}

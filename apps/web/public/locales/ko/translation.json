@@ -1,0 +1,103 @@
+{
+    "generalError": "에러가 발생했습니다.",
+    "login": {
+        "welcome": "EurekaBox에 오신 것을 환영합니다",
+        "googleButton": "Google 계정으로 로그인"
+    },
+    "oauth": {
+        "signing": "로그인 중...",
+        "error": {
+            "general": "에러가 발생했습니다.",
+            "stateParam": "상태 파라미터 파싱 실패:"
+        }
+    },
+    "tokenReceiver": {
+        "error": {
+            "auth": "인증 처리 중 오류가 발생했습니다.",
+            "timeout": "데이터 수신 시간이 초과되었습니다.",
+            "general": "오류가 발생했습니다."
+        }
+    },
+    "search": {
+        "placeholder": "검색어를 입력하세요",
+        "loading": "로딩 중...",
+        "newPage": "새 페이지",
+        "noResults": "페이지 이름을 입력해주세요."
+    },
+    "sidebar": {
+        "search": "검색",
+        "home": "홈",
+        "sections": {
+            "page": "페이지",
+            "bookmark": "북마크"
+        },
+        "noPages": "페이지 없음",
+        "newPage": "새 페이지",
+        "toast": {
+            "noContent": "콘텐츠가 없습니다!"
+        }
+    },
+    "editor": {
+        "newPage": "새 페이지",
+        "save": "저장",
+        "more": "더보기",
+        "export": {
+            "markdown": "마크다운으로 내보내기",
+            "html": "HTML로 내보내기"
+        },
+        "import": {
+            "title": "마크다운, HTML 가져오기",
+            "success": {
+                "title": "파일 업로드 성공",
+                "description": "파일이 성공적으로 로드되었습니다."
+            },
+            "error": {
+                "invalidFormat": ".md, .html 파일만 업로드 가능합니다.",
+                "uploadFailed": "마크다운 파일을 읽는 중 오류가 발생했습니다.",
+                "wrongFormat": "잘못된 파일 형식"
+            }
+        },
+        "delete": {
+            "button": "삭제",
+            "title": "이 문서를 삭제하시겠습니까?",
+            "cancel": "취소",
+            "confirm": "삭제",
+            "success": "성공적으로 삭제되었습니다."
+        },
+        "toggleSidebar": "사이드바 토글",
+        "noContent": "콘텐츠가 없습니다!",
+        "logout": "로그아웃"
+    },
+    "home": {
+        "title": "홈",
+        "myPage": "내 페이지",
+        "noPages": "페이지 없음",
+        "viewMore": "더보기",
+        "viewLess": "접기"
+    },
+    "editorPage": {
+        "newPage": "새 페이지",
+        "save": {
+            "complete": "저장 완료",
+            "success": "문서가 성공적으로 저장되었습니다.",
+            "failed": "저장 실패",
+            "error": "문서 저장 중 오류가 발생했습니다. 다시 시도해주세요."
+        },
+        "export": {
+            "complete": "내보내기 완료",
+            "markdown": "Markdown 파일이 생성되었습니다.",
+            "html": "HTML 파일이 생성되었습니다.",
+            "failed": "내보내기 실패"
+        },
+        "load": {
+            "error": "문서를 불러오는 중 오류가 발생했습니다.",
+            "refresh": "새로고침"
+        },
+        "error": {
+            "title": "오류"
+        }
+    },
+    "pageLeave": {
+        "unsavedChanges": "저장되지 않은 변경사항이 있습니다. 페이지를 나가시겠습니까?"
+    }
+}

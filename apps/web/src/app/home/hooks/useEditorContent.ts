@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -47,6 +48,7 @@ interface ElementTracker {
 }
 
 export const useEditorContent = (contentId: string | undefined, editor: YooEditor) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     const [loading, setLoading] = useState(true);
@@ -94,8 +96,8 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                     editor.setEditorValue(editorValue);
                     await handleSave(content.title);
                     toast({
-                        title: '파일 업로드 성공',
-                        description: '파일이 성공적으로 로드되었습니다.',
+                        title: t('editor.import.success.title'),
+                        description: t('editor.import.success.description'),
                     });
                     return;
                 }
@@ -117,13 +119,14 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 });
 
                 editor.setEditorValue(value);
+                return { hasNoElement, hasNoTitle: !content.title };
             } catch (err) {
                 console.error('Failed to load content:', err);
                 setError(err as Error);
+                return null;
             } finally {
                 loadingRef.current = false;
                 setLoading(false);
-                editor.focus();
             }
         },
         [contentId, editor]

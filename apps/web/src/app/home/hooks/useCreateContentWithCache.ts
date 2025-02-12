@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
@@ -11,6 +12,7 @@ import { useGlobalLoader } from '@eurekabox/shared';
 import { useContentCache } from './useContentCache';
 
 export const useCreateContentWithCache = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
@@ -20,7 +22,7 @@ export const useCreateContentWithCache = () => {
         setIsLoading(true);
         const newContent: CreateContentDTO = {
             name: '',
-            title: 'New Page',
+            title: '',
             subject: '',
         };
 
@@ -32,7 +34,7 @@ export const useCreateContentWithCache = () => {
                 },
             });
         } catch (e) {
-            toast({ description: '에러가 발생했습니다.', variant: 'destructive' });
+            toast({ description: t('generalError'), variant: 'destructive' });
         } finally {
             setIsLoading(false);
         }

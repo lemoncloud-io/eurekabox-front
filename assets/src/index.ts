@@ -5,6 +5,12 @@ export const Images = {
     googleLogo: new URL('./images/login_google.svg', import.meta.url).href,
     kakaoLogo: new URL('./images/login_kakao.svg', import.meta.url).href,
     loader: new URL('./images/loader.png', import.meta.url).href,
+    kr: new URL('./images/kr.svg', import.meta.url).href,
+    krDark: new URL('./images/kr_dark.svg', import.meta.url).href,
+    krHover: new URL('./images/kr_hover.svg', import.meta.url).href,
+    en: new URL('./images/en.svg', import.meta.url).href,
+    enDark: new URL('./images/en.svg', import.meta.url).href,
+    enHover: new URL('./images/en_hover.svg', import.meta.url).href,
 } as const;
 
 export const Logo = {
