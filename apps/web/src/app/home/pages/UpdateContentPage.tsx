@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -16,15 +17,19 @@ import { useEditorContent, usePageLeaveBlocker } from '../hooks';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { MARKS, TOOLS, exportToHTML, plugins, saveSelection } from '../utils';
 
+
 export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
     const { contentId } = useParams<{ contentId: string }>();
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState<string>('New Page');
+    const { t } = useTranslation();
+
+    const [title, setTitle] = useState<string>('');
 
     const editor = useMemo(() => createYooptaEditor(), []);
+    const titleInputRef = useRef<HTMLInputElement>(null);
     const selectionRef = useRef(null);
     const savedSelectionRef = useRef<{ start: number; end: number } | null>(null); // to restore cursor
 
@@ -39,39 +44,41 @@ export const UpdateContentPage = () => {
             console.log('Invalid editor or blockId');
             return;
         }
-
-        const baseOptions = {
-            waitExecution: true,
-            waitExecutionMs: 0,
-        };
-
-        // selection이 유효한지 한번 더 체크
-        const isValidSelection =
-            savedSelectionRef.current &&
-            typeof savedSelectionRef.current?.start === 'number' &&
-            typeof savedSelectionRef.current?.end === 'number';
-
-        console.log(savedSelectionRef.current);
-
-        const focusOptions =
-            isValidSelection && savedSelectionRef.current?.start === savedSelectionRef.current?.end
-                ? {
-                      ...baseOptions,
-                      focusAt: {
-                          path: [0],
-                          offset: savedSelectionRef.current?.end,
-                      },
-                  }
-                : baseOptions;
-
         try {
-            editor.focusBlock(blockId, focusOptions);
+            setTimeout(() => {
+                try {
+                    const baseOptions = {
+                        waitExecution: true,
+                        waitExecutionMs: 0,
+                    };
+
+                    // selection이 유효한지 한번 더 체크
+                    const isValidSelection =
+                        savedSelectionRef.current &&
+                        typeof savedSelectionRef.current?.start === 'number' &&
+                        typeof savedSelectionRef.current?.end === 'number';
+
+                    const focusOptions =
+                        isValidSelection && savedSelectionRef.current?.start === savedSelectionRef.current?.end
+                            ? {
+                                  ...baseOptions,
+                                  focusAt: {
+                                      path: [0],
+                                      offset: savedSelectionRef.current?.end,
+                                  },
+                              }
+                            : baseOptions;
+                    editor.focusBlock(blockId, focusOptions);
+                } catch (innerError) {
+                    console.log('Focus block failed in timeout:', innerError);
+                    editor.focus(); // fallback: 에디터 자체에 포커스
+                } finally {
+                    savedSelectionRef.current = null;
+                }
+            }, 0);
         } catch (error) {
             console.log('Focus block failed:', error);
-            // fallback: 기본 옵션으로 다시 시도
-            editor.focusBlock(blockId, baseOptions);
-        } finally {
-            savedSelectionRef.current = null;
+            editor.focus(); // fallback: 에디터 자체에 포커스
         }
     }, []);
 
@@ -79,7 +86,7 @@ export const UpdateContentPage = () => {
         if (error) {
             toast({
                 variant: 'destructive',
-                title: 'ERROR',
+                title: t('editorPage.error.title'),
                 description: `${error.toString()}`,
             });
         }
@@ -97,6 +104,8 @@ export const UpdateContentPage = () => {
     useEffect(() => {
         if (content?.title) {
             setTitle(content.title);
+        } else {
+            setTitle('');
         }
     }, [content]);
 
@@ -116,27 +125,22 @@ export const UpdateContentPage = () => {
             savedSelectionRef.current = saveSelection();
             editor.blur();
         } else {
-            const currentContent = editor.getEditorValue();
-            const currentPath = editor.path;
-
-            if (currentPath.current !== null) {
-                const previousBlock = Object.entries(currentContent)[currentPath.current];
-                if (!previousBlock || previousBlock.length === 0) {
-                    return;
-                }
-                const blockId = previousBlock[0];
-                focusBlockWithOptions(editor, blockId);
+            // 초기 로드 시에만 포커스 처리
+            if (titleInputRef.current && (!content?.title || !content?.element$$?.length)) {
+                titleInputRef.current.focus();
+                titleInputRef.current.select();
+            } else {
+                editor.focus();
             }
         }
-
         return () => setIsLoading(false);
-    }, [loading, setIsLoading, editor, focusBlockWithOptions]);
+    }, [loading, setIsLoading, editor, content]);
 
     const saveContent = useCallback(async () => {
         if (!hasChangesRef.current || !checkForChanges()) {
             return;
         }
-
+        const isTitleFocused = document.activeElement === titleInputRef.current;
         const currentPath = editor.path;
         savedSelectionRef.current = saveSelection();
 
@@ -161,28 +165,32 @@ export const UpdateContentPage = () => {
             }
 
             toast({
-                title: '저장 완료',
-                description: '문서가 성공적으로 저장되었습니다.',
+                title: t('editorPage.save.complete'),
+                description: t('editorPage.save.success'),
             });
 
-            // 저장 완료 후 이전 path로 복원
-            if (currentPath.current !== null) {
+            // Post-save focus logic
+            if (isTitleFocused && titleInputRef.current) {
+                titleInputRef.current.focus();
+            } else if (currentPath.current !== null) {
                 const previousBlock = Object.entries(currentContent)[currentPath.current];
-                if (!previousBlock || previousBlock.length === 0) {
-                    return;
+                if (previousBlock?.length) {
+                    focusBlockWithOptions(editor, previousBlock[0]);
+                } else {
+                    editor.focus();
                 }
-                const blockId = previousBlock[0];
-                focusBlockWithOptions(editor, blockId);
+            } else {
+                editor.focus();
             }
         } catch (error) {
             console.error('Save failed:', error);
             toast({
                 variant: 'destructive',
-                title: '저장 실패',
-                description: '문서 저장 중 오류가 발생했습니다. 다시 시도해주세요.',
+                title: t('editorPage.save.failed'),
+                description: t('editorPage.save.error'),
             });
         }
-    }, [handleSave, queryClient, contentId, title, editor]);
+    }, [handleSave, queryClient, contentId, title, editor, t]);
 
     // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
@@ -241,19 +249,19 @@ export const UpdateContentPage = () => {
                 window.URL.revokeObjectURL(url);
 
                 toast({
-                    title: '내보내기 완료',
-                    description: `${type === 'markdown' ? 'Markdown' : 'HTML'} 파일이 생성되었습니다.`,
+                    title: t('editorPage.export.complete'),
+                    description: t(`editorPage.export.${type}`),
                 });
             } catch (error) {
                 console.error('Export failed:', error);
                 toast({
                     variant: 'destructive',
-                    title: '내보내기 실패',
+                    title: t('editorPage.export.failed'),
                     description: `${error.toString()}`,
                 });
             }
         },
-        [title, editor]
+        [title, editor, t]
     );
 
     const handleTitleChange = useCallback((newTitle: string) => {
@@ -271,9 +279,9 @@ export const UpdateContentPage = () => {
             {error && (
                 <Alert variant="destructive" className="fixed top-20 right-4 z-50 w-80">
                     <AlertDescription>
-                        문서를 불러오는 중 오류가 발생했습니다.
+                        {t('editorPage.load.error')}
                         <button onClick={() => window.location.reload()} className="ml-2 underline hover:no-underline">
-                            새로고침
+                            {t('editorPage.load.refresh')}
                         </button>
                     </AlertDescription>
                 </Alert>
@@ -281,32 +289,30 @@ export const UpdateContentPage = () => {
             <EditorLayout
                 title={title}
                 isLoading={loading}
-                onTitleChange={handleTitleChange}
                 contentId={contentId}
                 handleSave={handleClickSave}
                 handleExport={handleClickExport}
             >
-                <div
-                    className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto"
-                    ref={selectionRef}
-                >
-                    <div className="ml-[2px]">
-                        <input
-                            type="text"
-                            className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
-                            placeholder="New Page"
+                <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto">
+                    <input
+                        type="text"
+                        ref={titleInputRef}
+                        value={title}
+                        onChange={e => handleTitleChange(e.target.value)}
+                        className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
+                        placeholder={t('editorPage.newPage')}
+                    />
+                    <div ref={selectionRef}>
+                        <YooptaEditor
+                            selectionBoxRoot={selectionRef}
+                            editor={editor}
+                            plugins={plugins}
+                            tools={TOOLS as Partial<Tools>}
+                            marks={MARKS}
+                            width="100%"
+                            autoFocus={true}
                         />
                     </div>
-
-                    <YooptaEditor
-                        selectionBoxRoot={selectionRef}
-                        editor={editor}
-                        plugins={plugins}
-                        tools={TOOLS as Partial<Tools>}
-                        marks={MARKS}
-                        width="100%"
-                        autoFocus={true}
-                    />
                 </div>
             </EditorLayout>
         </>

@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Trash2 } from 'lucide-react';
+import i18n from 'i18next';
+import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Star, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
+import { Images } from '@eurekabox/assets';
 import type { CreateContentDTO } from '@eurekabox/contents';
 import { useCreateContent, useDeleteContent } from '@eurekabox/contents';
 import {
@@ -15,7 +18,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@eurekabox/lib/components/ui/dropdown-menu';
+import { Image } from '@eurekabox/lib/components/ui/image';
 import { Loader } from '@eurekabox/shared';
+import { useTheme } from '@eurekabox/theme';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -38,7 +43,6 @@ interface EditorLayoutProps {
     isDashboard?: boolean;
     title: string;
     isLoading: boolean;
-    onTitleChange?: (title: string) => void;
     handleSave?: () => void;
     handleExport?: () => void;
 }
@@ -49,11 +53,13 @@ export const EditorLayout = ({
     isDashboard = false,
     title,
     isLoading = false,
-    onTitleChange,
     handleSave,
     handleExport,
 }: EditorLayoutProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
+    const { theme, setTheme } = useTheme();
+    const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -64,6 +70,12 @@ export const EditorLayout = ({
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
+
+    const toggleLanguage = () => {
+        const newLanguage = language === 'en' ? 'ko' : 'en';
+        setLanguage(newLanguage);
+        i18n.changeLanguage(newLanguage);
+    };
 
     const handleSaveClick = async () => {
         if (handleSave) {
@@ -80,16 +92,14 @@ export const EditorLayout = ({
     const handleImportMarkdownClick = useCallback(async () => {
         // eslint-disable-next-line no-restricted-globals
         const file = event.target.files?.[0];
-        if (!file) {
-            return;
-        }
+        if (!file) return;
 
         try {
             if (!(file.name.endsWith('.md') || file.name.endsWith('.html'))) {
                 toast({
                     variant: 'destructive',
-                    title: '잘못된 파일 형식',
-                    description: '.md, .html 파일만 업로드 가능합니다.',
+                    title: t('editor.import.error.wrongFormat'),
+                    description: t('editor.import.error.invalidFormat'),
                 });
                 return;
             }
@@ -114,8 +124,8 @@ export const EditorLayout = ({
             console.error('Markdown upload failed:', error);
             toast({
                 variant: 'destructive',
-                title: '파일 업로드 실패',
-                description: '마크다운 파일을 읽는 중 오류가 발생했습니다.',
+                title: t('editor.import.error.wrongFormat'),
+                description: t('editor.import.error.uploadFailed'),
             });
         }
 
@@ -142,7 +152,7 @@ export const EditorLayout = ({
 
     const handleContentSelect = (content: ContentView) => {
         if (!content || !content.id) {
-            toast({ description: `No Content!`, variant: 'destructive' });
+            toast({ description: t('editor.noContent'), variant: 'destructive' });
             return;
         }
         navigate(`/${content.id}`);
@@ -156,7 +166,7 @@ export const EditorLayout = ({
                         sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >
-                    <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                    <SideBar currentContentTitle={title} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 </div>
                 <div
                     className={`w-full flex-1 flex flex-col overflow-auto duration-300 ease-in-out transition-padding ${
@@ -174,17 +184,13 @@ export const EditorLayout = ({
                                 <Menu className="h-4 w-4" />
                                 <span className="sr-only">Toggle sidebar</span>
                             </Button>
-                            {isLoading ? (
-                                <Loader message={''} />
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={title}
-                                    onChange={e => onTitleChange?.(e.target.value)}
-                                    className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
-                                    placeholder="New Page"
-                                />
-                            )}
+                            <input
+                                type="text"
+                                value={title}
+                                disabled={true}
+                                className="w-full bg-background font-medium border-none focus:outline-none caret-text-text"
+                                placeholder={isDashboard ? '' : t('editor.newPage')}
+                            />
                         </div>
                         <div className="flex items-center gap-2">
                             {!isDashboard && (
@@ -195,13 +201,19 @@ export const EditorLayout = ({
                                         onClick={handleSaveClick}
                                         disabled={isLoading}
                                     >
-                                        <Save className="h-4 w-4" />
-                                        <span>Save</span>
+                                        {isLoading ? (
+                                            <Loader message={''} />
+                                        ) : (
+                                            <>
+                                                <Save className="h-4 w-4" />
+                                                <span>{t('editor.save')}</span>
+                                            </>
+                                        )}
                                     </Button>
                                     {/* TODO: bookmark */}
-                                    {/* <button>
+                                    <button>
                                         <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
-                                    </button> */}
+                                    </button>
                                 </>
                             )}
 
@@ -209,23 +221,36 @@ export const EditorLayout = ({
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon">
                                         <EllipsisVertical className="w-4 h-4" />
-                                        <span className="sr-only">더보기</span>
+                                        <span className="sr-only">{t('editor.more')}</span>
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2">
                                     <div className="py-1 flex items-center justify-center mb-1">
                                         <ThemeToggle />
+                                        <button className="relative" onClick={toggleLanguage}>
+                                            <Image
+                                                className="w-6 h-6 block hover:opacity-0"
+                                                src={language === 'en' ? Images.kr : Images.en}
+                                                darkSrc={language === 'en' ? Images.krDark : Images.enDark}
+                                                alt={language === 'en' ? 'Korean' : 'English'}
+                                            />
+                                            <Image
+                                                className="w-6 h-6 absolute top-0 left-0 opacity-0 hover:opacity-100"
+                                                src={language === 'en' ? Images.krHover : Images.enHover}
+                                                alt={language === 'en' ? 'Korean' : 'English'}
+                                            />
+                                        </button>
                                     </div>
 
                                     {!isDashboard && (
                                         <>
                                             <DropdownMenuItem onClick={() => handleClickExport('markdown')}>
                                                 <Download className="h-4 w-4" />
-                                                <span>Export as Markdown</span>
+                                                <span>{t('editor.export.markdown')}</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => handleClickExport('html')}>
                                                 <Download className="h-4 w-4" />
-                                                <span>Export as HTML</span>
+                                                <span>{t('editor.export.html')}</span>
                                             </DropdownMenuItem>
                                             <div className="p-2 py-1 rounded-[4px] hover:bg-accent">
                                                 <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -235,19 +260,21 @@ export const EditorLayout = ({
                                                             onClick={handleDelete}
                                                         >
                                                             <Trash2 className="h-4 w-4" />
-                                                            <span>Trash</span>
+                                                            <span>{t('editor.delete.button')}</span>
                                                         </button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>
-                                                                Are you sure you want to delete this document?
+                                                                {t('editor.delete.title')}
                                                             </AlertDialogTitle>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <AlertDialogCancel>
+                                                                {t('editor.delete.cancel')}
+                                                            </AlertDialogCancel>
                                                             <AlertDialogAction onClick={confirmDelete}>
-                                                                Delete
+                                                                {t('editor.delete.confirm')}
                                                             </AlertDialogAction>
                                                         </AlertDialogFooter>
                                                     </AlertDialogContent>
@@ -275,7 +302,7 @@ export const EditorLayout = ({
                                                 onClick={() => document.getElementById('markdown-upload')?.click()}
                                             >
                                                 <FileUp className="h-4 w-4" />
-                                                <span>Markdown, HTML 가져오기</span>
+                                                <span>{t('editor.import.title')}</span>
                                             </button>
                                         </DropdownMenuItem>
                                     )}
@@ -292,7 +319,7 @@ export const EditorLayout = ({
                                         <Link to="/auth/logout" className="w-full">
                                             <div className="w-full flex items-center gap-2">
                                                 <LogOut className="w-4 h-4" />
-                                                <span>Log out</span>
+                                                <span>{t('editor.logout')}</span>
                                             </div>
                                         </Link>
                                     </DropdownMenuItem>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
@@ -23,6 +24,7 @@ import { useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
 
 type SideBarProps = {
+    currentContentTitle?: string;
     setSidebarOpen: (open: boolean) => void;
 };
 
@@ -51,68 +53,63 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
 };
 
 const ContentList = ({
+    currentContentTitle,
     contents,
     currentContentId,
     onContentClick,
+    onCreateChildContentClick,
 }: {
+    currentContentTitle?: string;
     contents: ContentView[];
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
+    onCreateChildContentClick: (content: ContentView) => void;
 }) => (
     <div className="space-y-1 mt-1">
-        {contents.map(content => (
-            <Button
-                key={content.id}
-                variant="ghost"
-                className={`w-full h-[29px] justify-start font-normal text-text-700 hover:bg-sidebar-hover
-                    ${content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''}`}
-                onClick={() => onContentClick(content)}
-            >
-                <FileText className="h-4 w-4 shrink-0" />
-                <span className="truncate flex-1 w-0 text-left">{content.title || 'New Page'}</span>
-            </Button>
-        ))}
-        {/* TODO: tree nav */}
         <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-                <AccordionTrigger className="group flex items-center justify-between">
-                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
-                    <div className="flex-1 flex items-center gap-1 min-w-0">
-                        <FileText className="h-4 w-4 shrink-0" />
-                        <div className="w-0 flex-1 truncate">Page Title1</div>
-                    </div>
-                    <button>
-                        <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </button>
-                </AccordionTrigger>
-            </AccordionItem>
-
-            <AccordionItem value="item-2">
-                <AccordionTrigger className="group flex items-center justify-between">
-                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
-                    <div className="flex-1 flex items-center gap-1 min-w-0">
-                        <FileText className="h-4 w-4" />
-                        <div className="flex-1">Page Title2</div>
-                    </div>
-                    <button>
-                        <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </button>
-                </AccordionTrigger>
-                <AccordionContent>
-                    <div className="p-1 flex items-center">
-                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+            {contents.map(content => (
+                <AccordionItem value={content.title} key={content.id}>
+                    <AccordionTrigger
+                        className={`group flex items-center justify-between ${
+                            content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
+                        }`}
+                        onClick={() => onContentClick(content)}
+                    >
+                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
                         <div className="flex-1 flex items-center gap-1 min-w-0">
-                            <FileText className="h-4 w-4" />
-                            <div className="flex-1">Page Title2-1</div>
+                            <FileText className="h-4 w-4 shrink-0" />
+                            <div className="w-0 flex-1 truncate">
+                                {content.id === currentContentId ? currentContentTitle : content.title}
+                            </div>
                         </div>
-                    </div>
-                </AccordionContent>
-            </AccordionItem>
+                        <button
+                            onClick={e => {
+                                e.stopPropagation();
+                                onCreateChildContentClick(content);
+                            }}
+                        >
+                            <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                        </button>
+                    </AccordionTrigger>
+                    {content['hasChild'] && (
+                        <AccordionContent>
+                            <div className="p-1 flex items-center">
+                                <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                                <div className="flex-1 flex items-center gap-1 min-w-0">
+                                    <FileText className="h-4 w-4" />
+                                    <div className="flex-1">Page Title2-1</div>
+                                </div>
+                            </div>
+                        </AccordionContent>
+                    )}
+                </AccordionItem>
+            ))}
         </Accordion>
     </div>
 );
 
-export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
+export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const { contentId } = useParams<{ contentId: string }>();
@@ -130,10 +127,14 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
 
     const handleContentSelect = (content: ContentView) => {
         if (!content || !content.id) {
-            toast({ description: `No Content!`, variant: 'destructive' });
+            toast({ description: t('sidebar.toast.noContent'), variant: 'destructive' });
             return;
         }
         navigate(`/${content.id}`);
+    };
+
+    const handleCreateChildContent = (parent: ContentView) => {
+        // TODO: create child content
     };
 
     const isHomePage = location.pathname === '/home';
@@ -149,7 +150,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <Search className="h-4 w-4" />
-                        Search
+                        {t('sidebar.search')}
                     </Button>
                     <Button
                         variant="ghost"
@@ -159,11 +160,11 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                         onClick={() => navigate('/home')}
                     >
                         <Home className="h-4 w-4" />
-                        Home
+                        {t('sidebar.home')}
                     </Button>
                     {/* TODO: bookmark */}
                     {/* <div className="mt-[22px]">
-                        <h2 className="px-2 text-xs text-dim font-medium">Bookmark</h2>
+                        <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.bookmark')}</h2>
                         <Button variant="ghost" className=" h-[29px] justify-between font-normal text-text-700">
                             <div className="w-[175px] flex items-center gap-2">
                                 <FileText className="h-4 w-4" />
@@ -175,14 +176,18 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                         </Button>
                     </div> */}
                     <div className="mt-[22px]">
-                        <h2 className="px-2 text-xs text-dim font-medium">Page</h2>
+                        <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.page')}</h2>
                         {isLoading && <Loader />}
-                        {!isLoading && contents.length === 0 && <div className="px-4 text-sm text-dim">No Pages</div>}
+                        {!isLoading && contents.length === 0 && (
+                            <div className="px-4 text-sm text-dim">{t('sidebar.noPages')}</div>
+                        )}
                         {!isLoading && (
                             <ContentList
+                                currentContentTitle={currentContentTitle}
                                 contents={contents}
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
+                                onCreateChildContentClick={handleCreateChildContent}
                             />
                         )}
                         <div className="px-2">
@@ -193,7 +198,7 @@ export const SideBar = ({ setSidebarOpen }: SideBarProps) => {
                                 disabled={isCreatePending}
                             >
                                 <Plus className="h-4 w-4 text-text-800" />
-                                New Page
+                                {t('sidebar.newPage')}
                             </Button>
                         </div>
                     </div>
