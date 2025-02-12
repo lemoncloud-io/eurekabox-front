@@ -224,22 +224,20 @@ export const EditorLayout = ({
                                         <span className="sr-only">{t('editor.more')}</span>
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2">
-                                    <div className="py-1 flex items-center justify-center mb-1">
+                                <DropdownMenuContent className="w-[224px] px-2 py-[6px] mr-2 ">
+                                    <div className="py-1 flex items-center justify-center mb- gap-[14px]">
                                         <ThemeToggle />
-                                        <button className="relative" onClick={toggleLanguage}>
+                                        <Button
+                                            variant="ghost"
+                                            className="w-7 h-7 rounded-[4px] flex items-center justify-center hover:bg-accent p-0"
+                                            onClick={toggleLanguage}
+                                        >
                                             <Image
-                                                className="w-6 h-6 block hover:opacity-0"
                                                 src={language === 'en' ? Images.kr : Images.en}
                                                 darkSrc={language === 'en' ? Images.krDark : Images.enDark}
                                                 alt={language === 'en' ? 'Korean' : 'English'}
                                             />
-                                            <Image
-                                                className="w-6 h-6 absolute top-0 left-0 opacity-0 hover:opacity-100"
-                                                src={language === 'en' ? Images.krHover : Images.enHover}
-                                                alt={language === 'en' ? 'Korean' : 'English'}
-                                            />
-                                        </button>
+                                        </Button>
                                     </div>
 
                                     {!isDashboard && (
