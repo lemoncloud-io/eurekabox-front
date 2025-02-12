@@ -7,10 +7,8 @@ export const Images = {
     loader: new URL('./images/loader.png', import.meta.url).href,
     kr: new URL('./images/kr.svg', import.meta.url).href,
     krDark: new URL('./images/kr_dark.svg', import.meta.url).href,
-    krHover: new URL('./images/kr_hover.svg', import.meta.url).href,
     en: new URL('./images/en.svg', import.meta.url).href,
-    enDark: new URL('./images/en.svg', import.meta.url).href,
-    enHover: new URL('./images/en_hover.svg', import.meta.url).href,
+    enDark: new URL('./images/en_dark.svg', import.meta.url).href,
 } as const;
 
 export const Logo = {
