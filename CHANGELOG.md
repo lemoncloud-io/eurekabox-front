@@ -1,5 +1,16 @@
 # Changelog
 
+## [2025-02-20] - root@0.17.0, @eurekabox/web@0.17.0
+
+### Features
+
+-   persist language preference in local storage
+-   add query retry to improve resilience
+
+### Chores
+
+-   update lemon-web-core dependency
+
 ## [2025-02-12] - root@0.16.1, @eurekabox/web@0.16.1
 
 ### Refactor
