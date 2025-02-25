@@ -52,13 +52,73 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
     );
 };
 
-const ContentList = ({
-    currentContentTitle,
-    contents,
-    currentContentId,
-    onContentClick,
-    onCreateChildContentClick,
+const ContentItem = ({
+    content,
+    level = 0,
+    ...props
 }: {
+    content: ContentView & { hasChild?: boolean; children?: ContentView[] };
+    level?: number;
+    currentContentId?: string;
+    currentContentTitle?: string;
+    onContentClick: (content: ContentView) => void;
+    onCreateChildContentClick: (content: ContentView) => void;
+}) => (
+    <AccordionItem value={`${content.id}-${level}`} key={content.id} className="border-none">
+        <AccordionTrigger
+            className={`group flex items-center justify-between ${
+                content.id === props.currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
+            }`}
+        >
+            <button
+                className="flex items-center"
+                onClick={e => {
+                    e.stopPropagation();
+                    if (content.hasChild) {
+                        e.currentTarget.parentElement?.click();
+                    }
+                }}
+            >
+                <ChevronRight
+                    className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
+                        content.hasChild ? '' : 'opacity-0'
+                    }`}
+                />
+            </button>
+            <div
+                className="flex-1 flex items-center gap-1 min-w-0"
+                onClick={e => {
+                    e.stopPropagation();
+                    props.onContentClick(content);
+                }}
+            >
+                <FileText className="h-4 w-4 shrink-0" />
+                <div className="w-0 flex-1 truncate">
+                    {content.id === props.currentContentId ? props.currentContentTitle : content.title}
+                </div>
+            </div>
+            <button
+                onClick={e => {
+                    e.stopPropagation();
+                    props.onCreateChildContentClick(content);
+                }}
+            >
+                <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            </button>
+        </AccordionTrigger>
+        {content.hasChild && content.children && content.children.length > 0 && (
+            <AccordionContent>
+                <div className={`pl-${level > 0 ? '4' : '0'}`}>
+                    {content.children.map(child => (
+                        <ContentItem key={child.id} content={child} level={level + 1} {...props} />
+                    ))}
+                </div>
+            </AccordionContent>
+        )}
+    </AccordionItem>
+);
+
+const ContentList = (props: {
     currentContentTitle?: string;
     contents: (ContentView & { hasChild?: boolean; children?: ContentView[] })[];
     currentContentId?: string;
@@ -66,57 +126,9 @@ const ContentList = ({
     onCreateChildContentClick: (content: ContentView) => void;
 }) => (
     <div className="space-y-1 mt-1">
-        <Accordion type="single" collapsible className="w-full flex flex-col gap-[2px]">
-            {contents.map(content => (
-                <AccordionItem value={content.title} key={content.id} className="border-none">
-                    <AccordionTrigger
-                        className={`group flex items-center justify-between ${
-                            content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
-                        }`}
-                        onClick={() => onContentClick(content)}
-                    >
-                        <ChevronRight
-                            className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
-                                content.hasChild ? '' : 'opacity-0'
-                            }`}
-                        />
-                        <div className="flex-1 flex items-center gap-1 min-w-0">
-                            <FileText className="h-4 w-4 shrink-0" />
-                            <div className="w-0 flex-1 truncate">
-                                {content.id === currentContentId ? currentContentTitle : content.title}
-                            </div>
-                        </div>
-                        <button
-                            onClick={e => {
-                                e.stopPropagation();
-                                onCreateChildContentClick(content);
-                            }}
-                        >
-                            <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                        </button>
-                    </AccordionTrigger>
-                    {content.hasChild && (
-                        <AccordionContent>
-                            {content.children?.map(child => (
-                                <div
-                                    key={child.id}
-                                    className={`p-1 flex items-center cursor-pointer hover:bg-sidebar-hover ${
-                                        child.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
-                                    }`}
-                                    onClick={() => onContentClick(child)}
-                                >
-                                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
-                                    <div className="flex-1 flex items-center gap-1 min-w-0">
-                                        <FileText className="h-4 w-4" />
-                                        <div className="flex-1 truncate">
-                                            {child.id === currentContentId ? currentContentTitle : child.title}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </AccordionContent>
-                    )}
-                </AccordionItem>
+        <Accordion type="multiple" className="w-full flex flex-col gap-[2px]">
+            {props.contents.map(content => (
+                <ContentItem key={content.id} content={content} {...props} />
             ))}
         </Accordion>
     </div>
@@ -143,7 +155,10 @@ const BookmarkContentList = ({
                         className={`group flex items-center justify-between ${
                             content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
                         }`}
-                        onClick={() => onContentClick(content)}
+                        onClick={e => {
+                            e.stopPropagation();
+                            onContentClick(content);
+                        }}
                     >
                         <ChevronRight
                             className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
@@ -217,23 +232,20 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                 if (!contentMap.has(content.parentId)) {
                     contentMap.set(content.parentId, []);
                 }
-                contentMap.set(content.parentId, [...(contentMap.get(content.parentId) || []), content]);
+                contentMap.get(content.parentId)?.push(content);
             }
         });
 
-        console.log(
-            allContents.map(content => ({
+        const buildContentTree = (content: ContentView) => {
+            const children = contentMap.get(content.id) || [];
+            return {
                 ...content,
                 hasChild: contentMap.has(content.id),
-                children: contentMap.get(content.id) || [],
-            }))
-        );
-        // Then, add hasChild and children properties to contents
-        return allContents.map(content => ({
-            ...content,
-            hasChild: contentMap.has(content.id),
-            children: contentMap.get(content.id) || [],
-        }));
+                children: children.map(child => buildContentTree(child)),
+            };
+        };
+
+        return allContents.filter(content => !content.parentId).map(content => buildContentTree(content));
     }, [allContents]);
 
     const contents = useMemo(
