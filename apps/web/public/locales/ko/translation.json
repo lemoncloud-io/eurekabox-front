@@ -23,7 +23,7 @@
         "placeholder": "검색어를 입력하세요",
         "loading": "로딩 중...",
         "newPage": "새 페이지",
-        "noResults": "페이지 이름을 입력해주세요."
+        "noResults": "검색 결과가 없습니다."
     },
     "sidebar": {
         "search": "검색",

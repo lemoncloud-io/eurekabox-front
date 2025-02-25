@@ -42,10 +42,10 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
             />
             <div className="flex items-center gap-[9px]">
                 <button onClick={onClose} aria-label="Toggle Sidebar">
-                    <ChevronsLeft className="h-[18px] w-[18px] hover:text-[#BABCC0]" />
+                    <ChevronsLeft className="h-[18px] w-[18px]  hover:text-[#BABCC0]" />
                 </button>
                 <button aria-label="Edit" onClick={onClickNewPage}>
-                    <SquarePen className="h-[18px] w-[18px] hover:text-[#BABCC0]" />
+                    <SquarePen className="h-[18px] w-[18px]  hover:text-[#BABCC0]" />
                 </button>
             </div>
         </div>
@@ -66,9 +66,9 @@ const ContentList = ({
     onCreateChildContentClick: (content: ContentView) => void;
 }) => (
     <div className="space-y-1 mt-1">
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full flex flex-col gap-[2px]">
             {contents.map(content => (
-                <AccordionItem value={content.title} key={content.id}>
+                <AccordionItem value={content.title} key={content.id} className="border-none">
                     <AccordionTrigger
                         className={`group flex items-center justify-between ${
                             content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
