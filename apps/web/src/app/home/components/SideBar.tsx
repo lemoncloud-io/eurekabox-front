@@ -60,7 +60,7 @@ const ContentList = ({
     onCreateChildContentClick,
 }: {
     currentContentTitle?: string;
-    contents: ContentView[];
+    contents: (ContentView & { hasChild?: boolean; children?: ContentView[] })[];
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
     onCreateChildContentClick: (content: ContentView) => void;
@@ -75,7 +75,11 @@ const ContentList = ({
                         }`}
                         onClick={() => onContentClick(content)}
                     >
-                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
+                        <ChevronRight
+                            className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
+                                content.hasChild ? '' : 'opacity-0'
+                            }`}
+                        />
                         <div className="flex-1 flex items-center gap-1 min-w-0">
                             <FileText className="h-4 w-4 shrink-0" />
                             <div className="w-0 flex-1 truncate">
@@ -91,15 +95,25 @@ const ContentList = ({
                             <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </button>
                     </AccordionTrigger>
-                    {content['hasChild'] && (
+                    {content.hasChild && (
                         <AccordionContent>
-                            <div className="p-1 flex items-center">
-                                <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
-                                <div className="flex-1 flex items-center gap-1 min-w-0">
-                                    <FileText className="h-4 w-4" />
-                                    <div className="flex-1">Page Title2-1</div>
+                            {content.children?.map(child => (
+                                <div
+                                    key={child.id}
+                                    className={`p-1 flex items-center cursor-pointer hover:bg-sidebar-hover ${
+                                        child.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
+                                    }`}
+                                    onClick={() => onContentClick(child)}
+                                >
+                                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                                    <div className="flex-1 flex items-center gap-1 min-w-0">
+                                        <FileText className="h-4 w-4" />
+                                        <div className="flex-1 truncate">
+                                            {child.id === currentContentId ? currentContentTitle : child.title}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
                         </AccordionContent>
                     )}
                 </AccordionItem>
@@ -116,7 +130,7 @@ const BookmarkContentList = ({
     onCreateChildContentClick,
 }: {
     currentContentTitle?: string;
-    contents: ContentView[];
+    contents: (ContentView & { hasChild?: boolean; children?: ContentView[] })[];
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
     onCreateChildContentClick: (content: ContentView) => void;
@@ -131,7 +145,11 @@ const BookmarkContentList = ({
                         }`}
                         onClick={() => onContentClick(content)}
                     >
-                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
+                        <ChevronRight
+                            className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
+                                content.hasChild ? '' : 'opacity-0'
+                            }`}
+                        />
                         <div className="flex-1 flex items-center gap-1 min-w-0">
                             <FileText className="h-4 w-4 shrink-0" />
                             <div className="w-0 flex-1 truncate">
@@ -151,15 +169,25 @@ const BookmarkContentList = ({
                             </div>
                         </div>
                     </AccordionTrigger>
-                    {content['hasChild'] && (
+                    {content.hasChild && (
                         <AccordionContent>
-                            <div className="p-1 flex items-center">
-                                <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
-                                <div className="flex-1 flex items-center gap-1 min-w-0">
-                                    <FileText className="h-4 w-4" />
-                                    <div className="flex-1">Page Title2-1</div>
+                            {content.children?.map(child => (
+                                <div
+                                    key={child.id}
+                                    className={`p-1 flex items-center cursor-pointer hover:bg-sidebar-hover ${
+                                        child.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
+                                    }`}
+                                    onClick={() => onContentClick(child)}
+                                >
+                                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                                    <div className="flex-1 flex items-center gap-1 min-w-0">
+                                        <FileText className="h-4 w-4" />
+                                        <div className="flex-1 truncate">
+                                            {child.id === currentContentId ? currentContentTitle : child.title}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
                         </AccordionContent>
                     )}
                 </AccordionItem>
@@ -181,10 +209,43 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
     const allContents = useMemo(() => contentsData?.data || [], [contentsData]);
+    const contentsWithChildren = useMemo(() => {
+        const contentMap = new Map<string, ContentView[]>();
 
-    const contents = useMemo(() => allContents.filter(content => !content.$activity?.isMark), [allContents]);
+        // First, collect all contents that have parents
+        allContents.forEach(content => {
+            if (content.parentId) {
+                if (!contentMap.has(content.parentId)) {
+                    contentMap.set(content.parentId, []);
+                }
+                contentMap.set(content.parentId, [...(contentMap.get(content.parentId) || []), content]);
+            }
+        });
 
-    const bookmarkedContents = useMemo(() => allContents.filter(content => content.$activity?.isMark), [allContents]);
+        console.log(
+            allContents.map(content => ({
+                ...content,
+                hasChild: contentMap.has(content.id),
+                children: contentMap.get(content.id) || [],
+            }))
+        );
+        // Then, add hasChild and children properties to contents
+        return allContents.map(content => ({
+            ...content,
+            hasChild: contentMap.has(content.id),
+            children: contentMap.get(content.id) || [],
+        }));
+    }, [allContents]);
+
+    const contents = useMemo(
+        () => contentsWithChildren.filter(content => !content.$activity?.isMark && !content.parentId),
+        [contentsWithChildren]
+    );
+
+    const bookmarkedContents = useMemo(
+        () => contentsWithChildren.filter(content => content.$activity?.isMark && !content.parentId),
+        [contentsWithChildren]
+    );
 
     const handleContentClick = (content: ContentView) => {
         navigate(`/${content.id}`);
