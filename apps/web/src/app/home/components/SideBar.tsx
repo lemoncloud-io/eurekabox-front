@@ -66,7 +66,7 @@ const ContentItem = ({
 }) => (
     <AccordionItem value={`${content.id}-${level}`} key={content.id} className="border-none">
         <AccordionTrigger
-            className={`group flex items-center justify-between ${
+            className={`group flex items-center justify-between w-full px-2 ${
                 content.id === props.currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
             }`}
         >
@@ -80,7 +80,7 @@ const ContentItem = ({
                 }}
             >
                 <ChevronRight
-                    className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
+                    className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 group-data-[state=open]:rotate-90 ${
                         content.hasChild ? '' : 'opacity-0'
                     }`}
                 />
@@ -96,19 +96,35 @@ const ContentItem = ({
                 <div className="w-0 flex-1 truncate">
                     {content.id === props.currentContentId ? props.currentContentTitle : content.title}
                 </div>
+                {content.$activity?.isMark && (
+                    <div className="relative">
+                        <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609] group-hover:invisible" />
+                        <button
+                            className="absolute top-0 left-0 invisible group-hover:visible"
+                            onClick={e => {
+                                e.stopPropagation();
+                                props.onCreateChildContentClick(content);
+                            }}
+                        >
+                            <Plus className="h-4 w-4 text-text-700" />
+                        </button>
+                    </div>
+                )}
             </div>
-            <button
-                onClick={e => {
-                    e.stopPropagation();
-                    props.onCreateChildContentClick(content);
-                }}
-            >
-                <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-            </button>
+            {!content.$activity?.isMark && (
+                <button
+                    onClick={e => {
+                        e.stopPropagation();
+                        props.onCreateChildContentClick(content);
+                    }}
+                >
+                    <Plus className="h-4 w-4 text-text-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </button>
+            )}
         </AccordionTrigger>
         {content.hasChild && content.children && content.children.length > 0 && (
-            <AccordionContent>
-                <div className={`pl-${level > 0 ? '4' : '0'}`}>
+            <AccordionContent className="w-full">
+                <div className={`pl-${level > 0 ? '4' : '0'} w-full`}>
                     {content.children.map(child => (
                         <ContentItem key={child.id} content={child} level={level + 1} {...props} />
                     ))}
@@ -129,83 +145,6 @@ const ContentList = (props: {
         <Accordion type="multiple" className="w-full flex flex-col gap-[2px]">
             {props.contents.map(content => (
                 <ContentItem key={content.id} content={content} {...props} />
-            ))}
-        </Accordion>
-    </div>
-);
-
-const BookmarkContentList = ({
-    currentContentTitle,
-    contents,
-    currentContentId,
-    onContentClick,
-    onCreateChildContentClick,
-}: {
-    currentContentTitle?: string;
-    contents: (ContentView & { hasChild?: boolean; children?: ContentView[] })[];
-    currentContentId?: string;
-    onContentClick: (content: ContentView) => void;
-    onCreateChildContentClick: (content: ContentView) => void;
-}) => (
-    <div className="space-y-1 mt-1">
-        <Accordion type="single" collapsible className="w-full">
-            {contents.map(content => (
-                <AccordionItem value={content.title} key={content.id}>
-                    <AccordionTrigger
-                        className={`group flex items-center justify-between ${
-                            content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
-                        }`}
-                        onClick={e => {
-                            e.stopPropagation();
-                            onContentClick(content);
-                        }}
-                    >
-                        <ChevronRight
-                            className={`h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 ${
-                                content.hasChild ? '' : 'opacity-0'
-                            }`}
-                        />
-                        <div className="flex-1 flex items-center gap-1 min-w-0">
-                            <FileText className="h-4 w-4 shrink-0" />
-                            <div className="w-0 flex-1 truncate">
-                                {content.id === currentContentId ? currentContentTitle : content.title}
-                            </div>
-                            <div className="relative">
-                                <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609] group-hover:invisible" />
-                                <button
-                                    className="absolute top-0 left-0 invisible group-hover:visible"
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        onCreateChildContentClick(content);
-                                    }}
-                                >
-                                    <Plus className="h-4 w-4 text-text-700" />
-                                </button>
-                            </div>
-                        </div>
-                    </AccordionTrigger>
-                    {content.hasChild && (
-                        <AccordionContent>
-                            {content.children?.map(child => (
-                                <div
-                                    key={child.id}
-                                    className={`p-1 flex items-center cursor-pointer hover:bg-sidebar-hover ${
-                                        child.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
-                                    }`}
-                                    onClick={() => onContentClick(child)}
-                                >
-                                    <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
-                                    <div className="flex-1 flex items-center gap-1 min-w-0">
-                                        <FileText className="h-4 w-4" />
-                                        <div className="flex-1 truncate">
-                                            {child.id === currentContentId ? currentContentTitle : child.title}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </AccordionContent>
-                    )}
-                </AccordionItem>
             ))}
         </Accordion>
     </div>
@@ -309,7 +248,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         {bookmarkedContents.length === 0 ? (
                             <div className="px-4 text-sm text-dim">{t('sidebar.noBookmarks')}</div>
                         ) : (
-                            <BookmarkContentList
+                            <ContentList
                                 currentContentTitle={currentContentTitle}
                                 contents={bookmarkedContents}
                                 currentContentId={contentId}

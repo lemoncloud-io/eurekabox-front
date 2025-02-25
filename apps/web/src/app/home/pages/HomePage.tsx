@@ -14,7 +14,7 @@ import { Loader } from '@eurekabox/shared';
 
 import { EditorLayout } from '../layouts/EditorLayout';
 
-const DISPLAY_COUNT = 5;
+const DISPLAY_COUNT = 10;
 
 export const HomePage = () => {
     const { t } = useTranslation();
