@@ -25,7 +25,7 @@ const HighlightedText = ({ text, searchTerm }: { text: string; searchTerm: strin
         <>
             {parts.map((part, i) =>
                 part.toLowerCase() === searchTerm.toLowerCase() ? (
-                    <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded">
+                    <mark key={i} className="text-[#0077BF] font-semibold bg-transparent">
                         {part}
                     </mark>
                 ) : (
@@ -56,11 +56,11 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTitle></DialogTitle>
-            <DialogContent className="max-w-[650px] p-0">
-                <div className="flex flex-col h-[240px] p-3">
+            <DialogContent className="max-w-[580px] p-0">
+                <div className="flex flex-col max-h-[760px] h-[760px] p-3 pb-0">
                     <div className="flex items-center gap-[6px]">
                         <DialogClose asChild>
-                            <button className="text-text">
+                            <button className="text-text-800">
                                 <ChevronLeft />
                             </button>
                         </DialogClose>
