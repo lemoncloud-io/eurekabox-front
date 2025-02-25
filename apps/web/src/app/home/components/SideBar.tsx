@@ -212,7 +212,6 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const contentsWithChildren = useMemo(() => {
         const contentMap = new Map<string, ContentView[]>();
 
-        // First, collect all contents that have parents
         allContents.forEach(content => {
             if (content.parentId) {
                 if (!contentMap.has(content.parentId)) {
