@@ -2,6 +2,10 @@ import type { ContentActivityParam, ContentBody, ElementBody } from '@lemoncloud
 
 export type CreateContentDTO = ContentBody;
 
+export interface CreateChildContentDTO extends Partial<CreateContentDTO> {
+    parentId: string;
+}
+
 export interface UpdateContentDTO extends Partial<CreateContentDTO> {
     contentId: string;
 }

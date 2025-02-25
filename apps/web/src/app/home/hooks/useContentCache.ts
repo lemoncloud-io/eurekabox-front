@@ -12,7 +12,6 @@ export const useContentCache = () => {
     const prependContentToCache = useCallback(
         (content: ContentView) => {
             queryClient.setQueryData(contentsKeys.list({ limit: -1, activity: 1 }), (oldData: any) => {
-                console.log(content, oldData);
                 if (!oldData) {
                     return { total: 1, data: [content] };
                 }
@@ -31,7 +30,6 @@ export const useContentCache = () => {
     const removeContentFromCache = useCallback(
         (contentId: string) => {
             queryClient.setQueryData(contentsKeys.list({ limit: -1, activity: 1 }), (oldData: any) => {
-                console.log(contentId, oldData);
                 if (!oldData) {
                     return oldData;
                 }

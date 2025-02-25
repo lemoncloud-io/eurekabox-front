@@ -20,7 +20,7 @@ import {
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 
-import { useCreateContentWithCache } from '../hooks';
+import { useCreateChildContentWithCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
 
 type SideBarProps = {
@@ -177,6 +177,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
+    const { handleCreateChild, isPending: isCreateChildPending } = useCreateChildContentWithCache();
     const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
     const allContents = useMemo(() => contentsData?.data || [], [contentsData]);
@@ -199,7 +200,11 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
 
     const handleCreateChildContent = (parent: ContentView) => {
         // TODO: create child content
+        if (!parent || !parent.id) {
+            return;
+        }
         console.log(parent);
+        handleCreateChild(parent.id);
     };
 
     const isHomePage = location.pathname === '/home';

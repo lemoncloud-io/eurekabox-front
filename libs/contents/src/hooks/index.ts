@@ -18,7 +18,7 @@ import {
     updateContent,
 } from '../api';
 import { contentsKeys } from '../consts';
-import type { CreateContentDTO, UpdateActivityDTO, UpdateContentDTO } from '../types';
+import type { CreateChildContentDTO, CreateContentDTO, UpdateActivityDTO, UpdateContentDTO } from '../types';
 
 /**
  * 컨텐츠 목록을 불러오는 훅
@@ -94,6 +94,14 @@ export const useContent = (contentId: string) =>
         refetchOnMount: false,
         enabled: !!contentId,
     });
+
+export const useCreateChildContent = () => {
+    return useCustomMutation((data: CreateChildContentDTO) => createContent(data), {
+        onError: error => {
+            toast({ description: `${error.toString()}`, variant: 'destructive' });
+        },
+    });
+};
 
 /**
  * 컨텐츠 생성 mutation 훅
