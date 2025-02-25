@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-02-25] - root@0.17.1, @eurekabox/web@0.17.1
+
+### Refactor
+
+-   search detail style
+
 ## [2025-02-20] - root@0.17.0, @eurekabox/web@0.17.0
 
 ### Features
