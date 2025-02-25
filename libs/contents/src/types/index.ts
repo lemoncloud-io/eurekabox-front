@@ -1,4 +1,4 @@
-import type { ContentBody, ElementBody } from '@lemoncloud/lemon-contents-api';
+import type { ContentActivityParam, ContentBody, ElementBody } from '@lemoncloud/lemon-contents-api';
 
 export type CreateContentDTO = ContentBody;
 
@@ -10,4 +10,8 @@ export type CreateElementDTO = ElementBody;
 
 export interface UpdateElementDTO extends Partial<CreateElementDTO> {
     elementId: string;
+}
+
+export interface UpdateActivityDTO extends Partial<ContentActivityParam> {
+    contentId: string;
 }

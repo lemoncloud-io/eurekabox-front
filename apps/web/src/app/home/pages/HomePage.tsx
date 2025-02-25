@@ -21,7 +21,7 @@ export const HomePage = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState<string>('');
     const [displayCount, setDisplayCount] = useState(DISPLAY_COUNT);
-    const { data: contentsData, isLoading } = useContents({ limit: -1 });
+    const { data: contentsData, isLoading } = useContents({ limit: -1, activity: true });
 
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
     const displayedContents = useMemo(() => {

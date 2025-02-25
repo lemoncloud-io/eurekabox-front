@@ -40,7 +40,7 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
-    const { data: contentsData, isLoading } = useContents({ limit: -1 });
+    const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
     const filteredResults = useMemo(() => {
         if (!debouncedSearchTerm || !contentsData?.data) return [];

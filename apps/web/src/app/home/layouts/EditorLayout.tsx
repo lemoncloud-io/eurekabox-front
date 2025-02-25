@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Star, Trash2 } from 'lucide-react';
 
@@ -40,23 +41,29 @@ import { useContentCache, useCreateContentWithCache } from '../hooks';
 
 interface EditorLayoutProps {
     children: ReactNode;
+    content?: ContentView;
     isDashboard?: boolean;
     title: string;
     isLoading: boolean;
     handleSave?: () => void;
-    handleExport?: () => void;
+    handleBookmark?: () => void;
+    handleExport?: (type: 'markdown' | 'html') => void;
+    isBookmarkLoading?: boolean;
 }
 
 export const EditorLayout = ({
     children,
-    contentId,
+    content,
     isDashboard = false,
     title,
     isLoading = false,
     handleSave,
     handleExport,
+    handleBookmark,
+    isBookmarkLoading = false,
 }: EditorLayoutProps) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
@@ -80,6 +87,12 @@ export const EditorLayout = ({
     const handleSaveClick = async () => {
         if (handleSave) {
             handleSave();
+        }
+    };
+
+    const handleBookmarkClick = async () => {
+        if (handleBookmark) {
+            handleBookmark();
         }
     };
 
@@ -138,12 +151,12 @@ export const EditorLayout = ({
     };
 
     const confirmDelete = async () => {
-        if (!contentId) {
+        if (!content || !content.id) {
             return;
         }
-        await deleteContent.mutateAsync(contentId, {
+        await deleteContent.mutateAsync(content.id, {
             onSuccess: async () => {
-                removeContentFromCache(contentId);
+                removeContentFromCache(content.id);
                 toast({ description: `Successfully deleted.` });
                 navigate('/home');
             },
@@ -210,9 +223,18 @@ export const EditorLayout = ({
                                             </>
                                         )}
                                     </Button>
-                                    {/* TODO: bookmark */}
-                                    <button>
-                                        <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
+                                    <button onClick={handleBookmarkClick} disabled={isBookmarkLoading}>
+                                        {isBookmarkLoading ? (
+                                            <Loader message={''} />
+                                        ) : (
+                                            <Star
+                                                className={`w-4 h-4 ${
+                                                    content?.$activity?.isMark
+                                                        ? 'fill-[#FFC609] text-[#FFC609]'
+                                                        : 'fill-none text-text-800'
+                                                }`}
+                                            />
+                                        )}
                                     </button>
                                 </>
                             )}

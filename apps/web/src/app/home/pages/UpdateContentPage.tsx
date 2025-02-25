@@ -8,7 +8,9 @@ import type { Tools, YooEditor } from '@yoopta/editor';
 import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
 import { markdown } from '@yoopta/exports';
 
-import { contentsKeys } from '@eurekabox/contents';
+import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
+
+import { contentsKeys, useUpdateActivity } from '@eurekabox/contents';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
@@ -16,7 +18,6 @@ import { useGlobalLoader } from '@eurekabox/shared';
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
 import { EditorLayout } from '../layouts/EditorLayout';
 import { MARKS, TOOLS, exportToHTML, plugins, saveSelection } from '../utils';
-
 
 export const UpdateContentPage = () => {
     const { setIsLoading } = useGlobalLoader();
@@ -38,6 +39,28 @@ export const UpdateContentPage = () => {
     const hasChangesRef = useRef(false);
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
+    const updateActivity = useUpdateActivity();
+
+    const handleBookmark = async () => {
+        if (!content || !content.id) {
+            return;
+        }
+
+        const isMark = content.$activity?.isMark ?? false;
+        await updateActivity.mutateAsync(
+            { contentId: content.id, mark: !isMark },
+            {
+                onSuccess: async response => {
+                    queryClient.setQueryData(contentsKeys.detail(content.id), {
+                        ...content,
+                        $activity: response.$activity,
+                    });
+                    await createAsyncDelay(500);
+                    await queryClient.invalidateQueries(contentsKeys.lists() as never);
+                },
+            }
+        );
+    };
 
     const focusBlockWithOptions = useCallback((editor: YooEditor, blockId: string) => {
         if (!editor || !blockId) {
@@ -152,7 +175,7 @@ export const UpdateContentPage = () => {
             hasChangesRef.current = false;
 
             if (contentId) {
-                queryClient.setQueryData(contentsKeys.list({ limit: -1 }), (oldData: any) => {
+                queryClient.setQueryData(contentsKeys.list({ limit: -1, activity: 1 }), (oldData: any) => {
                     if (!oldData) {
                         return oldData;
                     }
@@ -289,9 +312,11 @@ export const UpdateContentPage = () => {
             <EditorLayout
                 title={title}
                 isLoading={loading}
-                contentId={contentId}
+                content={content}
                 handleSave={handleClickSave}
                 handleExport={handleClickExport}
+                handleBookmark={handleBookmark}
+                isBookmarkLoading={updateActivity.isPending}
             >
                 <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto">
                     <input

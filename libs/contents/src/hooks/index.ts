@@ -8,9 +8,17 @@ import type { PaginationType } from '@eurekabox/shared';
 import { useCustomMutation } from '@eurekabox/shared';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
-import { createContent, deleteContent, fetchContentById, fetchContents, searchContents, updateContent } from '../api';
+import {
+    createContent,
+    deleteContent,
+    fetchContentById,
+    fetchContents,
+    searchContents,
+    updateActivity,
+    updateContent,
+} from '../api';
 import { contentsKeys } from '../consts';
-import type { CreateContentDTO, UpdateContentDTO } from '../types';
+import type { CreateContentDTO, UpdateActivityDTO, UpdateContentDTO } from '../types';
 
 /**
  * 컨텐츠 목록을 불러오는 훅
@@ -154,6 +162,14 @@ export const useUpdateContent = () => {
 
 export const useDeleteContent = () => {
     return useCustomMutation((id: string) => deleteContent(id), {
+        onError: error => {
+            toast({ description: `${error.toString()}`, variant: 'destructive' });
+        },
+    });
+};
+
+export const useUpdateActivity = () => {
+    return useCustomMutation((updateDTO: UpdateActivityDTO) => updateActivity(updateDTO), {
         onError: error => {
             toast({ description: `${error.toString()}`, variant: 'destructive' });
         },

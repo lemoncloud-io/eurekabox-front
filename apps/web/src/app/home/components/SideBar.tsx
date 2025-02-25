@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen } from 'lucide-react';
+import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen, Star } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
@@ -117,7 +117,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
-    const { data: contentsData, isLoading } = useContents({ limit: -1 });
+    const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
     const contents = useMemo(() => contentsData?.data || [], [contentsData]);
 
@@ -162,8 +162,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         <Home className="h-4 w-4" />
                         {t('sidebar.home')}
                     </Button>
-                    {/* TODO: bookmark */}
-                    {/* <div className="mt-[22px]">
+                    <div className="mt-[22px]">
                         <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.bookmark')}</h2>
                         <Button variant="ghost" className=" h-[29px] justify-between font-normal text-text-700">
                             <div className="w-[175px] flex items-center gap-2">
@@ -174,7 +173,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                                 <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
                             </button>
                         </Button>
-                    </div> */}
+                    </div>
                     <div className="mt-[22px]">
                         <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.page')}</h2>
                         {isLoading && <Loader />}
