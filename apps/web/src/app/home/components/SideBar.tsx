@@ -108,6 +108,66 @@ const ContentList = ({
     </div>
 );
 
+const BookmarkContentList = ({
+    currentContentTitle,
+    contents,
+    currentContentId,
+    onContentClick,
+    onCreateChildContentClick,
+}: {
+    currentContentTitle?: string;
+    contents: ContentView[];
+    currentContentId?: string;
+    onContentClick: (content: ContentView) => void;
+    onCreateChildContentClick: (content: ContentView) => void;
+}) => (
+    <div className="space-y-1 mt-1">
+        <Accordion type="single" collapsible className="w-full">
+            {contents.map(content => (
+                <AccordionItem value={content.title} key={content.id}>
+                    <AccordionTrigger
+                        className={`group flex items-center justify-between ${
+                            content.id === currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
+                        }`}
+                        onClick={() => onContentClick(content)}
+                    >
+                        <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200 opacity-0" />
+                        <div className="flex-1 flex items-center gap-1 min-w-0">
+                            <FileText className="h-4 w-4 shrink-0" />
+                            <div className="w-0 flex-1 truncate">
+                                {content.id === currentContentId ? currentContentTitle : content.title}
+                            </div>
+                            <div className="relative">
+                                <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609] group-hover:invisible" />
+                                <button
+                                    className="absolute top-0 left-0 invisible group-hover:visible"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        onCreateChildContentClick(content);
+                                    }}
+                                >
+                                    <Plus className="h-4 w-4 text-text-700" />
+                                </button>
+                            </div>
+                        </div>
+                    </AccordionTrigger>
+                    {content['hasChild'] && (
+                        <AccordionContent>
+                            <div className="p-1 flex items-center">
+                                <ChevronRight className="h-4 w-4 shrink-0 text-text-700 transition-transform duration-200" />
+                                <div className="flex-1 flex items-center gap-1 min-w-0">
+                                    <FileText className="h-4 w-4" />
+                                    <div className="flex-1">Page Title2-1</div>
+                                </div>
+                            </div>
+                        </AccordionContent>
+                    )}
+                </AccordionItem>
+            ))}
+        </Accordion>
+    </div>
+);
+
 export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -119,7 +179,11 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
-    const contents = useMemo(() => contentsData?.data || [], [contentsData]);
+    const allContents = useMemo(() => contentsData?.data || [], [contentsData]);
+
+    const contents = useMemo(() => allContents.filter(content => !content.$activity?.isMark), [allContents]);
+
+    const bookmarkedContents = useMemo(() => allContents.filter(content => content.$activity?.isMark), [allContents]);
 
     const handleContentClick = (content: ContentView) => {
         navigate(`/${content.id}`);
@@ -135,6 +199,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
 
     const handleCreateChildContent = (parent: ContentView) => {
         // TODO: create child content
+        console.log(parent);
     };
 
     const isHomePage = location.pathname === '/home';
@@ -164,15 +229,17 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                     </Button>
                     <div className="mt-[22px]">
                         <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.bookmark')}</h2>
-                        <Button variant="ghost" className=" h-[29px] justify-between font-normal text-text-700">
-                            <div className="w-[175px] flex items-center gap-2">
-                                <FileText className="h-4 w-4" />
-                                <span className="truncate">page</span>
-                            </div>
-                            <button>
-                                <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609]" />
-                            </button>
-                        </Button>
+                        {bookmarkedContents.length === 0 ? (
+                            <div className="px-4 text-sm text-dim">{t('sidebar.noBookmarks')}</div>
+                        ) : (
+                            <BookmarkContentList
+                                currentContentTitle={currentContentTitle}
+                                contents={bookmarkedContents}
+                                currentContentId={contentId}
+                                onContentClick={handleContentClick}
+                                onCreateChildContentClick={handleCreateChildContent}
+                            />
+                        )}
                     </div>
                     <div className="mt-[22px]">
                         <h2 className="px-2 text-xs text-dim font-medium">{t('sidebar.sections.page')}</h2>
