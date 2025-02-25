@@ -8,10 +8,11 @@ import i18n from 'i18next';
 import { Download, EllipsisVertical, FileUp, LogOut, Menu, Plus, Save, Star, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 import { Images } from '@eurekabox/assets';
 import type { CreateContentDTO } from '@eurekabox/contents';
-import { useCreateContent, useDeleteContent } from '@eurekabox/contents';
+import { contentsKeys, useContent, useCreateContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -21,7 +22,6 @@ import {
 } from '@eurekabox/lib/components/ui/dropdown-menu';
 import { Image } from '@eurekabox/lib/components/ui/image';
 import { Loader } from '@eurekabox/shared';
-import { useTheme } from '@eurekabox/theme';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -41,31 +41,27 @@ import { useContentCache, useCreateContentWithCache } from '../hooks';
 
 interface EditorLayoutProps {
     children: ReactNode;
-    content?: ContentView;
+    contentId: string;
     isDashboard?: boolean;
     title: string;
     isLoading: boolean;
     handleSave?: () => void;
-    handleBookmark?: () => void;
     handleExport?: (type: 'markdown' | 'html') => void;
-    isBookmarkLoading?: boolean;
 }
 
 export const EditorLayout = ({
     children,
-    content,
+    contentId,
     isDashboard = false,
     title,
     isLoading = false,
     handleSave,
     handleExport,
-    handleBookmark,
-    isBookmarkLoading = false,
 }: EditorLayoutProps) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { theme, setTheme } = useTheme();
+    const { data: content, isLoading: isContentLoading } = useContent(contentId);
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -77,6 +73,28 @@ export const EditorLayout = ({
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
+    const updateActivity = useUpdateActivity();
+
+    const handleBookmarkClick = async () => {
+        if (!content || !content.id) {
+            return;
+        }
+
+        const isMark = content.$activity?.isMark ?? false;
+        await updateActivity.mutateAsync(
+            { contentId: content.id, mark: !isMark },
+            {
+                onSuccess: async response => {
+                    queryClient.setQueryData(contentsKeys.detail(content.id), {
+                        ...content,
+                        $activity: response.$activity,
+                    });
+                    await createAsyncDelay(500);
+                    await queryClient.invalidateQueries(contentsKeys.lists() as never);
+                },
+            }
+        );
+    };
 
     const toggleLanguage = () => {
         const newLanguage = language === 'en' ? 'ko' : 'en';
@@ -87,12 +105,6 @@ export const EditorLayout = ({
     const handleSaveClick = async () => {
         if (handleSave) {
             handleSave();
-        }
-    };
-
-    const handleBookmarkClick = async () => {
-        if (handleBookmark) {
-            handleBookmark();
         }
     };
 
@@ -223,9 +235,9 @@ export const EditorLayout = ({
                                             </>
                                         )}
                                     </Button>
-                                    <button onClick={handleBookmarkClick} disabled={isBookmarkLoading}>
-                                        {isBookmarkLoading ? (
-                                            <Loader message={''} />
+                                    <button onClick={handleBookmarkClick} disabled={updateActivity.isPending}>
+                                        {updateActivity.isPending ? (
+                                            <Loader className={`space-x-0`} message={''} />
                                         ) : (
                                             <Star
                                                 className={`w-4 h-4 ${
