@@ -1,5 +1,40 @@
 # EurekaboxFront
 
+## Environment Setup
+
+1. Copy the environment template file:
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
+
+2. Update the environment variables in .env.local with your own values:
+
+-   VITE_OAUTH_ENDPOINT : Your OAuth service endpoint
+-   VITE_BACKEND_ENDPOINT : Your backend API endpoint
+-   VITE_TRANSLATE_ENDPOINT : Your translation service endpoint
+-   VITE_SOCIAL_OAUTH_ENDPOINT : Your social OAuth endpoint
+-   VITE_IMAGE_API_ENDPOINT : Your image API endpoint
+-   VITE_CONTENT_ENDPOINT : Your content service endpoint
+
+3. For development environments, create additional environment files as needed:
+
+-   .env.dev for development
+-   .env.prod for production
+
+4. Additional Security Recommendations:
+
+-   Remove any hardcoded API keys or secrets from the codebase
+-   Consider using environment variable validation (e.g., with Zod or a similar library)
+-   Document any required API keys or services that users need to set up
+-   Consider providing mock services for development
+
+5. Before pushing to public repository:
+
+```bash
+git clean -fdx
+```
+
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
 ✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.

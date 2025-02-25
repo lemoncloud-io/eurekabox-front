@@ -29,8 +29,6 @@ replacers:
       replace: '루이'
     - search: 'alice-0130'
       replace: '앨리스'
-    - search: 'Mark-obov'
-      replace: '마크'
     - search: 'caleb-lemon'
       replace: '케일럽'
     - search: 'shy-lemon'

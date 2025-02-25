@@ -8,7 +8,7 @@ import { webCore } from '@eurekabox/web-core';
 
 import type { UpdateContentDTO, UpdateElementDTO } from '../types';
 
-const CONTENT_ENDPOINT = import.meta.env.VITE_CONTENT_ENDPOINT.toLowerCase();
+const CONTENT_API_ENDPOINT = import.meta.env.VITE_CONTENT_API_ENDPOINT.toLowerCase();
 const IMAGE_API_ENDPOINT = import.meta.env.VITE_IMAGE_API_ENDPOINT.toLowerCase();
 
 export interface UploadedImage {
@@ -31,7 +31,7 @@ export const fetchContents = async (params: Params): Promise<ListResult<ContentV
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/contents`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents`,
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ContentView>>();
@@ -43,7 +43,7 @@ export const searchContents = async (params: Params): Promise<ListResult<Content
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/contents/0/list`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/0/list`,
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ContentView>>();
@@ -59,7 +59,7 @@ export const fetchContentById = async (contentId?: string, signal?: GenericAbort
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/contents/${contentId}/detail`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/${contentId}/detail`,
         })
         .addAxiosRequestConfig({
             ...(signal && { signal }),
@@ -73,7 +73,7 @@ export const createContent = async (contentBody: ContentBody): Promise<ContentVi
     const { data } = await webCore
         .buildSignedRequest({
             method: 'POST',
-            baseURL: `${CONTENT_ENDPOINT}/contents/0`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/0`,
         })
         .setBody({ ...contentBody })
         .execute<ContentView>();
@@ -90,7 +90,7 @@ export const updateContent = async (updateContentDTO: UpdateContentDTO): Promise
     const response = await webCore
         .buildSignedRequest({
             method: 'PUT',
-            baseURL: `${CONTENT_ENDPOINT}/contents/${contentId}`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/${contentId}`,
         })
         .setBody(data)
         .execute<ContentView>();
@@ -106,7 +106,7 @@ export const deleteContent = async (contentId: string): Promise<ContentView> => 
     const { data } = await webCore
         .buildSignedRequest({
             method: 'DELETE',
-            baseURL: `${CONTENT_ENDPOINT}/contents/${contentId}`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/${contentId}`,
         })
         .setBody({})
         .execute<ContentView>();
@@ -118,7 +118,7 @@ export const fetchElements = async (params: Params): Promise<ListResult<ElementV
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/elements/0/list`,
+            baseURL: `${CONTENT_API_ENDPOINT}/elements/0/list`,
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ElementView>>();
@@ -134,7 +134,7 @@ export const fetchElementById = async (elementId?: string, signal?: GenericAbort
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/elements/${elementId}/detail`,
+            baseURL: `${CONTENT_API_ENDPOINT}/elements/${elementId}/detail`,
         })
         .addAxiosRequestConfig({
             ...(signal && { signal }),
@@ -153,7 +153,7 @@ export const createElement = async (elementBody: ElementBody): Promise<ElementVi
     const response = await webCore
         .buildSignedRequest({
             method: 'POST',
-            baseURL: `${CONTENT_ENDPOINT}/contents/${contentId}/elements`,
+            baseURL: `${CONTENT_API_ENDPOINT}/contents/${contentId}/elements`,
         })
         .setBody({ ...data })
         .execute<ElementView>();
@@ -170,7 +170,7 @@ export const updateElement = async (updateElementDTO: UpdateElementDTO): Promise
     const response = await webCore
         .buildSignedRequest({
             method: 'PUT',
-            baseURL: `${CONTENT_ENDPOINT}/elements/${elementId}`,
+            baseURL: `${CONTENT_API_ENDPOINT}/elements/${elementId}`,
         })
         .setBody({ ...data })
         .execute<ElementView>();
@@ -186,7 +186,7 @@ export const deleteElement = async (elementId: string): Promise<ElementView> => 
     const { data } = await webCore
         .buildSignedRequest({
             method: 'DELETE',
-            baseURL: `${CONTENT_ENDPOINT}/elements/${elementId}`,
+            baseURL: `${CONTENT_API_ENDPOINT}/elements/${elementId}`,
         })
         .setBody({})
         .execute<ElementView>();

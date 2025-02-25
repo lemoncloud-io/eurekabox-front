@@ -8,9 +8,10 @@ interface ImportMetaEnv {
     VITE_OAUTH_ENDPOINT: string;
     VITE_BACKEND_ENDPOINT: string;
     VITE_TRANSLATE_ENDPOINT: string;
-    VITE_CONTENT_ENDPOINT: string;
+    VITE_CONTENT_API_ENDPOINT: string;
     VITE_HOST: string;
     VITE_IMAGE_API_ENDPOINT: string;
+    VITE_CODES_HOST?: string;
 }
 
 interface ImportMeta {

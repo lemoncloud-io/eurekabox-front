@@ -145,6 +145,12 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+            - name: Create deploy env file
+              run: |
+                  echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> .env.deploy
+                  echo "DEV_DISTRIBUTION_ID=${{ secrets.DEV_DISTRIBUTION_ID }}" >> .env.deploy
+                  echo "PROD_DISTRIBUTION_ID=${{ secrets.PROD_DISTRIBUTION_ID }}" >> .env.deploy
+
             - name: Deploy to PROD
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh

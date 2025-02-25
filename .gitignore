@@ -1,5 +1,12 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# environment variables
+.env
+.env.local
+.env.dev
+.env.prod
+.env.deploy
+
 # compiled output
 dist
 tmp

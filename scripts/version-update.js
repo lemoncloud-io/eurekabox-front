@@ -6,7 +6,7 @@ const { spawnSync } = require('child_process');
 const CONFIG = {
     changelogPath: 'CHANGELOG.md',
     targetBranch: 'develop',
-    rootPackagePath: 'package.json', // 루트 package.json 경로
+    rootPackagePath: 'package.json',
     projectPaths: {
         web: 'apps/web/package.json',
     },
