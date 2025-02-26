@@ -40,7 +40,7 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
     const { isDarkTheme } = useTheme();
 
     return (
-        <div className="h-[54px] px-4 flex items-center justify-between">
+        <div className="h-[54px] px-4 flex items-center justify-between shrink-0">
             <img
                 src={isDarkTheme ? Logo.purple1 : Logo.black1}
                 alt="EurekaBox Logo"
@@ -75,7 +75,7 @@ const ContentItem = ({
 }) => (
     <AccordionItem value={`${content.id}-${level}`} key={content.id} className="border-none">
         <AccordionTrigger
-            className={`group flex items-center justify-between w-full px-2 ${
+            className={`group flex items-center justify-between w-full px-2 my-[1px] ${
                 content.id === props.currentContentId ? 'bg-sidebar-hover text-text font-medium' : ''
             }`}
         >
@@ -166,7 +166,7 @@ const ContentList = (props: {
     onExpandChange: (expandedItems: string[]) => void;
 }) => (
     <div className="space-y-1 mt-1">
-        <Accordion type="multiple" value={props.expandedItems} className="w-full flex flex-col gap-[2px]">
+        <Accordion type="multiple" value={props.expandedItems} className="w-full">
             {props.contents.map(content => (
                 <ContentItem key={content.id} content={content} {...props} />
             ))}
@@ -290,10 +290,10 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
         <div className="w-[248px] flex flex-col h-full bg-sidebar">
             <SideBarHeader onClose={() => setSidebarOpen(false)} onClickNewPage={handleCreate} />
             <ScrollArea className="flex-grow">
-                <div className="px-3">
+                <div className="px-3 pb-6 mt-1">
                     <Button
                         variant="ghost"
-                        className="w-full justify-start text-text-700 hover:bg-transparent"
+                        className="w-full justify-start text-text-700 px-2 hover:bg-transparent"
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <Search className="h-4 w-4" />
@@ -301,7 +301,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                     </Button>
                     <Button
                         variant="ghost"
-                        className={`w-full h-[29px] justify-start text-text-700 hover:bg-sidebar-hover ${
+                        className={`w-full h-[29px] justify-start text-text-700 px-2 hover:bg-sidebar-hover ${
                             isHomePage ? 'bg-sidebar-hover text-text font-medium' : ''
                         }`}
                         onClick={() => navigate('/home')}
@@ -345,7 +345,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         <div className="px-2">
                             <Button
                                 variant="ghost"
-                                className="mt-[22px] dark:bg-[#3A3C40] dark:border-[#53555B] w-full h-[33px] text-text-800 border border-text-700 font-medium"
+                                className="mt-[22px] dark:bg-[#3A3C40] dark:border-[#53555B] w-full h-[33px] text-text-800 border border-text-700 font-medium hover:text-[#84888F] hover:border-[#84888F]"
                                 onClick={handleCreate}
                                 disabled={isCreatePending}
                             >
