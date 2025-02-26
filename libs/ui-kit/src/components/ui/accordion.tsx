@@ -40,7 +40,7 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
     <AccordionPrimitive.Content
         ref={ref}
-        className="cursor-pointer mt-[2px] pl-[14px] flex flex-1 items-center justify-between gap-1 text-sm text-text-700 rounded-[4px] transition-all hover:bg-sidebar-hover text-left"
+        className="cursor-pointer mt-[2px] pl-[14px] flex flex-1 items-center justify-between text-sm text-text-700 rounded-[4px] gap-1 transition-all text-left"
         {...props}
     >
         <div className={cn('', className)}>{children}</div>
