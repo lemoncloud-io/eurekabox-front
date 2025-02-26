@@ -34,6 +34,7 @@
         },
         "noPages": "No Pages",
         "newPage": "New Page",
+        "noBookmarks": "No bookmarked pages",
         "toast": {
             "noContent": "No Content!"
         }

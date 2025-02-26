@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { AuthRoutes } from '../../auth';
+import { AuthRoutes } from '../../features/auth';
 
 const AuthRedirect = () => {
     const location = useLocation();
