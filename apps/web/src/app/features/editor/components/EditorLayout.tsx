@@ -87,26 +87,15 @@ export const EditorLayout = ({
                             return { total: 0, data: [] };
                         }
 
+                        const updateActivityStatus = (items: ContentView[]) =>
+                            items.map(item =>
+                                item.id === content.id ? { ...item, $activity: response.$activity } : item
+                            );
+
                         return {
                             ...oldData,
-                            data: oldData.data.map((item: ContentView) => {
-                                if (item.id === content.id) {
-                                    return {
-                                        ...item,
-                                        $activity: response.$activity,
-                                    };
-                                }
-                                return item;
-                            }),
-                            list: oldData.list.map((item: ContentView) => {
-                                if (item.id === content.id) {
-                                    return {
-                                        ...item,
-                                        $activity: response.$activity,
-                                    };
-                                }
-                                return item;
-                            }),
+                            data: updateActivityStatus(oldData.data),
+                            list: updateActivityStatus(oldData.list),
                         };
                     });
                 },
