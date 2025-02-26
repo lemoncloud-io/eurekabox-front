@@ -28,8 +28,8 @@ export const useCreateContentWithCache = () => {
 
         try {
             await createContent.mutateAsync(newContent, {
-                onSuccess: (response: ContentView) => {
-                    prependContentToCache(response);
+                onSuccess: async (response: ContentView) => {
+                    await prependContentToCache(response);
                     navigate(`/${response.id}`);
                 },
             });
@@ -38,7 +38,7 @@ export const useCreateContentWithCache = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [createContent, navigate, prependContentToCache]);
+    }, [createContent, navigate, prependContentToCache, t]);
 
     return {
         handleCreate,

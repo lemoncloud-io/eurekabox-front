@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -55,6 +55,7 @@ const SideBarHeader = ({ onClose, onClickNewPage }: { onClose: () => void; onCli
 const ContentItem = ({
     content,
     level = 0,
+    expandedItems,
     ...props
 }: {
     content: ContentView & { hasChild?: boolean; children?: ContentView[] };
@@ -63,6 +64,7 @@ const ContentItem = ({
     currentContentTitle?: string;
     onContentClick: (content: ContentView) => void;
     onCreateChildContentClick: (content: ContentView) => void;
+    expandedItems: string[];
 }) => (
     <AccordionItem value={`${content.id}-${level}`} key={content.id} className="border-none">
         <AccordionTrigger
@@ -75,7 +77,12 @@ const ContentItem = ({
                 onClick={e => {
                     e.stopPropagation();
                     if (content.hasChild) {
-                        e.currentTarget.parentElement?.click();
+                        const itemValue = `${content.id}-${level}`;
+                        const isExpanded = expandedItems.includes(itemValue);
+                        const newExpandedItems = isExpanded
+                            ? expandedItems.filter(item => item !== itemValue)
+                            : [...expandedItems, itemValue];
+                        props.onExpandChange?.(newExpandedItems);
                     }
                 }}
             >
@@ -126,7 +133,13 @@ const ContentItem = ({
             <AccordionContent className="w-full">
                 <div className={`pl-${level > 0 ? '4' : '0'} w-full`}>
                     {content.children.map(child => (
-                        <ContentItem key={child.id} content={child} level={level + 1} {...props} />
+                        <ContentItem
+                            key={child.id}
+                            content={child}
+                            level={level + 1}
+                            {...props}
+                            expandedItems={expandedItems}
+                        />
                     ))}
                 </div>
             </AccordionContent>
@@ -140,9 +153,11 @@ const ContentList = (props: {
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
     onCreateChildContentClick: (content: ContentView) => void;
+    expandedItems: string[];
+    onExpandChange: (expandedItems: string[]) => void;
 }) => (
     <div className="space-y-1 mt-1">
-        <Accordion type="multiple" className="w-full flex flex-col gap-[2px]">
+        <Accordion type="multiple" value={props.expandedItems} className="w-full flex flex-col gap-[2px]">
             {props.contents.map(content => (
                 <ContentItem key={content.id} content={content} {...props} />
             ))}
@@ -157,6 +172,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     const { contentId } = useParams<{ contentId: string }>();
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const { handleCreateChild, isPending: isCreateChildPending } = useCreateChildContentWithCache();
@@ -197,6 +213,23 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
         [contentsWithChildren]
     );
 
+    useEffect(() => {
+        if (contentId && allContents.length > 0) {
+            const content = allContents.find(c => c.id === contentId);
+            if (content?.parentId) {
+                const parentIds: string[] = [];
+                let currentContent = content;
+
+                while (currentContent.parentId) {
+                    parentIds.push(currentContent.parentId);
+                    currentContent = allContents.find(c => c.id === currentContent.parentId) || currentContent;
+                }
+
+                setExpandedItems(parentIds.map(id => `${id}-0`));
+            }
+        }
+    }, [contentId, allContents]);
+
     const handleContentClick = (content: ContentView) => {
         navigate(`/${content.id}`);
     };
@@ -216,6 +249,10 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
         }
         console.log(parent);
         handleCreateChild(parent.id);
+    };
+
+    const handleExpandChange = (newExpandedItems: string[]) => {
+        setExpandedItems(newExpandedItems);
     };
 
     const isHomePage = location.pathname === '/home';
@@ -254,6 +291,8 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
                                 onCreateChildContentClick={handleCreateChildContent}
+                                expandedItems={expandedItems}
+                                onExpandChange={handleExpandChange}
                             />
                         )}
                     </div>
@@ -270,6 +309,8 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
                                 onCreateChildContentClick={handleCreateChildContent}
+                                expandedItems={expandedItems}
+                                onExpandChange={handleExpandChange}
                             />
                         )}
                         <div className="px-2">
