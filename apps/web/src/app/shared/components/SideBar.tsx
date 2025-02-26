@@ -217,15 +217,26 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
         if (contentId && allContents.length > 0) {
             const content = allContents.find(c => c.id === contentId);
             if (content?.parentId) {
-                const parentIds: string[] = [];
-                let currentContent = content;
+                const expandedSet = new Set<string>();
 
-                while (currentContent.parentId) {
-                    parentIds.push(currentContent.parentId);
-                    currentContent = allContents.find(c => c.id === currentContent.parentId) || currentContent;
-                }
+                // Find the path from content to root
+                const findParentPath = (currentId: string) => {
+                    const current = allContents.find(c => c.id === currentId);
+                    if (!current) return [];
 
-                setExpandedItems(parentIds.map(id => `${id}-0`));
+                    if (!current.parentId) return [current.id];
+
+                    return [...findParentPath(current.parentId), current.id];
+                };
+
+                const parentPath = findParentPath(content.parentId);
+
+                // Create expanded items with correct levels
+                parentPath.forEach((id, index) => {
+                    expandedSet.add(`${id}-${index}`);
+                });
+
+                setExpandedItems(Array.from(expandedSet));
             }
         }
     }, [contentId, allContents]);
