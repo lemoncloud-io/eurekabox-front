@@ -17,6 +17,8 @@ import { MARKS, TOOLS, exportToHTML, plugins, saveSelection } from '../../../sha
 import { EditorLayout } from '../components';
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
 
+const MAX_TITLE_LENGTH = 50;
+
 export const EditorPage = () => {
     const { setIsLoading } = useGlobalLoader();
     const queryClient = useQueryClient();
@@ -267,6 +269,16 @@ export const EditorPage = () => {
         hasChangesRef.current = true;
     }, []);
 
+    const handleTitleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                editor.focus();
+            }
+        },
+        [editor]
+    );
+
     useEffect(() => {
         setIsLoading(loading);
         return () => setIsLoading(false);
@@ -297,8 +309,10 @@ export const EditorPage = () => {
                         ref={titleInputRef}
                         value={title}
                         onChange={e => handleTitleChange(e.target.value)}
-                        className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text"
+                        onKeyDown={handleTitleKeyDown}
+                        className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text pb-4"
                         placeholder={t('editorPage.newPage')}
+                        maxLength={MAX_TITLE_LENGTH}
                     />
                     <div ref={selectionRef}>
                         <YooptaEditor
