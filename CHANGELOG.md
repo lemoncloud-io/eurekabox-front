@@ -1,5 +1,44 @@
 # Changelog
 
+## [2025-02-26] - root@0.18.0, @eurekabox/web@0.18.0
+
+### Features
+
+-   add bookmark functionality to contents
+-   add bookmark functionality to content page
+-   display bookmarked content in sidebar
+-   add create child content functionality
+-   add children to content list
+-   refactor content list display
+-   improve sidebar content display
+-   add caching to child content creation
+-   add support for expanding parent content items
+-   remove floating action button
+-   limit content item nesting depth
+-   add max length to page title input
+-   add active title to sidebar
+-   update query cache to include content with activity
+-   search all content, including children
+-   (i18n) add 'no bookmarks' translation
+
+### Bug Fixes
+
+-   update sidebar logic to handle nested content
+
+### Documentation
+
+-   update README with project info
+
+### Refactor
+
+-   remove unused dashboard components
+-   refactor folder structure
+-   extract activity update logic
+
+### Chores
+
+-   remove unused code
+
 ## [2025-02-25] - root@0.17.1, @eurekabox/web@0.17.1
 
 ### Refactor
