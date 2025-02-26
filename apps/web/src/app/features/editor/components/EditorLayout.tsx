@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 import i18n from 'i18next';
-import { Download, EllipsisVertical, LogOut, Menu, Plus, Save, Star, Trash2 } from 'lucide-react';
+import { Download, EllipsisVertical, LogOut, Menu, Save, Star, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
@@ -276,18 +276,6 @@ export const EditorLayout = ({
                     <main className="flex-1 overflow-auto">{children}</main>
                 </div>
             </div>
-            <Button
-                className="fixed bottom-6 right-6 rounded-full w-12 h-12 shadow-lg hover:shadow-xl transition-shadow"
-                size="icon"
-                disabled={isCreatePending}
-                onClick={handleCreate}
-            >
-                {isCreatePending ? (
-                    <Loader className="text-white space-x-0" message={''} />
-                ) : (
-                    <Plus className="h-6 w-6" />
-                )}
-            </Button>
             <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
         </div>
     );
