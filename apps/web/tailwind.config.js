@@ -22,7 +22,13 @@ module.exports = {
         },
         extend: {
             colors: {
-                hover: 'hsl(var(--hover))',
+                text: 'hsl(var(--text))',
+                dim: 'hsl(var(--dim))',
+                'text-700': 'hsl(var(--text-700))',
+                'text-800': 'hsl(var(--text-800))',
+                sidebar: 'hsl(var(--sidebar))',
+                'sidebar-hover': 'hsl(var(--sidebar-hover))',
+                placeholder: 'hsl(var(--placeholder))',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',

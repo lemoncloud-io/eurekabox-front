@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { webCore } from '../core';
+import { LANGUAGE_KEY, webCore } from '../core';
 
 export type UserProfile = never;
 export type UserView = never;
@@ -36,11 +36,13 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
         try {
             await webCore.init();
             const isAuthenticated = await webCore.isAuthenticated();
+            await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
             set({ isInitialized: true, isAuthenticated });
         } catch (error: unknown) {
             const e = error as Error;
             console.log(e);
             set({ error: e, isInitialized: false });
+            await webCore.logout();
         }
     },
     logout: async () => {

@@ -1,12 +1,17 @@
 import type { AxiosRequestConfig, GenericAbortSignal } from 'axios';
 
-import type { ContentBody, ContentView, ElementBody, ElementView } from '@lemoncloud/lemon-contents-api';
+import type {
+    ContentBody,
+    ContentView,
+    ElementBody,
+    ElementView,
+} from '@lemoncloud/lemon-contents-api';
 import type { Params } from '@lemoncloud/lemon-web-core';
 
 import type { ListResult } from '@eurekabox/shared';
 import { webCore } from '@eurekabox/web-core';
 
-import type { UpdateContentDTO, UpdateElementDTO } from '../types';
+import type { UpdateActivityDTO, UpdateContentDTO, UpdateElementDTO } from '../types';
 
 const CONTENT_ENDPOINT = import.meta.env.VITE_CONTENT_ENDPOINT.toLowerCase();
 const IMAGE_API_ENDPOINT = import.meta.env.VITE_IMAGE_API_ENDPOINT.toLowerCase();
@@ -31,7 +36,7 @@ export const fetchContents = async (params: Params): Promise<ListResult<ContentV
     const { data } = await webCore
         .buildSignedRequest({
             method: 'GET',
-            baseURL: `${CONTENT_ENDPOINT}/contents`,
+            baseURL: `${CONTENT_ENDPOINT}/contents/0/list`,
         })
         .setParams({ limit: 10, ...params })
         .execute<ListResult<ContentView>>();
@@ -64,6 +69,7 @@ export const fetchContentById = async (contentId?: string, signal?: GenericAbort
         .addAxiosRequestConfig({
             ...(signal && { signal }),
         } as AxiosRequestConfig)
+        .setParams({ activity: 1 })
         .execute<ContentView>();
 
     return { ...data };
@@ -225,4 +231,22 @@ export const uploadImage = async (
         console.error(e);
         return null;
     }
+};
+
+export const updateActivity = async (updateActivityDTO: UpdateActivityDTO): Promise<ContentView> => {
+    const { contentId, ...data } = updateActivityDTO;
+    if (!contentId) {
+        throw new Error('updateActivity: @contentId is required');
+    }
+
+    const response = await webCore
+        .buildSignedRequest({
+            method: 'PUT',
+            baseURL: `${CONTENT_ENDPOINT}/contents/${contentId}/activity`,
+        })
+        .setParams({ ...data })
+        .setBody({})
+        .execute<ContentView>();
+
+    return response.data;
 };

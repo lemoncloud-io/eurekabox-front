@@ -12,3 +12,8 @@ export interface StorageTransferResult {
     success: boolean;
     error?: Error | null;
 }
+
+export interface MessagePayload {
+    type: 'RECEIVER_READY' | 'TRANSFER_STORAGE';
+    data?: StorageData;
+}

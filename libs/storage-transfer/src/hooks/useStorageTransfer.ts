@@ -1,15 +1,13 @@
 import { useCallback, useState } from 'react';
 
-import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
-
 import { webCore } from '@eurekabox/web-core';
 
-import { getAllStorageData, transferData } from '../functions/index';
+import { getAllStorageData, getOriginFromUrl, transferData } from '../functions/index';
 import type { StorageTransferResult, TransferStatus } from '../types';
 
-
-
 export const useStorageTransfer = (targetDomain: string) => {
+    const targetOrigin = getOriginFromUrl(targetDomain);
+
     const [transferStatus, setTransferStatus] = useState<TransferStatus>({
         isTransferring: false,
         status: '',
@@ -28,13 +26,10 @@ export const useStorageTransfer = (targetDomain: string) => {
             const token = await webCore.getSavedToken();
             const dataToShare = getAllStorageData(token);
 
-            await createAsyncDelay(200);
-            setTransferStatus(prev => ({ ...prev, status: 'Transferring data...' }));
+            setTransferStatus(prev => ({ ...prev, status: 'Waiting for receiver ready...' }));
+            await transferData(newWindow, targetOrigin, dataToShare);
 
-            await transferData(newWindow, targetDomain, dataToShare);
             setTransferStatus(prev => ({ ...prev, status: 'Transfer complete!' }));
-
-            await createAsyncDelay(500);
             return { success: true };
         } catch (error) {
             const err = error instanceof Error ? error : new Error('Unknown error');
@@ -43,7 +38,6 @@ export const useStorageTransfer = (targetDomain: string) => {
                 status: 'Transfer failed!',
                 error: err,
             });
-            await createAsyncDelay(500);
             return { success: false, error: err };
         } finally {
             setTransferStatus({
