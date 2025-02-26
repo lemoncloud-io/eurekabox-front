@@ -9,10 +9,12 @@ import { useCreateChildContent } from '@eurekabox/contents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
+import { useContentCache } from './useContentCache';
+
 export const useCreateChildContentWithCache = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    // const { prependContentToCache } = useContentCache();
+    const { prependContentToCache } = useContentCache();
     const createChildContent = useCreateChildContent();
     const { setIsLoading } = useGlobalLoader();
 
@@ -28,8 +30,8 @@ export const useCreateChildContentWithCache = () => {
 
             try {
                 await createChildContent.mutateAsync(newChildContent, {
-                    onSuccess: (response: ContentView) => {
-                        // prependContentToCache(response);
+                    onSuccess: async (response: ContentView) => {
+                        await prependContentToCache(response);
                         navigate(`/${response.id}`);
                     },
                 });
@@ -39,7 +41,7 @@ export const useCreateChildContentWithCache = () => {
                 setIsLoading(false);
             }
         },
-        [createChildContent, navigate]
+        [createChildContent, navigate, prependContentToCache, t]
     );
 
     return {
