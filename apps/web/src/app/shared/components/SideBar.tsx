@@ -23,6 +23,8 @@ import { ScrollArea } from '@eurekabox/ui-kit/components/ui/scroll-area';
 import { useCreateChildContentWithCache, useCreateContentWithCache } from '../hooks';
 import { SearchDialog } from './SearchDialog';
 
+const MAX_CONTENT_DEPTH = 2;
+
 type SideBarProps = {
     currentContentTitle?: string;
     setSidebarOpen: (open: boolean) => void;
@@ -106,19 +108,21 @@ const ContentItem = ({
                 {content.$activity?.isMark && (
                     <div className="relative">
                         <Star className="w-4 h-4 fill-[#FFC609] text-[#FFC609] group-hover:invisible" />
-                        <button
-                            className="absolute top-0 left-0 invisible group-hover:visible"
-                            onClick={e => {
-                                e.stopPropagation();
-                                props.onCreateChildContentClick(content);
-                            }}
-                        >
-                            <Plus className="h-4 w-4 text-text-700" />
-                        </button>
+                        {level < MAX_CONTENT_DEPTH && (
+                            <button
+                                className="absolute top-0 left-0 invisible group-hover:visible"
+                                onClick={e => {
+                                    e.stopPropagation();
+                                    props.onCreateChildContentClick(content);
+                                }}
+                            >
+                                <Plus className="h-4 w-4 text-text-700" />
+                            </button>
+                        )}
                     </div>
                 )}
             </div>
-            {!content.$activity?.isMark && (
+            {!content.$activity?.isMark && level < MAX_CONTENT_DEPTH && (
                 <button
                     onClick={e => {
                         e.stopPropagation();
