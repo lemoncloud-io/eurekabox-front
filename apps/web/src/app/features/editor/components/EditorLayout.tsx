@@ -144,7 +144,7 @@ export const EditorLayout = ({
                         sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >
-                    <SideBar currentContentTitle={title} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                    <SideBar currentContentTitle={title} setSidebarOpen={setSidebarOpen} />
                 </div>
                 <div
                     className={`w-full flex-1 flex flex-col overflow-auto duration-300 ease-in-out transition-padding ${

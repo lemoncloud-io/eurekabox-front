@@ -177,6 +177,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
+    const [activeTitle, setActiveTitle] = useState(currentContentTitle);
 
     const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
     const { handleCreateChild, isPending: isCreateChildPending } = useCreateChildContentWithCache();
@@ -218,6 +219,10 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     );
 
     useEffect(() => {
+        setActiveTitle(currentContentTitle);
+    }, [currentContentTitle]);
+
+    useEffect(() => {
         if (contentId && allContents.length > 0) {
             const content = allContents.find(c => c.id === contentId);
             if (content?.parentId) {
@@ -246,6 +251,10 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
     }, [contentId, allContents]);
 
     const handleContentClick = (content: ContentView) => {
+        if (content.id === contentId) {
+            return;
+        }
+        setActiveTitle(content.title);
         navigate(`/${content.id}`);
     };
 
@@ -301,7 +310,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                             <div className="px-4 text-sm text-dim">{t('sidebar.noBookmarks')}</div>
                         ) : (
                             <ContentList
-                                currentContentTitle={currentContentTitle}
+                                currentContentTitle={activeTitle}
                                 contents={bookmarkedContents}
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
@@ -319,7 +328,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                         )}
                         {!isLoading && (
                             <ContentList
-                                currentContentTitle={currentContentTitle}
+                                currentContentTitle={activeTitle}
                                 contents={contents}
                                 currentContentId={contentId}
                                 onContentClick={handleContentClick}
