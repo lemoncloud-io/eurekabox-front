@@ -303,7 +303,7 @@ export const EditorPage = () => {
                 handleSave={handleClickSave}
                 handleExport={handleClickExport}
             >
-                <div className="px-20 py-6 max-md:p-6 max-md:pl-10 w-full flex flex-col justify-center max-w-screen-xl mx-auto">
+                <div className="px-20 py-6 max-sm:px-[50px] w-full flex flex-col justify-center max-w-screen-xl mx-auto">
                     <input
                         type="text"
                         ref={titleInputRef}
