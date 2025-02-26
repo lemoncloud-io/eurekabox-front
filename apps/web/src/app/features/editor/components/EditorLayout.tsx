@@ -8,10 +8,9 @@ import i18n from 'i18next';
 import { Download, EllipsisVertical, LogOut, Menu, Save, Star, Trash2 } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
-import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 
 import { Images } from '@eurekabox/assets';
-import { contentsKeys, useContent, useCreateContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
+import { contentsKeys, useContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -35,7 +34,7 @@ import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 import { SearchDialog, SideBar, ThemeToggle } from '../../../shared';
-import { useContentCache, useCreateContentWithCache } from '../../../shared';
+import { useContentCache } from '../../../shared';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -66,9 +65,6 @@ export const EditorLayout = ({
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { removeContentFromCache } = useContentCache();
-    const { handleCreate, isPending: isCreatePending } = useCreateContentWithCache();
-    const { prependContentToCache } = useContentCache();
-    const createContent = useCreateContent();
     const deleteContent = useDeleteContent();
     const updateActivity = useUpdateActivity();
 
@@ -86,8 +82,33 @@ export const EditorLayout = ({
                         ...content,
                         $activity: response.$activity,
                     });
-                    await createAsyncDelay(500);
-                    await queryClient.invalidateQueries(contentsKeys.lists() as never);
+                    queryClient.setQueryData(contentsKeys.list({ limit: -1, activity: 1 }), (oldData: any) => {
+                        if (!oldData) {
+                            return { total: 0, data: [] };
+                        }
+
+                        return {
+                            ...oldData,
+                            data: oldData.data.map((item: ContentView) => {
+                                if (item.id === content.id) {
+                                    return {
+                                        ...item,
+                                        $activity: response.$activity,
+                                    };
+                                }
+                                return item;
+                            }),
+                            list: oldData.list.map((item: ContentView) => {
+                                if (item.id === content.id) {
+                                    return {
+                                        ...item,
+                                        $activity: response.$activity,
+                                    };
+                                }
+                                return item;
+                            }),
+                        };
+                    });
                 },
             }
         );
