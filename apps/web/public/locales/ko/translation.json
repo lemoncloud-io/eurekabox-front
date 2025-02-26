@@ -34,6 +34,7 @@
         },
         "noPages": "페이지 없음",
         "newPage": "새 페이지",
+        "noBookmarks": "북마크된 페이지가 없습니다",
         "toast": {
             "noContent": "콘텐츠가 없습니다!"
         }
