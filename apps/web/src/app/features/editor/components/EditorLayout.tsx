@@ -33,7 +33,7 @@ import {
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
-import { SearchDialog, SideBar, ThemeToggle } from '../../../shared';
+import { SideBar, ThemeToggle } from '../../../shared';
 import { useContentCache } from '../../../shared';
 
 interface EditorLayoutProps {
@@ -286,7 +286,6 @@ export const EditorLayout = ({
                     <main className="flex-1 overflow-auto">{children}</main>
                 </div>
             </div>
-            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
         </div>
     );
 };

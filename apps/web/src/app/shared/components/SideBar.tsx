@@ -25,6 +25,11 @@ import { SearchDialog } from './SearchDialog';
 
 const MAX_CONTENT_DEPTH = 2;
 
+export type ContentViewWithChildren = ContentView & {
+    hasChild?: boolean;
+    children?: ContentViewWithChildren[];
+};
+
 type SideBarProps = {
     currentContentTitle?: string;
     setSidebarOpen: (open: boolean) => void;
@@ -60,7 +65,7 @@ const ContentItem = ({
     expandedItems,
     ...props
 }: {
-    content: ContentView & { hasChild?: boolean; children?: ContentView[] };
+    content: ContentViewWithChildren;
     level?: number;
     currentContentId?: string;
     currentContentTitle?: string;
@@ -153,7 +158,7 @@ const ContentItem = ({
 
 const ContentList = (props: {
     currentContentTitle?: string;
-    contents: (ContentView & { hasChild?: boolean; children?: ContentView[] })[];
+    contents: ContentViewWithChildren[];
     currentContentId?: string;
     onContentClick: (content: ContentView) => void;
     onCreateChildContentClick: (content: ContentView) => void;
@@ -196,7 +201,7 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
             }
         });
 
-        const buildContentTree = (content: ContentView) => {
+        const buildContentTree = (content: ContentView): ContentViewWithChildren => {
             const children = contentMap.get(content.id) || [];
             return {
                 ...content,
@@ -351,7 +356,12 @@ export const SideBar = ({ currentContentTitle, setSidebarOpen }: SideBarProps) =
                     </div>
                 </div>
             </ScrollArea>
-            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
+            <SearchDialog
+                open={isSearchOpen}
+                onOpenChange={setIsSearchOpen}
+                onContentSelect={handleContentSelect}
+                contentsWithChildren={contentsWithChildren}
+            />
         </div>
     );
 };

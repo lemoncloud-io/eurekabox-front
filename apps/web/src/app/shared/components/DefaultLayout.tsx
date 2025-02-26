@@ -20,7 +20,7 @@ import { Image } from '@eurekabox/lib/components/ui/image';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
-import { SearchDialog, SideBar, ThemeToggle } from '../components';
+import { SideBar, ThemeToggle } from '../components';
 import { useContentCache } from '../hooks';
 
 export const DefaultLayout = () => {
@@ -175,7 +175,6 @@ export const DefaultLayout = () => {
                     </main>
                 </div>
             </div>
-            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} onContentSelect={handleContentSelect} />
         </div>
     );
 };

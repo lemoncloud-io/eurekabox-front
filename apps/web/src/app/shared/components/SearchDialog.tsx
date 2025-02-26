@@ -5,14 +5,16 @@ import { ChevronLeft, FileText, Search, X } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/lemon-contents-api';
 
-import { useContents } from '@eurekabox/contents';
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { ScrollArea } from '@eurekabox/lib/components/ui/scroll-area';
-import { Loader, useDebounce } from '@eurekabox/shared';
+import { useDebounce } from '@eurekabox/shared';
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
+
+import type { ContentViewWithChildren } from './SideBar';
 
 interface SearchDialogProps {
     open: boolean;
+    contentsWithChildren: ContentViewWithChildren[];
     onOpenChange: (open: boolean) => void;
     onContentSelect: (content: ContentView) => void;
 }
@@ -36,22 +38,51 @@ const HighlightedText = ({ text, searchTerm }: { text: string; searchTerm: strin
     );
 };
 
-export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDialogProps) => {
+interface SearchResult {
+    id: string;
+    title: string;
+    readme?: string;
+    parentPath?: {
+        title: string;
+        id: string;
+    }[];
+}
+
+export const SearchDialog = ({ open, onOpenChange, onContentSelect, contentsWithChildren }: SearchDialogProps) => {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 200);
-    const { data: contentsData, isLoading } = useContents({ limit: -1, activity: 1 });
 
     const filteredResults = useMemo(() => {
-        if (!debouncedSearchTerm || !contentsData?.data) return [];
+        if (!debouncedSearchTerm) return [];
 
         const searchTermLower = debouncedSearchTerm.toLowerCase();
-        return contentsData.data.filter(
-            content =>
+        const results: SearchResult[] = [];
+
+        const processContent = (content: ContentViewWithChildren, parents: { title: string; id: string }[] = []) => {
+            if (
                 content.title?.toLowerCase().includes(searchTermLower) ||
                 content.readme?.toLowerCase().includes(searchTermLower)
-        );
-    }, [contentsData?.data, debouncedSearchTerm]);
+            ) {
+                results.push({
+                    id: content.id,
+                    title: content.title || '',
+                    readme: content.readme,
+                    parentPath: parents.length > 0 ? parents : undefined,
+                });
+            }
+
+            content.children?.forEach(child => {
+                processContent(child, [...parents, { title: content.title || '', id: content.id }]);
+            });
+        };
+
+        contentsWithChildren.forEach(content => {
+            processContent(content);
+        });
+
+        return results;
+    }, [contentsWithChildren, debouncedSearchTerm]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -86,42 +117,43 @@ export const SearchDialog = ({ open, onOpenChange, onContentSelect }: SearchDial
                     </div>
                     <ScrollArea className="flex-grow mt-[18px]">
                         <div className="space-y-1">
-                            {isLoading ? (
-                                <Loader message={'Loading...'} />
-                            ) : (
-                                <>
-                                    {filteredResults.map(result => (
-                                        <div
-                                            key={result.id}
-                                            onClick={() => {
-                                                onContentSelect(result);
-                                                onOpenChange(false);
-                                            }}
-                                            className="flex space-x-2 p-1 rounded-[4px] hover:bg-accent transition-colors cursor-pointer"
-                                        >
-                                            <FileText className="w-4 h-4 mt-[2px] text-text" />
-                                            <div>
-                                                <h3 className="text-text">
-                                                    <HighlightedText
-                                                        text={result.title || t('search.newPage')}
-                                                        searchTerm={debouncedSearchTerm}
-                                                    />
-                                                </h3>
-                                                {result.readme && (
-                                                    <p className="text-xs text-dim line-clamp-2">
-                                                        <HighlightedText
-                                                            text={result.readme}
-                                                            searchTerm={debouncedSearchTerm}
-                                                        />
-                                                    </p>
-                                                )}
-                                            </div>
+                            {filteredResults.map(result => (
+                                <div
+                                    key={result.id}
+                                    onClick={() => {
+                                        onContentSelect(result);
+                                        onOpenChange(false);
+                                    }}
+                                    className="flex space-x-2 p-1 rounded-[4px] hover:bg-accent transition-colors cursor-pointer"
+                                >
+                                    <FileText className="w-4 h-4 mt-[2px] text-text" />
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-1">
+                                            <h3 className="text-text">
+                                                <HighlightedText
+                                                    text={result.title || t('search.newPage')}
+                                                    searchTerm={debouncedSearchTerm}
+                                                />
+                                            </h3>
+                                            {result.parentPath && (
+                                                <span className="text-xs text-dim whitespace-nowrap">
+                                                    {result.parentPath.map((parent, index) => (
+                                                        <span key={parent.id}>
+                                                            {index > 0 && ' / '}
+                                                            <HighlightedText
+                                                                text={parent.title}
+                                                                searchTerm={debouncedSearchTerm}
+                                                            />
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            )}
                                         </div>
-                                    ))}
-                                    {filteredResults.length === 0 && debouncedSearchTerm && (
-                                        <p className="text-center text-dim py-[50px]">{t('search.noResults')}</p>
-                                    )}
-                                </>
+                                    </div>
+                                </div>
+                            ))}
+                            {filteredResults.length === 0 && debouncedSearchTerm && (
+                                <p className="text-center text-dim py-[50px]">{t('search.noResults')}</p>
                             )}
                         </div>
                     </ScrollArea>
