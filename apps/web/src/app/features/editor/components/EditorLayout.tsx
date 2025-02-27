@@ -180,7 +180,7 @@ export const EditorLayout = ({
                                 placeholder={t('editor.newPage')}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             <Button
                                 variant="ghost"
                                 className="h-[26px] px-[6px] rounded-sm gap-[6px] text-text-800 border border-text-800"
