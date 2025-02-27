@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-02-27] - root@0.18.2, @eurekabox/web@0.18.2
+
+### Refactor
+
+-   dialog z-index
+
 ## [2025-02-26] - root@0.18.1, @eurekabox/web@0.18.1
 
 ### Refactor
