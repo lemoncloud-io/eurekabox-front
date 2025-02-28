@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-02-28] - root@0.19.0, @eurekabox/web@0.19.0
+
+### Features
+
+-   add token validation in refreshToken
+
 ## [2025-02-27] - root@0.18.2, @eurekabox/web@0.18.2
 
 ### Refactor
