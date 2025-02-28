@@ -12,6 +12,12 @@ const useTokenRefresh = () => {
     const refreshAuthToken = async () => {
         try {
             const { current, signature, authId, originToken } = await webCore.getTokenSignature();
+            if (!authId || !originToken || !signature) {
+                console.error('Missing required token information');
+                window.location.href = '/auth/logout';
+                return;
+            }
+
             const body: RefreshTokenBody = { current, signature };
 
             const response = await webCore
