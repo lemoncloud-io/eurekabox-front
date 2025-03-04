@@ -172,6 +172,10 @@ jobs:
                   aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
             - name: Deploy to DEV
+              env:
+                  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+                  DEV_DISTRIBUTION_ID: ${{ secrets.DEV_DISTRIBUTION_ID }}
+                  PROD_DISTRIBUTION_ID: ${{ secrets.PROD_DISTRIBUTION_ID }}
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
                   yarn ${{ matrix.project }}:deploy:dev
