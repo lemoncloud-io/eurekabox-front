@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-03-04] - root@0.20.0, @eurekabox/web@0.20.0
+
+### Features
+
+-   add env variables for deployment
+
 ## [2025-02-28] - root@0.19.0, @eurekabox/web@0.19.0
 
 ### Features
