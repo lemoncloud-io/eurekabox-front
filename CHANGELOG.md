@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-03-05] - root@0.21.1, @eurekabox/web@0.21.1
+
+### Refactor
+
+-   darkmode loader, selection color
+
 ## [2025-03-05] - root@0.21.0, @eurekabox/web@0.21.0
 
 ### Features
