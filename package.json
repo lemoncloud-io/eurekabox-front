@@ -12,9 +12,11 @@
         "build:all:dev": "npx nx run-many --target=build --configuration=dev --all",
         "build:all:prod": "npx nx run-many --target=build --configuration=prod --all",
         "!web": "------------- web scripts -------------",
+        "web:env:dev": "node ./scripts/create-env.js dev web",
+        "web:env:prod": "node ./scripts/create-env.js prod web",
         "web:start": "yarn clean:cache && npx nx serve web --port 5001",
-        "web:build:dev": "yarn clean:cache && npx nx build --configuration=dev web",
-        "web:build:prod": "yarn clean:cache && npx nx build --configuration=prod web",
+        "web:build:dev": "yarn clean:cache && yarn web:env:dev && npx nx build --configuration=dev web",
+        "web:build:prod": "yarn clean:cache && yarn web:env:prod && npx nx build --configuration=prod web",
         "web:deploy:dev": "(rm -rf ./dist/apps/web || true) && yarn web:build:dev && ./scripts/deploy-web.sh dev",
         "web:deploy:prod": "(rm -rf ./dist/apps/web || true) && yarn web:build:prod && ./scripts/deploy-web.sh prod"
     },
