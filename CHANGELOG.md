@@ -1,5 +1,15 @@
 # Changelog
 
+## [2025-03-05] - root@0.22.0, @eurekabox/web@0.22.0
+
+### Features
+
+-   add jsdoc comments for web-core
+
+### Documentation
+
+-   update READMEs for libs and root
+
 ## [2025-03-05] - root@0.21.1, @eurekabox/web@0.21.1
 
 ### Refactor
