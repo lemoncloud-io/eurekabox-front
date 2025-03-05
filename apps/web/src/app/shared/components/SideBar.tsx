@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { ChevronRight, ChevronsLeft, FileText, Home, Plus, Search, SquarePen, Star } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Logo } from '@eurekabox/assets';
 import { useContents } from '@eurekabox/contents';

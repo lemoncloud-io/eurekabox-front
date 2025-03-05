@@ -5,7 +5,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import i18n from 'i18next';
 import { EllipsisVertical, FileUp, LogOut, Menu } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Images } from '@eurekabox/assets';
 import type { CreateContentDTO } from '@eurekabox/contents';

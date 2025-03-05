@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 import type { Params } from '@lemoncloud/lemon-web-core';
 import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 

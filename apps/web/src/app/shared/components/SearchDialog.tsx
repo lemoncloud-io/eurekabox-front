@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ChevronLeft, FileText, Search, X } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { ScrollArea } from '@eurekabox/lib/components/ui/scroll-area';

@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { Download, EllipsisVertical, LogOut, Menu, Save, Star, Trash2 } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Images } from '@eurekabox/assets';
 import { contentsKeys, useContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
