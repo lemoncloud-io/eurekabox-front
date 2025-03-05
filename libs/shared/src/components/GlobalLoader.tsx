@@ -25,9 +25,9 @@ export const GlobalLoader = () => {
     }
 
     return createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-background/60 backdrop-blur-sm">
             <div className="flex flex-col items-center space-y-4">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <Loader2 className="h-10 w-10 animate-spin text-primary dark:text-white" />
             </div>
         </div>,
         document.body

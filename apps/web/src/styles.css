@@ -178,6 +178,12 @@ body {
         .yoopta-link-preview {
             @apply bg-popover text-foreground !important;
         }
+
+        @layer utilities {
+            ::selection {
+                color: black;
+            }
+        }
     }
 }
 
