@@ -2,6 +2,25 @@
 
 Core authentication and initialization library for EurekaBox, handling OAuth integration with EurekaCodes platform.
 
+## Project Structure
+
+```
+libs/web-core/
+├── src/
+│   ├── core/            # Core configuration and initialization
+│   │   └── index.ts     # Environment variables and webCore instance
+│   ├── hooks/           # Application hooks
+│   │   ├── useInitWebCore.ts
+│   │   ├── useProfile.ts
+│   │   └── ...         # Other hooks
+│   ├── stores/          # Zustand state management
+│   │   ├── useWebCoreStore.ts
+│   │   └── index.ts
+│   └── ...             # Additional source files
+├── project.json         # Nx project configuration
+└── package.json        # Library dependencies
+```
+
 ## Overview
 
 The web-core library manages essential functionalities:
