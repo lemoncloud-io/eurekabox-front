@@ -12,6 +12,7 @@
 
 [![lemoncloud-io](https://img.shields.io/badge/by-lemoncloud--io-ED6F31?logo=github)](https://github.com/lemoncloud-io)
 [![license](https://img.shields.io/badge/license-MIT-211A4C.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRiIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTMgNiAzIDFtMCAwLTMgOWE1IDUgMCAwIDAgNi4wMDEgME02IDdsMyA5TTYgN2w2LTJtNiAyIDMtMW0tMyAxLTMgOWE1IDUgMCAwIDAgNi4wMDEgME0xOCA3bDMgOW0tMy05LTYtMm0wLTJ2Mm0wIDE2VjVtMCAxNkg5bTMgMGgzIi8+PC9zdmc+)](https://github.com/lemoncloud-io/eurekabox-front/blob/main/LICENSE)
+[![Nx](https://img.shields.io/badge/-Nx-143157?logo=nx&logoWidth=30)](https://nx.dev)
 
 </div>
 
@@ -19,7 +20,7 @@
 
 EurekaBox is a powerful SaaS (Software as a Service) documentation platform, available exclusively through [EurekaCodes](https://eureka.codes/). It provides teams with an intuitive document editor to create, share, and manage documentation efficiently, enabling team members to focus on their work while maintaining clear and accessible documentation.
 
-## 🌟 Getting Started with EurekaBox
+## 🌟 Getting Started with EurekaCodes
 
 1. Visit [EurekaCodes](https://eureka.codes/) to subscribe to the service
 2. Create your workspace through the EurekaCodes dashboard
@@ -45,17 +46,18 @@ EurekaBox is a powerful SaaS (Software as a Service) documentation platform, ava
 ### Project Structure
 
 ```plaintext
-    .
-    apps/
-    ├── web/                    # Main web application
-    assets/                     # Shared assets
-    libs/
-    ├── contents/               # Content management features
-    ├── shared/                 # Shared components and utilities
-    ├── storage-transfer/       # Storage transfer functionality
-    ├── theme/                  # Theme management
-    ├── ui-kit/                 # UI component library
-    └── web-core/               # Core web functionalities
+eurekabox-front/
+├── apps/
+│   └── web/              # Main application entry point
+├── libs/
+│   ├── web-core/         # Core authentication and initialization
+│   ├── ui-kit/           # Shared UI components library
+│   ├── contents/         # Document management and content operations
+│   ├── shared/           # Utilities and shared logic
+│   └── theme/            # Theme management system
+├── tools/                # Development scripts and configs
+├── nx.json               # `nx.json`
+└── package.json          # Workspace package manager configuration
 ```
 
 ### Getting Started
