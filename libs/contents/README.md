@@ -90,7 +90,7 @@ VITE_IMAGE_API_ENDPOINT= # Image API endpoint
 
 ## Dependencies
 
--   @lemoncloud/lemon-contents-api
+-   @lemoncloud/eureka-contents-api
 -   @lemoncloud/lemon-web-core
 -   @tanstack/react-query
 -   axios

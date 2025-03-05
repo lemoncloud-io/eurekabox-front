@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import {
     contentsKeys,

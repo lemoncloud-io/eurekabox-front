@@ -2030,10 +2030,10 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
-"@lemoncloud/lemon-contents-api@^0.25.224":
-  version "0.25.224"
-  resolved "https://registry.yarnpkg.com/@lemoncloud/lemon-contents-api/-/lemon-contents-api-0.25.224.tgz#72dfc1de0b3d97ce571e9a76873e908ec07280bd"
-  integrity sha512-rqnDXrvFdL18N6xPGj3sstfi5O+6hfFBiavsMRyKngSY6D+mcOf7747kQbUZwx8PMeWiujEo/urQv6hG00FQVw==
+"@lemoncloud/eureka-contents-api@^0.25.224":
+  version "0.25.303"
+  resolved "https://registry.yarnpkg.com/@lemoncloud/eureka-contents-api/-/eureka-contents-api-0.25.303.tgz#2ff0cd5dfb778d5076615c414655e9766a0d2357"
+  integrity sha512-FSHFfc4L8qgup5HkytCBvDiHahnimEtdbbpQjOuS9LYIxMdDa0zT0s18KYBIkbPSseWi4LOYFhgyJhskKbSxlw==
   dependencies:
     lemon-model "^1.0.2"
 
