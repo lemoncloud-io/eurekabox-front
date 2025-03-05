@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
 
 const CONFIG = {
     changelogPath: 'CHANGELOG.md',
