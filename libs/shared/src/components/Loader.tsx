@@ -17,7 +17,7 @@ interface LoaderProps {
 
 export const Loader: React.FC<LoaderProps> = ({ size = 'sm', message = 'Loading...', className = '' }) => {
     return (
-        <div className={cn('animate-pulse flex items-center space-x-2 text-primary', className)}>
+        <div className={cn('animate-pulse flex items-center space-x-2 text-primary dark:text-white', className)}>
             <Loader2 className={cn('animate-spin', sizes[size])} />
             <span className="text-sm font-medium">{message}</span>
         </div>

@@ -150,7 +150,7 @@ export const EditorLayout = ({
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
             <div className="h-screen flex flex-col">
                 <div
-                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-[999] ${
+                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-50 ${
                         sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >
