@@ -1,11 +1,6 @@
 import type { AxiosRequestConfig, GenericAbortSignal } from 'axios';
 
-import type {
-    ContentBody,
-    ContentView,
-    ElementBody,
-    ElementView,
-} from '@lemoncloud/lemon-contents-api';
+import type { ContentBody, ContentView, ElementBody, ElementView } from '@lemoncloud/lemon-contents-api';
 import type { Params } from '@lemoncloud/lemon-web-core';
 
 import type { ListResult } from '@eurekabox/shared';

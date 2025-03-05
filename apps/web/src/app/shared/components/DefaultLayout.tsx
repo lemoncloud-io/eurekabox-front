@@ -29,7 +29,6 @@ export const DefaultLayout = () => {
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
@@ -84,14 +83,6 @@ export const DefaultLayout = () => {
         event.target.value = '';
     }, [toast]);
 
-    const handleContentSelect = (content: ContentView) => {
-        if (!content || !content.id) {
-            toast({ description: t('editor.noContent'), variant: 'destructive' });
-            return;
-        }
-        navigate(`/${content.id}`);
-    };
-
     return (
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
             <div className="h-screen flex flex-col">
@@ -100,7 +91,7 @@ export const DefaultLayout = () => {
                         sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >
-                    <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                    <SideBar setSidebarOpen={setSidebarOpen} />
                 </div>
                 <div
                     className={`w-full flex-1 flex flex-col overflow-auto duration-300 ease-in-out transition-padding ${

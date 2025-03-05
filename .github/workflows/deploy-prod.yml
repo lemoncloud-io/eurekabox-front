@@ -94,6 +94,7 @@ jobs:
     build-and-deploy:
         needs: [changes, get-version]
         runs-on: ubuntu-latest
+        environment: prod
         name: Build and Deploy
         strategy:
             fail-fast: false
@@ -150,6 +151,16 @@ jobs:
                   BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
                   DEV_DISTRIBUTION_ID: ${{ secrets.DEV_DISTRIBUTION_ID }}
                   PROD_DISTRIBUTION_ID: ${{ secrets.PROD_DISTRIBUTION_ID }}
+                  VITE_ENV: ${{ vars.VITE_ENV }}
+                  VITE_PROJECT: ${{ vars.VITE_PROJECT }}
+                  VITE_OAUTH_ENDPOINT: ${{ vars.VITE_OAUTH_ENDPOINT }}
+                  VITE_BACKEND_ENDPOINT: ${{ vars.VITE_BACKEND_ENDPOINT }}
+                  VITE_TRANSLATE_ENDPOINT: ${{ vars.VITE_TRANSLATE_ENDPOINT }}
+                  VITE_HOST: ${{ vars.VITE_HOST }}
+                  VITE_SOCIAL_OAUTH_ENDPOINT: ${{ vars.VITE_SOCIAL_OAUTH_ENDPOINT }}
+                  VITE_CONTENT_ENDPOINT: ${{ vars.VITE_CONTENT_ENDPOINT }}
+                  VITE_IMAGE_API_ENDPOINT: ${{ vars.VITE_IMAGE_API_ENDPOINT }}
+                  VITE_CODES_HOST: ${{ vars.VITE_CODES_HOST }}
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
                   yarn ${{ matrix.project }}:deploy:prod

@@ -1,5 +1,29 @@
 # Changelog
 
+## [2025-03-05] - root@0.21.0, @eurekabox/web@0.21.0
+
+### Features
+
+-   add env vars to github actions
+-   remove unused search functionality
+
+### Documentation
+
+-   update README with project introduction
+-   add LICENSE and update README
+-   add README for contents and web-core
+-   enhance README with architecure image
+
+### Chores
+
+-   add architecture.png
+
+## [2025-03-04] - root@0.20.0, @eurekabox/web@0.20.0
+
+### Features
+
+-   add env variables for deployment
+
 ## [2025-02-28] - root@0.19.0, @eurekabox/web@0.19.0
 
 ### Features
