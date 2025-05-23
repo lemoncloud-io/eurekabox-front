@@ -9,6 +9,10 @@ export const Images = {
     krDark: new URL('./images/kr_dark.svg', import.meta.url).href,
     en: new URL('./images/en.svg', import.meta.url).href,
     enDark: new URL('./images/en_dark.svg', import.meta.url).href,
+    chatBot: new URL('./images/chatbot.png', import.meta.url).href,
+    chatBotDark: new URL('./images/chatbot_dark.png', import.meta.url).href,
+    notice: new URL('./images/notice.svg', import.meta.url).href,
+    thumbsDown: new URL('./images/thumbs_down.svg', import.meta.url).href,
 } as const;
 
 export const Logo = {

@@ -35,6 +35,9 @@ module.exports = {
                 ring: 'hsl(var(--ring))',
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
+                'chatbot-card': 'hsl(var(--chatbot-card))',
+                'button-disabled': 'hsl(var(--button-disabled))',
+                'button-text': 'hsl(var(--button-text))',
                 primary: {
                     DEFAULT: 'hsl(var(--primary))',
                     foreground: 'hsl(var(--primary-foreground))',
