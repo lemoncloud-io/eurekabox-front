@@ -8,6 +8,6 @@ export const ProtectedRoutes = [
     { path: '/', element: <Navigate to="/home" replace /> },
     { path: `/home`, element: <HomeRoutes /> },
     { path: `/*`, element: <EditorRoutes /> },
-    { path: `/styling`, element: <StylingRoutes /> },
+    { path: `/styling/*`, element: <StylingRoutes /> },
     { path: '*', element: <Navigate to="/home" replace /> },
 ];
