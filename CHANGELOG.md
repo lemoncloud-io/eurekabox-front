@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-05-26] - root@0.22.2, @eurekabox/web@0.22.2
+
+### Refactor
+
+-   test chatbot page style
+-   add copy tooltip style
+
 ## [2025-05-26] - root@0.22.1, @eurekabox/web@0.22.1
 
 ### Refactor
