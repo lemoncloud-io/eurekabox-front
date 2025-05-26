@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 
 import {
+    ChevronLeft,
     ChevronRight,
     ChevronUp,
     Copy,
@@ -69,7 +70,7 @@ export const ChatBot = () => {
     };
 
     return (
-        <div className="text-text">
+        <div className="text-text flex gap-6">
             {/* 챗봇 진입 버튼 */}
             <button className="rounded-full w-[62px] h-[62px] flex items-center justify-center border-[#7932FF] border-[0.5px] bg-chatbot-card shadow-[2px_2px_10px_0px_rgba(0,0,0,0.10)] overflow-hidden">
                 <img
@@ -461,7 +462,7 @@ export const ChatBot = () => {
             </div>
 
             {/* 질문 수정 */}
-            {/* <div className="w-[484px] min-h-[350px] max-h-[90vh] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
+            <div className="w-[484px] min-h-[350px] max-h-[90vh] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                 <div className="py-[10px] px-3 flex items-center justify-between sticky top-0">
                     <div className="flex items-center gap-[6px]">
                         <Button variant="ghost" className="h-auto p-[2px] group">
@@ -477,7 +478,7 @@ export const ChatBot = () => {
                     AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료
                     AI 응답 메시지 수정 완료
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 };
