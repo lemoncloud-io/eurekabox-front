@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-05-26] - root@0.22.1, @eurekabox/web@0.22.1
+
+### Refactor
+
+-   chatbot page style
+
 ## [2025-03-05] - root@0.22.0, @eurekabox/web@0.22.0
 
 ### Features
