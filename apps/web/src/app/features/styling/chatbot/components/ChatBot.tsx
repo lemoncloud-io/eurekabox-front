@@ -232,9 +232,18 @@ export const ChatBot = () => {
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                             </div>
                             <div className="pt-1 mt-auto">
-                                <Button variant="ghost" className="h-auto p-[2px] group">
-                                    <Copy className="w-4 h-4 text-[#9fa2a7] group-hover:text-text transition-colors duration-200" />
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" className="h-auto p-[2px] group">
+                                                <Copy className="w-4 h-4 text-[#9fa2a7] group-hover:text-text transition-colors duration-200" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="dark:bg-[#787878] p-1">
+                                            <p className="dark:text-white">복사</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </div>
                         </div>
                     </div>

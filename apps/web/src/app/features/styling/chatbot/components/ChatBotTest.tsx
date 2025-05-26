@@ -1,15 +1,6 @@
 import { useState } from 'react';
 
-import {
-    ChevronRight,
-    ChevronUp,
-    Copy,
-    EllipsisVertical,
-    Maximize2,
-    PencilLine,
-    ThumbsDown,
-    ThumbsUp,
-} from 'lucide-react';
+import { ChevronRight, ChevronUp, Copy, EllipsisVertical, Maximize2 } from 'lucide-react';
 
 import { Images } from '@eurekabox/assets';
 import { Button } from '@eurekabox/lib/components/ui/button';
@@ -121,31 +112,6 @@ export const ChatBotTest = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="flex items-center gap-[6px]">
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button variant="ghost" className="p-[2px] h-auto group">
-                                            <Copy className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="dark:bg-[#787878] p-1">
-                                        <p className="dark:text-white">복사</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-
-                            <button className="p-[2px]">
-                                <ThumbsUp className="w-[14px] h-[14px] text-[#8F19F6]" />
-                            </button>
-                            <button className="p-[2px]">
-                                <ThumbsDown className="w-[14px] h-[14px] text-[#9FA2A7]" />
-                                <img src={Images.thumbsDown} alt="" />
-                            </button>
-                            <Button variant="ghost" className="p-[2px] h-auto group">
-                                <PencilLine className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
-                            </Button>
-                        </div>
 
                         {/* 응답 메세지 수정 결과 */}
                         <div className="max-w-[278px] min-h-[197px] rounded-xl border border-[#F4F5F5] dark:border-[#3A3C40] bg-white dark:bg-[#262626] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] py-3 px-4 flex flex-col">
@@ -167,9 +133,18 @@ export const ChatBotTest = () => {
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                             </div>
                             <div className="pt-1 mt-auto">
-                                <Button variant="ghost" className="h-auto p-[2px] group">
-                                    <Copy className="w-4 h-4 text-[#9fa2a7] group-hover:text-text transition-colors duration-200" />
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" className="h-auto p-[2px] group">
+                                                <Copy className="w-4 h-4 text-[#9fa2a7] group-hover:text-text transition-colors duration-200" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent className="dark:bg-[#787878] p-1">
+                                            <p className="dark:text-white">복사</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </div>
                         </div>
                     </div>
