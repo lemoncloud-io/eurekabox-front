@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
+import { motion } from 'framer-motion';
 import {
-    ChevronLeft,
     ChevronRight,
     ChevronUp,
     Copy,
@@ -46,20 +46,19 @@ import { NewChatModal } from './NewChatModal';
 import { PricingModal } from './PricingModal';
 import { TestChatSelectModal } from './TestChatSelectModal';
 
-export const ChatBot = () => {
+interface ChatBotProps {
+    onClose: () => void;
+}
+
+export const ChatBot = ({ onClose }: ChatBotProps) => {
     const { isDarkTheme } = useTheme();
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isOpen, setIsOpen] = useState(true);
     const [testChatSelectModalOpen, setTestChatSelectModalOpen] = useState(false);
     const [newChatModalOpen, setNewChatModalOpen] = useState(false);
     const [pricingModalOpen, setPricingModalOpen] = useState(false);
-    const [isHelpOpen, setIsHelpOpen] = useState(true);
+    const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<'faq' | 'chat'>('faq');
-
-    const openHelp = (tab: 'faq' | 'chat') => {
-        setActiveTab(tab);
-        setIsHelpOpen(true);
-    };
 
     const handleInput = () => {
         const el = textareaRef.current;
@@ -69,8 +68,19 @@ export const ChatBot = () => {
         }
     };
 
+    const openHelp = (tab: 'faq' | 'chat') => {
+        setActiveTab(tab);
+        setIsHelpOpen(true);
+    };
+
     return (
-        <div className="text-text flex gap-6">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-6 right-6 text-text flex gap-6"
+        >
             {/* 챗봇 질문/응답 */}
             <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                 <header className="py-[10px] px-3 flex items-center justify-between sticky top-0">
@@ -96,7 +106,7 @@ export const ChatBot = () => {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button variant="ghost" className="h-auto p-[2px] group">
+                        <Button variant="ghost" className="h-auto p-[2px] group" onClick={onClose}>
                             <X className="w-[18px] h-[18px] text-[#9fa2a7] group-hover:text-text transition-colors duration-200" />
                         </Button>
                     </div>
@@ -104,7 +114,6 @@ export const ChatBot = () => {
                     <TestChatSelectModal open={testChatSelectModalOpen} onOpenChange={setTestChatSelectModalOpen} />
                     <PricingModal open={pricingModalOpen} onOpenChange={setPricingModalOpen} />
                 </header>
-
                 <main className="px-4 w-full overflow-auto flex-1">
                     <div className="py-[10px]">
                         <img
@@ -460,25 +469,6 @@ export const ChatBot = () => {
                     )}
                 </div>
             </div>
-
-            {/* 질문 수정 */}
-            <div className="w-[484px] min-h-[350px] max-h-[90vh] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
-                <div className="py-[10px] px-3 flex items-center justify-between sticky top-0">
-                    <div className="flex items-center gap-[6px]">
-                        <Button variant="ghost" className="h-auto p-[2px] group">
-                            <ChevronLeft className="w-[18px] h-[18px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
-                        </Button>
-                        <div className="font-medium truncate">채팅 질문 요약명으로 노출</div>
-                    </div>
-                    <Button size="sm" className="dark:bg-[#53009A]">
-                        수정 완료
-                    </Button>
-                </div>
-                <div className="py-[18px] px-[30px] bg-[#F4F5F5] dark:bg-[#2E2E2E] h-full">
-                    AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료 AI 응답 메시지 수정 완료
-                    AI 응답 메시지 수정 완료
-                </div>
-            </div>
-        </div>
+        </motion.div>
     );
 };

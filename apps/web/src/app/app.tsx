@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { ErrorFallback, GlobalLoader, LoadingFallback } from '@eurekabox/shared';
 import { ThemeProvider } from '@eurekabox/theme';
@@ -13,6 +12,7 @@ import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';
 import i18n from '../i18n';
+import { ChatBotButton } from './features/chatbots/components';
 
 export function App() {
     const queryClient = new QueryClient({
@@ -41,8 +41,9 @@ export function App() {
                                 <Router />
                                 <GlobalLoader />
                                 <Toaster />
+                                <ChatBotButton />
                             </ThemeProvider>
-                            {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />}
+                            {/* {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />} */}
                         </QueryClientProvider>
                     </HelmetProvider>
                 </ErrorBoundary>
