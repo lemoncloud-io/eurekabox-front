@@ -12,9 +12,10 @@ import type { Message } from '../types';
 
 interface AssistantMessageProps {
     message: Message;
+    onEdit?: (messageId: string) => void;
 }
 
-export const AssistantMessage = ({ message }: AssistantMessageProps) => {
+export const AssistantMessage = ({ message, onEdit }: AssistantMessageProps) => {
     const { isDarkTheme } = useTheme();
     const [isDocumentsOpen, setIsDocumentsOpen] = useState(true);
 
@@ -53,7 +54,7 @@ export const AssistantMessage = ({ message }: AssistantMessageProps) => {
                 <button className="p-[2px]">
                     <ThumbsDown className="w-[14px] h-[14px] text-[#9FA2A7]" />
                 </button>
-                <Button variant="ghost" className="p-[2px] h-auto group">
+                <Button variant="ghost" className="p-[2px] h-auto group" onClick={() => onEdit?.(message.id)}>
                     <PencilLine className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
                 </Button>
             </div>

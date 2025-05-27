@@ -59,8 +59,13 @@ export const useRefreshToken = () => {
 
         const initialize = async () => {
             if (!initializationRef.current) {
-                await fetchProfile();
-                initializationRef.current = true;
+                try {
+                    await fetchProfile();
+                    initializationRef.current = true;
+                } catch (error) {
+                    console.error('Initialization failed:', error);
+                    window.location.href = '/auth/logout';
+                }
             }
         };
 

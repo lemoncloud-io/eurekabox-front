@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+
 import { OAUTH_ENDPOINT, webCore } from '../core';
 import type { UserProfile } from '../stores';
 import { useWebCoreStore } from '../stores';
@@ -28,6 +30,9 @@ export const useProfile = () => {
             setProfile(data);
         } catch (error) {
             console.error('Failed to fetch profile:', error);
+            if ((error as AxiosError).isAxiosError && (error as AxiosError).response?.status === 403) {
+                throw error;
+            }
         }
     };
 

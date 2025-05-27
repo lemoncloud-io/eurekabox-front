@@ -158,6 +158,28 @@ export const useChatState = () => {
         }));
     }, []);
 
+    const updateMessage = useCallback((messageId: string, newContent: string) => {
+        setState(prev => {
+            if (!prev.currentConversation) return prev;
+
+            const updatedMessages = prev.currentConversation.messages.map(msg =>
+                msg.id === messageId ? { ...msg, content: newContent } : msg
+            );
+
+            const updatedConversation = {
+                ...prev.currentConversation,
+                messages: updatedMessages,
+                updatedAt: new Date(),
+            };
+
+            return {
+                ...prev,
+                conversations: prev.conversations.map(c => (c.id === updatedConversation.id ? updatedConversation : c)),
+                currentConversation: updatedConversation,
+            };
+        });
+    }, []);
+
     return {
         ...state,
         setInput,
@@ -166,5 +188,6 @@ export const useChatState = () => {
         createNewConversation,
         deleteConversation,
         togglePinConversation,
+        updateMessage,
     };
 };

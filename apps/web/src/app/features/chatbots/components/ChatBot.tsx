@@ -8,6 +8,7 @@ import { useTheme } from '@eurekabox/theme';
 import { ChatHeader } from './ChatHeader';
 import { ChatInput } from './ChatInput';
 import { HelpPanel } from './HelpPanel';
+import { MessageEditView } from './MessageEditView';
 import { MessageItem } from './MessageItem';
 import { useChatState } from '../hooks/useChatState';
 import { NewChatModal } from '../modals/NewChatModal';
@@ -26,10 +27,23 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
     const [newChatModalOpen, setNewChatModalOpen] = useState(false);
     const [pricingModalOpen, setPricingModalOpen] = useState(false);
     const [testChatSelectModalOpen, setTestChatSelectModalOpen] = useState(false);
+    const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 
     // Help panel state
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [activeHelpTab, setActiveHelpTab] = useState<'faq' | 'chat'>('faq');
+
+    const handleEditMessage = (messageId: string) => {
+        setEditingMessageId(messageId);
+    };
+
+    const handleSaveEdit = (messageId: string, newContent: string) => {
+        chatState.updateMessage(messageId, newContent);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingMessageId(null);
+    };
 
     const handleHelpOpen = (tab: 'faq' | 'chat') => {
         setActiveHelpTab(tab);
@@ -47,6 +61,10 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
         setNewChatModalOpen(false);
     };
 
+    const editingMessage = editingMessageId
+        ? chatState.currentConversation?.messages.find(msg => msg.id === editingMessageId)
+        : null;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -55,69 +73,80 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
             transition={{ duration: 0.2 }}
             className="fixed bottom-6 right-6 text-text flex gap-6"
         >
-            <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
-                <ChatHeader
-                    modelName="Got-4o-mini"
-                    onClose={onClose}
-                    onNewChat={() => setNewChatModalOpen(true)}
-                    onTestChat={() => setTestChatSelectModalOpen(true)}
-                    onPricing={() => setPricingModalOpen(true)}
-                />
-
-                <main className="px-4 w-full overflow-auto flex-1">
-                    {!chatState.currentConversation ? (
-                        <div className="py-[10px]">
-                            <img
-                                src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
-                                alt="chatbot image"
-                                className="w-9 h-9"
-                            />
-                            <div className="text-base font-medium mt-[3px]">무엇을 도와드릴까요?</div>
-                        </div>
-                    ) : (
-                        <>
-                            {chatState.currentConversation.messages.map(message => (
-                                <MessageItem key={message.id} message={message} />
-                            ))}
-                            {chatState.isLoading && (
-                                <div className="py-[10px] px-[14px] flex items-center gap-[9px]">
-                                    <img
-                                        src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
-                                        alt="chatbot image"
-                                        className="w-6 h-6"
-                                    />
-                                    <div className="text-[#9FA2A7]">응답을 생성하고 있습니다...</div>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </main>
-
-                <ChatInput
-                    value={chatState.input}
-                    onChange={chatState.setInput}
-                    onSubmit={handleSubmit}
-                    onHelpOpen={handleHelpOpen}
-                    isHelpOpen={isHelpOpen}
-                    disabled={chatState.isLoading}
-                />
-
-                {isHelpOpen && (
-                    <HelpPanel
-                        activeTab={activeHelpTab}
-                        onTabChange={setActiveHelpTab}
-                        onClose={() => setIsHelpOpen(false)}
-                        conversations={chatState.conversations}
-                        onDeleteConversation={chatState.deleteConversation}
-                        onTogglePinConversation={chatState.togglePinConversation}
+            {editingMessage ? (
+                <MessageEditView message={editingMessage} onSave={handleSaveEdit} onCancel={handleCancelEdit} />
+            ) : (
+                <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
+                    <ChatHeader
+                        modelName="Got-4o-mini"
+                        onClose={onClose}
+                        onNewChat={() => setNewChatModalOpen(true)}
+                        onTestChat={() => setTestChatSelectModalOpen(true)}
+                        onPricing={() => setPricingModalOpen(true)}
                     />
-                )}
-            </div>
 
-            {/* Modals */}
-            <NewChatModal open={newChatModalOpen} onOpenChange={setNewChatModalOpen} onNewChat={handleNewChat} />
-            <TestChatSelectModal open={testChatSelectModalOpen} onOpenChange={setTestChatSelectModalOpen} />
-            <PricingModal open={pricingModalOpen} onOpenChange={setPricingModalOpen} />
+                    <main className="px-4 w-full overflow-auto flex-1">
+                        {!chatState.currentConversation ? (
+                            <div className="py-[10px]">
+                                <img
+                                    src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
+                                    alt="chatbot image"
+                                    className="w-9 h-9"
+                                />
+                                <div className="text-base font-medium mt-[3px]">무엇을 도와드릴까요?</div>
+                            </div>
+                        ) : (
+                            <>
+                                {chatState.currentConversation.messages.map(message => (
+                                    <MessageItem key={message.id} message={message} onEdit={handleEditMessage} />
+                                ))}
+                                {chatState.isLoading && (
+                                    <div className="py-[10px] px-[14px] flex items-center gap-[9px]">
+                                        <img
+                                            src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
+                                            alt="chatbot image"
+                                            className="w-6 h-6"
+                                        />
+                                        <div className="text-[#9FA2A7]">응답을 생성하고 있습니다...</div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </main>
+
+                    <ChatInput
+                        value={chatState.input}
+                        onChange={chatState.setInput}
+                        onSubmit={handleSubmit}
+                        onHelpOpen={handleHelpOpen}
+                        isHelpOpen={isHelpOpen}
+                        disabled={chatState.isLoading}
+                    />
+
+                    {isHelpOpen && (
+                        <HelpPanel
+                            activeTab={activeHelpTab}
+                            onTabChange={setActiveHelpTab}
+                            onClose={() => setIsHelpOpen(false)}
+                            conversations={chatState.conversations}
+                            onDeleteConversation={chatState.deleteConversation}
+                            onTogglePinConversation={chatState.togglePinConversation}
+                        />
+                    )}
+                </div>
+            )}
+
+            {!editingMessage && (
+                <>
+                    <NewChatModal
+                        open={newChatModalOpen}
+                        onOpenChange={setNewChatModalOpen}
+                        onNewChat={handleNewChat}
+                    />
+                    <TestChatSelectModal open={testChatSelectModalOpen} onOpenChange={setTestChatSelectModalOpen} />
+                    <PricingModal open={pricingModalOpen} onOpenChange={setPricingModalOpen} />
+                </>
+            )}
         </motion.div>
     );
 };
