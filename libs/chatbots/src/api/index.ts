@@ -1,4 +1,3 @@
-import { webCore } from '@slp/web-core';
 
 import type {
     BrainView,
@@ -11,6 +10,7 @@ import type {
 } from '@lemoncloud/ssocio-chatbots-api';
 
 import type { ListResult, Params } from '@eurekabox/shared';
+import { webCore } from '@eurekabox/web-core';
 
 import type {
     BulkCreateChildBotsBody,

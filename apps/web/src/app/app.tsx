@@ -13,7 +13,7 @@ import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';
 import i18n from '../i18n';
-import { ChatBotButton } from './features/chatbots/components';
+import { ChatBotButton } from './features/chatbots';
 
 export function App() {
     const queryClient = new QueryClient({
