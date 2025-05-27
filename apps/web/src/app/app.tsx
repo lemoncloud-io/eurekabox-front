@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { ErrorFallback, GlobalLoader, LoadingFallback } from '@eurekabox/shared';
 import { ThemeProvider } from '@eurekabox/theme';
@@ -43,7 +44,7 @@ export function App() {
                                 <Toaster />
                                 <ChatBotButton />
                             </ThemeProvider>
-                            {/* {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />} */}
+                            {process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />}
                         </QueryClientProvider>
                     </HelmetProvider>
                 </ErrorBoundary>
