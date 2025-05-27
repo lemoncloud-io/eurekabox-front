@@ -42,7 +42,6 @@ import type {
 } from '../types';
 import { generateUUID } from '../utils';
 
-
 export const rootChatbotsKeys = createQueryKeys('rootChatbots');
 export const chatbotsKeys = createQueryKeys('chatbots');
 export const chatKeys = createQueryKeys('chatKeys');
@@ -103,7 +102,7 @@ export const useChatMessages = (params: Params) =>
 export const useCreateRootChat = () => {
     return useCustomMutation((data: CreateChatDTO) => createRootChat(data), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
@@ -111,7 +110,7 @@ export const useCreateRootChat = () => {
 export const useCreateChildChats = () => {
     return useCustomMutation((bulkBody: BulkCreateChildBotsBody) => createChildChats(bulkBody), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
@@ -120,7 +119,7 @@ export const useSendMessage = () => {
     return useCustomMutation((sendMessageDTO: SendMessageDTO) => sendMessage(sendMessageDTO), {
         onError: (error, variables) => {
             const errorMessage = error.response?.data || error.message || 'An error occurred while sending the message';
-            toast(errorMessage);
+            toast({ title: errorMessage });
 
             throw {
                 response: {
@@ -150,7 +149,7 @@ export const useSendMessage = () => {
 export const useDeleteChat = () => {
     return useCustomMutation((id: string) => deleteChat(id), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
@@ -158,7 +157,7 @@ export const useDeleteChat = () => {
 export const useUpdateChat = () => {
     return useCustomMutation((dto: UpdateChatDTO) => updateChat(dto), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
@@ -166,7 +165,7 @@ export const useUpdateChat = () => {
 export const useUpdatePrompt = () => {
     return useCustomMutation((dto: UpdatePromptDTO) => updatePrompt(dto), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
@@ -221,7 +220,7 @@ export const useDocs = (params: DocumentSyncPullParam) =>
 export const useUpdateDocument = () => {
     return useCustomMutation((dto: UpdateDocumentDTO) => updateDocument(dto), {
         onError: error => {
-            toast(error instanceof Error ? error.message : 'An unknown error occurred');
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
     });
 };
