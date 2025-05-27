@@ -22,7 +22,7 @@ import {
 } from '@eurekabox/lib/components/ui/dropdown-menu';
 import { useTheme } from '@eurekabox/theme';
 
-import type { Conversation } from '../../types';
+import type { Conversation } from '../types';
 
 interface ConversationItemProps {
     conversation: Conversation;

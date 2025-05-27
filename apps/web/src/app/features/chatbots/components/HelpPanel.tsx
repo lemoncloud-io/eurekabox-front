@@ -4,7 +4,7 @@ import { Button } from '@eurekabox/lib/components/ui/button';
 import { cn } from '@eurekabox/lib/utils';
 
 import { ConversationList } from './ConversationList';
-import type { Conversation, HelpTab } from '../../types';
+import type { Conversation, HelpTab } from '../types';
 
 interface HelpPanelProps {
     activeTab: HelpTab;

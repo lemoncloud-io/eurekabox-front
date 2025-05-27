@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { ConversationItem } from './ConversationItem';
-import type { Conversation } from '../../types';
+import type { Conversation } from '../types';
 
 interface ConversationListProps {
     conversations: Conversation[];

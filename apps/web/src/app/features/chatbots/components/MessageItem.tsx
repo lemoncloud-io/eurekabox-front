@@ -1,6 +1,6 @@
 import { AssistantMessage } from './AssistantMessage';
 import { UserMessage } from './UserMessage';
-import type { Message } from '../../types';
+import type { Message } from '../types';
 
 interface MessageItemProps {
     message: Message;

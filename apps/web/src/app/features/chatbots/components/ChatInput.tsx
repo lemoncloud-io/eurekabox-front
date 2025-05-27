@@ -1,4 +1,3 @@
-// components/ChatBot/ChatInput.tsx
 import { useRef } from 'react';
 
 import { MessageCircleWarning, MessageSquareText, Paperclip, SendHorizontal } from 'lucide-react';

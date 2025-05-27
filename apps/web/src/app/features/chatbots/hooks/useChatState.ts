@@ -1,4 +1,3 @@
-// hooks/useChatState.ts
 import { useCallback, useState } from 'react';
 
 import {
@@ -8,7 +7,7 @@ import {
     createDummyConversations,
     generateId,
 } from '../data/dummyData';
-import type { ChatState, Conversation, Message } from '../types/chatbot';
+import type { ChatState, Conversation, Message } from '../types';
 
 const getAIResponse = (userInput: string): { content: string; relatedDocuments?: typeof DUMMY_RELATED_DOCUMENTS } => {
     const input = userInput.toLowerCase();

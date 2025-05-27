@@ -1,6 +1,6 @@
 import { ChevronRight, ChevronUp } from 'lucide-react';
 
-import type { RelatedDocument } from '../../types';
+import type { RelatedDocument } from '../types';
 
 interface RelatedDocumentsProps {
     documents: RelatedDocument[];

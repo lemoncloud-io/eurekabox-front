@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurek
 import { useTheme } from '@eurekabox/theme';
 
 import { RelatedDocuments } from './RelatedDocuments';
-import type { Message } from '../../types';
+import type { Message } from '../types';
 
 interface AssistantMessageProps {
     message: Message;
