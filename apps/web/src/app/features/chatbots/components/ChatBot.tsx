@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 
@@ -12,8 +12,10 @@ import { ChatInput } from './ChatInput';
 import { HelpPanel } from './HelpPanel';
 import { MessageEditView } from './MessageEditView';
 import { MessageItem } from './MessageItem';
+import { NewMessageBadge } from './NewMessageBadge';
 import { useAutoScroll } from '../hooks/useAutoScroll';
 import { useChatState } from '../hooks/useChatState';
+import { useNewMessageBadge } from '../hooks/useNewMessageBadge';
 import { NewChatModal } from '../modals/NewChatModal';
 import { PricingModal } from '../modals/PricingModal';
 import { TestChatSelectModal } from '../modals/TestChatSelectModal';
@@ -37,10 +39,15 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [activeHelpTab, setActiveHelpTab] = useState<'faq' | 'chat'>('faq');
 
-    const { containerRef, handleScroll, forceScrollToBottom } = useAutoScroll({
+    const { containerRef, handleScroll, forceScrollToBottom, shouldAutoScroll } = useAutoScroll({
         dependencies: [chatState.displayMessages.length, chatState.isWaitingResponse, chatState.currentChat?.id],
         threshold: 100,
         behavior: 'smooth',
+    });
+
+    const { showBadge, handleBadgeClick } = useNewMessageBadge({
+        shouldAutoScroll,
+        isWaitingResponse: chatState.isWaitingResponse,
     });
 
     useEffect(() => {
@@ -48,6 +55,10 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             forceScrollToBottom();
         }
     }, [chatState.currentChat?.id, forceScrollToBottom]);
+
+    const onBadgeClick = useCallback(() => {
+        handleBadgeClick(forceScrollToBottom);
+    }, [handleBadgeClick, forceScrollToBottom]);
 
     const handleEditMessage = (messageId: string) => {
         setEditingMessageId(messageId);
@@ -91,7 +102,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             {editingMessage ? (
                 <MessageEditView message={editingMessage} onSave={handleSaveEdit} onCancel={handleCancelEdit} />
             ) : (
-                <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
+                <div className="w-[484px] min-h-[350px] max-h-[400px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                     <ChatHeader
                         modelName="Gpt-4o-mini"
                         onClose={onClose}
@@ -125,8 +136,8 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                                         />
                                         <div className="flex items-center gap-1 text-[#9FA2A7]">
                                             <div className="flex gap-1">
-                                                <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                                <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                                <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce [animation-delay:-0.5s]"></div>
+                                                <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce [animation-delay:-0.1s]"></div>
                                                 <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce"></div>
                                             </div>
                                             <span>응답을 생성하고 있습니다</span>
@@ -147,6 +158,8 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                             </>
                         )}
                     </main>
+
+                    <NewMessageBadge show={showBadge} onClick={onBadgeClick} />
 
                     <ChatInput
                         value={chatState.input}

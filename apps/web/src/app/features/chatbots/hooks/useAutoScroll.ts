@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseAutoScrollOptions {
     dependencies: any[];
@@ -8,35 +8,62 @@ interface UseAutoScrollOptions {
 
 export const useAutoScroll = ({ dependencies, threshold = 100, behavior = 'smooth' }: UseAutoScrollOptions) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const shouldAutoScrollRef = useRef(true);
+    const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
     const lastScrollTopRef = useRef(0);
+    const timeoutRef = useRef<NodeJS.Timeout>();
 
-    // 스크롤 위치 추적
     const handleScroll = useCallback(() => {
         const container = containerRef.current;
         if (!container) return;
 
-        const { scrollTop, scrollHeight, clientHeight } = container;
-        const isNearBottom = scrollHeight - scrollTop - clientHeight <= threshold;
-
-        // 사용자가 수동으로 위로 스크롤했는지 감지
-        const isScrollingUp = scrollTop < lastScrollTopRef.current;
-
-        if (isScrollingUp && !isNearBottom) {
-            shouldAutoScrollRef.current = false;
-        } else if (isNearBottom) {
-            shouldAutoScrollRef.current = true;
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
         }
+        timeoutRef.current = setTimeout(() => {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const isNearBottom = scrollHeight - scrollTop - clientHeight <= threshold;
+            const isScrollingUp = scrollTop < lastScrollTopRef.current;
 
-        lastScrollTopRef.current = scrollTop;
+            if (isScrollingUp && !isNearBottom) {
+                setShouldAutoScroll(false);
+            } else if (isNearBottom) {
+                setShouldAutoScroll(true);
+            }
+
+            lastScrollTopRef.current = scrollTop;
+        }, 50);
     }, [threshold]);
 
-    // 하단으로 스크롤
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
+
     const scrollToBottom = useCallback(() => {
         const container = containerRef.current;
-        if (!container || !shouldAutoScrollRef.current) return;
+        if (!container || !shouldAutoScroll) return;
 
-        // DOM 업데이트 완료 후 스크롤 실행
+        requestAnimationFrame(() => {
+            container.scrollTo({
+                top: container.scrollHeight,
+                behavior,
+            });
+        });
+    }, [behavior, shouldAutoScroll]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, dependencies);
+
+    // 강제 스크롤 함수 (새 대화 시작 등)
+    const forceScrollToBottom = useCallback(() => {
+        setShouldAutoScroll(true);
+        const container = containerRef.current;
+        if (!container) return;
+
         requestAnimationFrame(() => {
             container.scrollTo({
                 top: container.scrollHeight,
@@ -45,22 +72,11 @@ export const useAutoScroll = ({ dependencies, threshold = 100, behavior = 'smoot
         });
     }, [behavior]);
 
-    // 의존성 변경 시 자동 스크롤
-    useEffect(() => {
-        scrollToBottom();
-    }, dependencies);
-
-    // 강제 스크롤 함수 (새 대화 시작 등)
-    const forceScrollToBottom = useCallback(() => {
-        shouldAutoScrollRef.current = true;
-        scrollToBottom();
-    }, [scrollToBottom]);
-
     return {
         containerRef,
         handleScroll,
         scrollToBottom,
         forceScrollToBottom,
-        shouldAutoScroll: shouldAutoScrollRef.current,
+        shouldAutoScroll,
     };
 };
