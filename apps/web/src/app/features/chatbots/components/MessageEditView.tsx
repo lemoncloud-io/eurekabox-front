@@ -2,12 +2,13 @@ import { useState } from 'react';
 
 import { ChevronLeft } from 'lucide-react';
 
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 import { Button } from '@eurekabox/lib/components/ui/button';
 
-import type { Message } from '../types';
 
 interface MessageEditViewProps {
-    message: Message;
+    message: ChatView;
     onSave: (messageId: string, newContent: string) => void;
     onCancel: () => void;
 }

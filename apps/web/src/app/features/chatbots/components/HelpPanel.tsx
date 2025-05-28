@@ -1,16 +1,18 @@
 import { X } from 'lucide-react';
 
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 import { Button } from '@eurekabox/lib/components/ui/button';
 import { cn } from '@eurekabox/lib/utils';
 
 import { ConversationList } from './ConversationList';
-import type { Conversation, HelpTab } from '../types';
+import type { HelpTab } from '../types';
 
 interface HelpPanelProps {
     activeTab: HelpTab;
     onTabChange: (tab: HelpTab) => void;
     onClose: () => void;
-    conversations: Conversation[];
+    conversations: ChatView[];
     onDeleteConversation: (id: string) => void;
     onTogglePinConversation: (id: string) => void;
 }

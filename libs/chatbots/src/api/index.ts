@@ -1,4 +1,3 @@
-
 import type {
     BrainView,
     ChatView,
@@ -22,6 +21,30 @@ import type {
 } from '../types';
 
 const CHATBOTS_ENDPOINT = import.meta.env.VITE_CHATBOTS_API_ENDPOINT.toLowerCase();
+
+export const startMyChat = async (createBody: CreateChatDTO): Promise<ChatView> => {
+    const response = await webCore
+        .buildSignedRequest({
+            method: 'POST',
+            baseURL: `${CHATBOTS_ENDPOINT}/agents/1000001/start`,
+        })
+        .setBody({ ...createBody })
+        .execute<ChatView>();
+
+    return response.data;
+};
+
+export const fetchMyChats = async (params: Params): Promise<ListResult<ChatView>> => {
+    const { data } = await webCore
+        .buildSignedRequest({
+            method: 'GET',
+            baseURL: `${CHATBOTS_ENDPOINT}/chats/0/list`,
+        })
+        .setParams({ stereo: 'root', view: 'mine', name: '!', ...params })
+        .execute<ListResult<ChatView>>();
+
+    return { ...data };
+};
 
 export const fetchRootChats = async (params: Params): Promise<ListResult<ChatView>> => {
     const { data } = await webCore

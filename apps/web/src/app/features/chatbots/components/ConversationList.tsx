@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 import { ConversationItem } from './ConversationItem';
-import type { Conversation } from '../types';
 
 interface ConversationListProps {
-    conversations: Conversation[];
+    conversations: ChatView[];
     onDeleteConversation: (id: string) => void;
     onTogglePinConversation: (id: string) => void;
 }
@@ -15,11 +16,11 @@ export const ConversationList = ({
     onTogglePinConversation,
 }: ConversationListProps) => {
     const { pinnedConversations, recentConversations } = useMemo(() => {
-        const pinned = conversations.filter(conv => conv.isPinned);
-        const recent = conversations.filter(conv => !conv.isPinned);
+        const pinned = conversations.filter(conv => conv['isPinned']);
+        const recent = conversations.filter(conv => !conv['isPinned']);
 
         // Sort by updatedAt descending
-        const sortByDate = (a: Conversation, b: Conversation) =>
+        const sortByDate = (a: ChatView, b: ChatView) =>
             new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 
         return {

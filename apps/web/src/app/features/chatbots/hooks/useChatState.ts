@@ -1,193 +1,188 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { useQueryClient } from '@tanstack/react-query';
+
+import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import {
-    AI_RESPONSES,
-    DEFAULT_RESPONSE,
-    DUMMY_RELATED_DOCUMENTS,
-    createDummyConversations,
-    generateId,
-} from '../data/dummyData';
-import type { ChatState, Conversation, Message } from '../types';
+    chatKeys,
+    myChatbotKeys,
+    useChatMessages,
+    useDeleteChat,
+    useMyChats,
+    useSendMessage,
+    useStartMyChat,
+} from '@eurekabox/chatbots';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
+import { useWebCoreStore } from '@eurekabox/web-core';
 
-const getAIResponse = (userInput: string): { content: string; relatedDocuments?: typeof DUMMY_RELATED_DOCUMENTS } => {
-    const input = userInput.toLowerCase();
 
-    // Find matching response category
-    const matchedCategory = AI_RESPONSES.find(category => category.keywords.some(keyword => input.includes(keyword)));
 
-    const responses = matchedCategory ? matchedCategory.responses : DEFAULT_RESPONSE;
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+import type { ChatState } from '../types';
 
-    // Add related documents for certain keywords
-    const shouldIncludeDocs = input.includes('도움') || input.includes('문서') || input.includes('가이드');
+interface UseChatStateProps {
+    initialChat: ChatView;
+}
 
-    return {
-        content: randomResponse,
-        relatedDocuments: shouldIncludeDocs ? DUMMY_RELATED_DOCUMENTS : undefined,
-    };
-};
+export const useChatState = ({ initialChat }: UseChatStateProps) => {
+    const queryClient = useQueryClient();
+    const { profile } = useWebCoreStore();
 
-export const useChatState = () => {
-    const [state, setState] = useState<ChatState>(() => {
-        const conversations = createDummyConversations();
-        return {
-            conversations,
-            currentConversation: conversations[0] || null,
-            isLoading: false,
-            input: '',
-        };
+    const [state, setState] = useState<ChatState>({
+        myChats: [],
+        currentChat: initialChat || null,
+        messages: [],
+        isLoading: false,
+        input: '',
     });
+
+    const { data: myChatsData, isLoading: chatsLoading } = useMyChats({ page: 0 });
+    const { data: messagesData } = useChatMessages({
+        rootId: state.currentChat?.id,
+        limit: -1,
+    });
+    const startMyChat = useStartMyChat();
+    const sendMessage = useSendMessage();
+    const deleteChat = useDeleteChat();
+
+    // 내 채팅 목록 로드
+    useEffect(() => {
+        if (myChatsData?.data) {
+            setState(prev => ({
+                ...prev,
+                myChats: myChatsData.data,
+            }));
+        }
+    }, [myChatsData]);
+
+    // 현재 채팅의 메시지들 로드
+    useEffect(() => {
+        if (messagesData?.pages) {
+            const allMessages = messagesData.pages
+                .reduce((acc, page) => [...acc, ...(page.data || [])], [])
+                .filter(msg => msg.id && msg.content)
+                .sort((a, b) => (a.childNo || 0) - (b.childNo || 0));
+
+            setState(prev => ({ ...prev, messages: allMessages }));
+        }
+    }, [messagesData]);
 
     const setInput = useCallback((input: string) => {
         setState(prev => ({ ...prev, input }));
     }, []);
 
-    const setCurrentConversation = useCallback((conversation: Conversation | null) => {
-        setState(prev => ({ ...prev, currentConversation: conversation }));
+    const setCurrentChat = useCallback((chat: ChatView | null) => {
+        setState(prev => ({ ...prev, currentChat: chat, messages: [] }));
     }, []);
 
     const addMessage = useCallback(
         async (messageContent: string) => {
-            if (!messageContent.trim()) return;
+            if (!messageContent.trim() || !state.currentChat?.id) return;
 
             setState(prev => ({ ...prev, isLoading: true }));
 
-            // Create user message
-            const userMessage: Message = {
-                id: generateId(),
-                content: messageContent.trim(),
-                role: 'user',
-                timestamp: new Date(),
-            };
+            try {
+                await sendMessage.mutateAsync({
+                    rootId: state.currentChat.id!,
+                    body: { input: messageContent.trim() },
+                });
 
-            // Update current conversation or create new one
-            let updatedConversation: Conversation;
+                // 메시지 전송 후 갱신
+                await queryClient.invalidateQueries(chatKeys.list({ rootId: state.currentChat.id }));
 
-            if (state.currentConversation) {
-                updatedConversation = {
-                    ...state.currentConversation,
-                    messages: [...state.currentConversation.messages, userMessage],
-                    updatedAt: new Date(),
-                };
-            } else {
-                updatedConversation = {
-                    id: generateId(),
-                    title: messageContent.slice(0, 50) + (messageContent.length > 50 ? '...' : ''),
-                    messages: [userMessage],
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    isPinned: false,
-                };
+                setState(prev => ({ ...prev, input: '' }));
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                toast({ title: '메시지 전송에 실패했습니다.' });
+            } finally {
+                setState(prev => ({ ...prev, isLoading: false }));
             }
+        },
+        [state.currentChat, sendMessage, queryClient]
+    );
 
-            // Update conversations list
-            setState(prev => {
-                const existingIndex = prev.conversations.findIndex(c => c.id === updatedConversation.id);
-                const conversations =
-                    existingIndex >= 0
-                        ? prev.conversations.map(c => (c.id === updatedConversation.id ? updatedConversation : c))
-                        : [updatedConversation, ...prev.conversations];
+    const createNewConversation = useCallback(async () => {
+        try {
+            setState(prev => ({ ...prev, isLoading: true }));
 
-                return {
-                    ...prev,
-                    conversations,
-                    currentConversation: updatedConversation,
-                    input: '',
-                };
-            });
+            const profile$: ChatUserProfile = {
+                ...(profile?.sid && { sid: profile.sid }),
+                ...(profile?.uid && { uid: profile.uid }),
+                ...(profile?.$user?.gender && { gender: profile?.$user?.gender }),
+                ...(profile?.$user?.name && { name: profile?.$user?.name }),
+            };
+            await startMyChat.mutateAsync(
+                { name: `새 채팅 ${new Date().toLocaleTimeString()}`, profile$ },
+                {
+                    onSuccess: async (newChat: ChatView) => {
+                        await queryClient.invalidateQueries(myChatbotKeys.invalidateList());
+                        setState(prev => ({
+                            ...prev,
+                            currentChat: newChat,
+                            messages: [],
+                            input: '',
+                        }));
+                    },
+                }
+            );
+        } catch (error) {
+            console.error('Failed to create new conversation:', error);
+            toast({ title: '새 채팅 생성에 실패했습니다.' });
+        } finally {
+            setState(prev => ({ ...prev, isLoading: false }));
+        }
+    }, [startMyChat, queryClient]);
 
-            // Simulate AI response delay
-            setTimeout(() => {
-                const aiResponse = getAIResponse(messageContent);
-                const assistantMessage: Message = {
-                    id: generateId(),
-                    content: aiResponse.content,
-                    role: 'assistant',
-                    timestamp: new Date(),
-                    relatedDocuments: aiResponse.relatedDocuments,
-                };
+    const deleteConversation = useCallback(
+        async (id: string) => {
+            try {
+                await deleteChat.mutateAsync(id);
+                await queryClient.invalidateQueries(myChatbotKeys.invalidateList());
 
                 setState(prev => {
-                    const currentConv = prev.currentConversation!;
-                    const updatedConv = {
-                        ...currentConv,
-                        messages: [...currentConv.messages, assistantMessage],
-                        updatedAt: new Date(),
-                    };
+                    const remainingChats = prev.myChats.filter(chat => chat.id !== id);
+                    const newCurrentChat = prev.currentChat?.id === id ? remainingChats[0] || null : prev.currentChat;
 
                     return {
                         ...prev,
-                        conversations: prev.conversations.map(c => (c.id === updatedConv.id ? updatedConv : c)),
-                        currentConversation: updatedConv,
-                        isLoading: false,
+                        myChats: remainingChats,
+                        currentChat: newCurrentChat,
+                        messages: newCurrentChat ? prev.messages : [],
                     };
                 });
-            }, 1000 + Math.random() * 2000); // 1-3초 랜덤 딜레이
+
+                toast({ title: '채팅이 삭제되었습니다.' });
+            } catch (error) {
+                console.error('Failed to delete conversation:', error);
+                toast({ title: '채팅 삭제에 실패했습니다.' });
+            }
         },
-        [state.currentConversation]
+        [deleteChat, queryClient]
     );
-
-    const createNewConversation = useCallback(() => {
-        setState(prev => ({
-            ...prev,
-            currentConversation: null,
-            input: '',
-        }));
-    }, []);
-
-    const deleteConversation = useCallback((id: string) => {
-        setState(prev => {
-            const conversations = prev.conversations.filter(conv => conv.id !== id);
-            const currentConversation =
-                prev.currentConversation?.id === id ? conversations[0] || null : prev.currentConversation;
-
-            return {
-                ...prev,
-                conversations,
-                currentConversation,
-            };
-        });
-    }, []);
 
     const togglePinConversation = useCallback((id: string) => {
         setState(prev => ({
             ...prev,
-            conversations: prev.conversations.map(conv =>
-                conv.id === id ? { ...conv, isPinned: !conv.isPinned } : conv
-            ),
+            myChats: prev.myChats.map(chat => (chat.id === id ? { ...chat, isPinned: !chat['isPinned'] } : chat)),
         }));
     }, []);
 
     const updateMessage = useCallback((messageId: string, newContent: string) => {
-        setState(prev => {
-            if (!prev.currentConversation) return prev;
-
-            const updatedMessages = prev.currentConversation.messages.map(msg =>
-                msg.id === messageId ? { ...msg, content: newContent } : msg
-            );
-
-            const updatedConversation = {
-                ...prev.currentConversation,
-                messages: updatedMessages,
-                updatedAt: new Date(),
-            };
-
-            return {
-                ...prev,
-                conversations: prev.conversations.map(c => (c.id === updatedConversation.id ? updatedConversation : c)),
-                currentConversation: updatedConversation,
-            };
-        });
+        setState(prev => ({
+            ...prev,
+            messages: prev.messages.map(msg => (msg.id === messageId ? { ...msg, content: newContent } : msg)),
+        }));
     }, []);
 
     return {
         ...state,
         setInput,
-        setCurrentConversation,
+        setCurrentChat,
         addMessage,
         createNewConversation,
         deleteConversation,
         togglePinConversation,
         updateMessage,
+        isChatsLoading: chatsLoading,
     };
 };

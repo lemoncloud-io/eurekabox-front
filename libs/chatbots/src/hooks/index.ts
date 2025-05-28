@@ -25,9 +25,11 @@ import {
     fetchDocs,
     fetchDocumentById,
     fetchEmbeddings,
+    fetchMyChats,
     fetchPrompts,
     fetchRootChats,
     sendMessage,
+    startMyChat,
     updateChat,
     updateDocument,
     updatePrompt,
@@ -42,6 +44,7 @@ import type {
 } from '../types';
 import { generateUUID } from '../utils';
 
+export const myChatbotKeys = createQueryKeys('myChatbotKeys');
 export const rootChatbotsKeys = createQueryKeys('rootChatbots');
 export const chatbotsKeys = createQueryKeys('chatbots');
 export const chatKeys = createQueryKeys('chatKeys');
@@ -51,6 +54,24 @@ export const embeddingKeys = createQueryKeys('embeddings');
 export const brainKeys = createQueryKeys('brains');
 export const promptKeys = createQueryKeys('prompts');
 export const docsKeys = createQueryKeys('docs');
+
+export const useStartMyChat = () => {
+    return useCustomMutation((data: CreateChatDTO) => startMyChat(data), {
+        onError: error => {
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
+        },
+    });
+};
+
+export const useMyChats = (params: Params) =>
+    useQuery<PaginationType<ChatView[]>>({
+        queryKey: myChatbotKeys.list(params ?? {}),
+        queryFn: async () => {
+            const result = await fetchMyChats(params);
+            return { ...result, data: result.list.filter(data => !data.deletedAt) || [] } as PaginationType<ChatView[]>;
+        },
+        refetchOnWindowFocus: false,
+    });
 
 export const useRootChats = (params: Params) =>
     useQuery<PaginationType<ChatView[]>>({

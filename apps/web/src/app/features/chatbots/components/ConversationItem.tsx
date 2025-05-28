@@ -1,5 +1,7 @@
 import { Ellipsis } from 'lucide-react';
 
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 import { Images } from '@eurekabox/assets';
 import {
     AlertDialog,
@@ -22,10 +24,9 @@ import {
 } from '@eurekabox/lib/components/ui/dropdown-menu';
 import { useTheme } from '@eurekabox/theme';
 
-import type { Conversation } from '../types';
 
 interface ConversationItemProps {
-    conversation: Conversation;
+    conversation: ChatView;
     onDelete: () => void;
     onTogglePin: () => void;
     isPinned: boolean;
@@ -53,7 +54,7 @@ export const ConversationItem = ({ conversation, onDelete, onTogglePin, isPinned
                         textOverflow: 'ellipsis',
                     }}
                 >
-                    {conversation.title}
+                    {conversation.name || '새 대화'}
                 </div>
             </div>
 

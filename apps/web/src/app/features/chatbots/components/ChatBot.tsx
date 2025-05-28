@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { motion } from 'framer-motion';
 
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 import { Images } from '@eurekabox/assets';
 import { useTheme } from '@eurekabox/theme';
 
@@ -17,11 +19,12 @@ import { TestChatSelectModal } from '../modals/TestChatSelectModal';
 
 interface ChatBotProps {
     onClose: () => void;
+    initialChat: ChatView;
 }
 
-export const ChatBot = ({ onClose }: ChatBotProps) => {
+export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
     const { isDarkTheme } = useTheme();
-    const chatState = useChatState();
+    const chatState = useChatState({ initialChat });
 
     // Modal states
     const [newChatModalOpen, setNewChatModalOpen] = useState(false);
@@ -51,19 +54,33 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
     };
 
     const handleSubmit = () => {
-        if (chatState.input.trim() && !chatState.isLoading) {
+        console.log(chatState.currentChat);
+        return;
+        if (chatState.input.trim() && !chatState.isLoading && chatState.currentChat) {
             chatState.addMessage(chatState.input);
+        } else if (!chatState.currentChat) {
+            chatState.createNewConversation();
         }
     };
 
     const handleNewChat = () => {
-        chatState.createNewConversation();
         setNewChatModalOpen(false);
     };
 
-    const editingMessage = editingMessageId
-        ? chatState.currentConversation?.messages.find(msg => msg.id === editingMessageId)
-        : null;
+    const editingMessage = editingMessageId ? chatState.messages.find(msg => msg.id === editingMessageId) : null;
+
+    if (chatState.isLoading) {
+        return (
+            <motion.div className="fixed bottom-6 right-6 text-text flex gap-6">
+                <div className="w-[484px] min-h-[350px] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex items-center justify-center">
+                    <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-[#7932FF] border-t-transparent rounded-full animate-spin" />
+                        <span>채팅을 불러오는 중...</span>
+                    </div>
+                </div>
+            </motion.div>
+        );
+    }
 
     return (
         <motion.div
@@ -86,7 +103,7 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
                     />
 
                     <main className="px-4 w-full overflow-auto flex-1">
-                        {!chatState.currentConversation ? (
+                        {!chatState.currentChat ? (
                             <div className="py-[10px]">
                                 <img
                                     src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
@@ -97,7 +114,7 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
                             </div>
                         ) : (
                             <>
-                                {chatState.currentConversation.messages.map(message => (
+                                {chatState.messages.map(message => (
                                     <MessageItem key={message.id} message={message} onEdit={handleEditMessage} />
                                 ))}
                                 {chatState.isLoading && (
@@ -128,7 +145,7 @@ export const ChatBot = ({ onClose }: ChatBotProps) => {
                             activeTab={activeHelpTab}
                             onTabChange={setActiveHelpTab}
                             onClose={() => setIsHelpOpen(false)}
-                            conversations={chatState.conversations}
+                            conversations={chatState.myChats}
                             onDeleteConversation={chatState.deleteConversation}
                             onTogglePinConversation={chatState.togglePinConversation}
                         />

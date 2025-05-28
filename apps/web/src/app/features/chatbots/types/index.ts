@@ -1,3 +1,5 @@
+import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+
 export interface Message {
     id: string;
     content: string;
@@ -42,8 +44,9 @@ export interface ModelInfo {
 }
 
 export interface ChatState {
-    conversations: Conversation[];
-    currentConversation: Conversation | null;
+    myChats: ChatView[];
+    currentChat: ChatView | null;
+    messages: ChatView[];
     isLoading: boolean;
     input: string;
 }
