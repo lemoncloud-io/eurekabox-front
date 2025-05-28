@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -6,6 +6,7 @@ import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api'
 
 import {
     chatKeys,
+    generateUUID,
     myChatbotKeys,
     useChatMessages,
     useDeleteChat,
@@ -15,8 +16,6 @@ import {
 } from '@eurekabox/chatbots';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
-
-
 
 import type { ChatState } from '../types';
 
@@ -32,7 +31,9 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         myChats: [],
         currentChat: initialChat || null,
         messages: [],
+        pendingMessage: null,
         isLoading: false,
+        isWaitingResponse: false,
         input: '',
     });
 
@@ -77,29 +78,69 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
 
     const addMessage = useCallback(
         async (messageContent: string) => {
-            if (!messageContent.trim() || !state.currentChat?.id) return;
+            if (!messageContent.trim() || !state.currentChat?.id) {
+                return;
+            }
 
-            setState(prev => ({ ...prev, isLoading: true }));
+            // 1. 사용자 메시지를 즉시 표시
+            const userMessage: ChatView = {
+                id: generateUUID(),
+                content: messageContent.trim(),
+                stereo: 'query',
+                createdAt: new Date().toISOString(),
+                childNo: (state.messages.length + 1) * 10, // 임시 순서
+            } as ChatView;
+
+            setState(prev => ({
+                ...prev,
+                pendingMessage: userMessage,
+                isWaitingResponse: true,
+                input: '',
+            }));
 
             try {
-                await sendMessage.mutateAsync({
-                    rootId: state.currentChat.id!,
-                    body: { input: messageContent.trim() },
+                const res = await sendMessage.mutateAsync({
+                    groupId: state.currentChat.id!,
+                    body: {
+                        ...(profile?.sid && { sid: profile.sid }),
+                        input: messageContent.trim(),
+                    },
                 });
 
                 // 메시지 전송 후 갱신
-                await queryClient.invalidateQueries(chatKeys.list({ rootId: state.currentChat.id }));
+                await updateChatMessages(state.currentChat.id, res.list || []);
+                // await queryClient.invalidateQueries(chatKeys.list({ rootId: state.currentChat.id }));
 
-                setState(prev => ({ ...prev, input: '' }));
+                setState(prev => ({
+                    ...prev,
+                    pendingMessage: null,
+                    isWaitingResponse: false,
+                }));
             } catch (error) {
                 console.error('Failed to send message:', error);
+                setState(prev => ({
+                    ...prev,
+                    pendingMessage: prev.pendingMessage
+                        ? {
+                              ...prev.pendingMessage,
+                              isError: true,
+                          }
+                        : null,
+                    isWaitingResponse: false,
+                }));
                 toast({ title: '메시지 전송에 실패했습니다.' });
-            } finally {
-                setState(prev => ({ ...prev, isLoading: false }));
             }
         },
         [state.currentChat, sendMessage, queryClient]
     );
+
+    const displayMessages = useMemo(() => {
+        const allMessages = [...state.messages];
+        if (state.pendingMessage) {
+            allMessages.push(state.pendingMessage);
+        }
+        return allMessages.sort((a, b) => (a.childNo || 0) - (b.childNo || 0));
+    }, [state.messages, state.pendingMessage]);
 
     const createNewConversation = useCallback(async () => {
         try {
@@ -174,8 +215,27 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         }));
     }, []);
 
+    const updateChatMessages = async (chatId: string, newMessages: ChatView[]) => {
+        await queryClient.setQueryData(chatKeys.list({ rootId: chatId, limit: -1 }), (oldData: any) => {
+            if (!oldData) {
+                return oldData;
+            }
+
+            const newFirstPage = {
+                ...oldData.pages[0],
+                data: [...(oldData.pages[0].data || []), ...newMessages],
+            };
+            return {
+                ...oldData,
+                pages: [newFirstPage, ...oldData.pages.slice(1)],
+                pageParams: oldData.pageParams,
+            };
+        });
+    };
+
     return {
         ...state,
+        displayMessages,
         setInput,
         setCurrentChat,
         addMessage,

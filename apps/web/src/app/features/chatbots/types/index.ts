@@ -47,7 +47,9 @@ export interface ChatState {
     myChats: ChatView[];
     currentChat: ChatView | null;
     messages: ChatView[];
+    pendingMessage: ChatView | null;
     isLoading: boolean;
+    isWaitingResponse: boolean;
     input: string;
 }
 

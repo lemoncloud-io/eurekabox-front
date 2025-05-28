@@ -34,7 +34,7 @@ export const ChatBotButton = () => {
                 ...(profile?.$user?.gender && { gender: profile?.$user?.gender }),
                 ...(profile?.$user?.name && { name: profile?.$user?.name }),
             };
-            const newChat = await startMyChat.mutateAsync({ profile$ });
+            const newChat = await startMyChat.mutateAsync({ name: '', profile$ });
 
             setCurrentChat(newChat);
             setIsOpen(true);
