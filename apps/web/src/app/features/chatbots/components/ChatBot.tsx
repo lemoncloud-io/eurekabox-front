@@ -89,6 +89,35 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
         setNewChatModalOpen(false);
     };
 
+    const handleFaqClick = useCallback(
+        async (faqText: string) => {
+            if (chatState.isLoading || chatState.isWaitingResponse) {
+                return;
+            }
+
+            setIsHelpOpen(false);
+            chatState.setInput('');
+            if (faqText.trim() && chatState.currentChat) {
+                await chatState.addMessage(faqText.trim());
+            }
+        },
+        [chatState, setIsHelpOpen]
+    );
+
+    const handleConversationClick = useCallback(
+        (conversation: ChatView) => {
+            if (chatState.isLoading || chatState.isWaitingResponse) {
+                return;
+            }
+
+            if (chatState.currentChat?.id !== conversation.id) {
+                chatState.setCurrentChat(conversation);
+                setIsHelpOpen(false);
+            }
+        },
+        [chatState.currentChat?.id, chatState.setCurrentChat, chatState.isLoading, chatState.isWaitingResponse]
+    );
+
     const editingMessage = editingMessageId ? chatState.messages.find(msg => msg.id === editingMessageId) : null;
 
     return (
@@ -102,7 +131,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             {editingMessage ? (
                 <MessageEditView message={editingMessage} onSave={handleSaveEdit} onCancel={handleCancelEdit} />
             ) : (
-                <div className="w-[484px] min-h-[350px] max-h-[400px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
+                <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                     <ChatHeader
                         modelName="Gpt-4o-mini"
                         onClose={onClose}
@@ -178,6 +207,10 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                             conversations={chatState.myChats}
                             onDeleteConversation={chatState.deleteConversation}
                             onTogglePinConversation={chatState.togglePinConversation}
+                            onFaqClick={handleFaqClick}
+                            onConversationClick={handleConversationClick}
+                            currentChatId={chatState.currentChat?.id}
+                            isDisabled={chatState.isLoading || chatState.isWaitingResponse}
                         />
                     )}
                 </div>

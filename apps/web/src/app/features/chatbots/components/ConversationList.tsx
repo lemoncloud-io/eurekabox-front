@@ -8,12 +8,18 @@ interface ConversationListProps {
     conversations: ChatView[];
     onDeleteConversation: (id: string) => void;
     onTogglePinConversation: (id: string) => void;
+    onConversationClick: (conversation: ChatView) => void;
+    currentChatId?: string;
+    isDisabled?: boolean;
 }
 
 export const ConversationList = ({
     conversations,
     onDeleteConversation,
     onTogglePinConversation,
+    onConversationClick,
+    currentChatId,
+    isDisabled = false,
 }: ConversationListProps) => {
     const { pinnedConversations, recentConversations } = useMemo(() => {
         const pinned = conversations.filter(conv => conv['isPinned']);
@@ -37,8 +43,11 @@ export const ConversationList = ({
                         <ConversationItem
                             key={conversation.id}
                             conversation={conversation}
-                            onDelete={() => onDeleteConversation(conversation.id)}
-                            onTogglePin={() => onTogglePinConversation(conversation.id)}
+                            onDelete={() => onDeleteConversation(conversation.id!)}
+                            onTogglePin={() => onTogglePinConversation(conversation.id!)}
+                            onConversationClick={() => onConversationClick(conversation)}
+                            isCurrentChat={currentChatId === conversation.id}
+                            isDisabled={isDisabled}
                             isPinned={true}
                         />
                     ))}
@@ -53,8 +62,11 @@ export const ConversationList = ({
                             <ConversationItem
                                 key={conversation.id}
                                 conversation={conversation}
-                                onDelete={() => onDeleteConversation(conversation.id)}
-                                onTogglePin={() => onTogglePinConversation(conversation.id)}
+                                onDelete={() => onDeleteConversation(conversation.id!)}
+                                onTogglePin={() => onTogglePinConversation(conversation.id!)}
+                                onConversationClick={() => onConversationClick(conversation)}
+                                isCurrentChat={currentChatId === conversation.id}
+                                isDisabled={isDisabled}
                                 isPinned={false}
                             />
                         ))}

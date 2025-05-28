@@ -24,7 +24,7 @@ export const NewMessageBadge = ({ show, onClick }: NewMessageBadgeProps) => {
                 >
                     <button
                         onClick={onClick}
-                        className="relative flex items-center gap-2 bg-[#007AFF] hover:bg-[#0056CC] text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 active:scale-95"
+                        className="relative flex items-center gap-2 bg-[#7932FF] hover:bg-[#6028E0] text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 active:scale-95"
                     >
                         <MessageCircle className="w-4 h-4" />
                         <span className="text-sm font-medium">새 메시지</span>

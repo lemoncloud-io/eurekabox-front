@@ -15,12 +15,13 @@ interface HelpPanelProps {
     conversations: ChatView[];
     onDeleteConversation: (id: string) => void;
     onTogglePinConversation: (id: string) => void;
+    onFaqClick: (faqText: string) => void;
+    onConversationClick: (conversation: ChatView) => void;
+    currentChatId?: string;
+    isDisabled?: boolean;
 }
 
-const FAQ_ITEMS = [
-    '자주 하는 질문 리스트 2줄 넘어갈 경우',
-    '자주 하는 질문 리스트 2줄 넘어갈 경우 ... 처리 자주 하는 질문 리스트 2줄 넘어갈 경우 ... 처리 자주 하는 질문 리스트 2줄 넘어갈 경우 ... 처리 자주 하는 질문 리스트 2줄 넘어갈 경우 ... 처리',
-];
+const FAQ_ITEMS = ['유레카박스란 무엇인가요?', '유레카코즈와 유레카박스의 차이는 무엇인가요?'];
 
 export const HelpPanel = ({
     activeTab,
@@ -29,6 +30,10 @@ export const HelpPanel = ({
     conversations,
     onDeleteConversation,
     onTogglePinConversation,
+    onFaqClick,
+    onConversationClick,
+    currentChatId,
+    isDisabled = false,
 }: HelpPanelProps) => {
     return (
         <div className="p-[6px] bg-[#F4F5F5] dark:bg-[#222325] border border-[#EAEAEC] dark:border-[#3A3C40] rounded-b-lg border-t-0">
@@ -78,6 +83,7 @@ export const HelpPanel = ({
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                 }}
+                                onClick={() => onFaqClick(item)}
                             >
                                 {item}
                             </li>
@@ -90,6 +96,9 @@ export const HelpPanel = ({
                         conversations={conversations}
                         onDeleteConversation={onDeleteConversation}
                         onTogglePinConversation={onTogglePinConversation}
+                        onConversationClick={onConversationClick}
+                        currentChatId={currentChatId}
+                        isDisabled={isDisabled}
                     />
                 )}
             </div>
