@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import { Images } from '@eurekabox/assets';
-import { useStartMyChat } from '@eurekabox/chatbots';
+import { useMyChats, useStartMyChat } from '@eurekabox/chatbots';
 import { useTheme } from '@eurekabox/theme';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
@@ -21,25 +21,40 @@ export const ChatBotButton = () => {
 
     const startMyChat = useStartMyChat();
 
+    const { data: myChatsData, refetch: refetchMyChats, isFetching } = useMyChats({ page: 0 }, { enabled: false });
+
     const handleOpenChat = async () => {
-        if (isCreating) {
+        if (isCreating || isFetching) {
             return;
         }
 
         try {
             setIsCreating(true);
-            const profile$: ChatUserProfile = {
-                ...(profile?.sid && { sid: profile.sid }),
-                ...(profile?.uid && { uid: profile.uid }),
-                ...(profile?.$user?.gender && { gender: profile?.$user?.gender }),
-                ...(profile?.$user?.name && { name: profile?.$user?.name }),
-            };
-            const newChat = await startMyChat.mutateAsync({ name: '', profile$ });
+            const { data: chatsResult } = await refetchMyChats();
+            const existingChats = chatsResult?.data || [];
 
-            setCurrentChat(newChat);
+            let selectedChat: ChatView;
+
+            if (existingChats.length > 0) {
+                selectedChat = existingChats[0];
+            } else {
+                const profile$: ChatUserProfile = {
+                    ...(profile?.sid && { sid: profile.sid }),
+                    ...(profile?.uid && { uid: profile.uid }),
+                    ...(profile?.$user?.gender && { gender: profile?.$user?.gender }),
+                    ...(profile?.$user?.name && { name: profile?.$user?.name }),
+                };
+
+                selectedChat = await startMyChat.mutateAsync({
+                    name: '',
+                    profile$,
+                });
+            }
+
+            setCurrentChat(selectedChat);
             setIsOpen(true);
         } catch (error) {
-            console.error('Failed to create new chat:', error);
+            console.error('Failed to open chat:', error);
         } finally {
             setIsCreating(false);
         }
@@ -61,14 +76,14 @@ export const ChatBotButton = () => {
                 }}
                 transition={{ duration: 0.2 }}
                 className="fixed bottom-6 right-6 rounded-full w-[62px] h-[62px] flex items-center justify-center border-[#7932FF] border-[0.5px] bg-chatbot-card shadow-[2px_2px_10px_0px_rgba(0,0,0,0.10)] overflow-hidden z-50"
-                disabled={isCreating}
+                disabled={isCreating || isFetching}
             >
                 <img
                     src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
                     alt="chatbot button"
                     className="w-[51px] h-[51px]"
                 />
-                {isCreating && (
+                {(isCreating || isFetching) && (
                     <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     </div>
