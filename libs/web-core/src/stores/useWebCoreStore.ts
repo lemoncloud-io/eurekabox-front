@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { refreshAuthToken } from '../api';
 import { LANGUAGE_KEY, webCore } from '../core';
+import { MAX_RETRIES, withRetry } from '../utils';
 
 export type UserProfile = never;
 export type UserView = never;
@@ -47,20 +48,21 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
      */
     initialize: async () => {
         set({ isInitialized: false, error: null });
-        try {
-            await webCore.init();
-            await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
-            const isAuthenticated = await webCore.isAuthenticated();
-            if (isAuthenticated) {
-                await refreshAuthToken();
-            }
-            set({ isInitialized: true, isAuthenticated });
-        } catch (error: unknown) {
-            const e = error as Error;
-            console.log(e);
-            set({ error: e, isInitialized: false });
-            await webCore.logout();
-        }
+        return withRetry(
+            async () => {
+                await webCore.init();
+                await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
+                const isAuthenticated = await webCore.isAuthenticated();
+
+                if (isAuthenticated) {
+                    await refreshAuthToken();
+                }
+
+                set({ isInitialized: true, isAuthenticated });
+            },
+            MAX_RETRIES,
+            'App initialization'
+        );
     },
 
     /**
