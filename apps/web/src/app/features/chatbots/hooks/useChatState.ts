@@ -5,11 +5,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import {
+    MY_CHAT_PARAMS,
     chatKeys,
     generateUUID,
     myChatbotKeys,
     useChatMessages,
-    useDeleteChat,
+    useDeleteMyChat,
     useMyChats,
     useSendMessage,
     useStartMyChat,
@@ -37,14 +38,14 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         input: '',
     });
 
-    const { data: myChatsData, isLoading: chatsLoading } = useMyChats({ page: 0 });
+    const { data: myChatsData, isLoading: chatsLoading } = useMyChats(MY_CHAT_PARAMS);
     const { data: messagesData } = useChatMessages({
         rootId: state.currentChat?.id,
         limit: -1,
     });
     const startMyChat = useStartMyChat();
     const sendMessage = useSendMessage();
-    const deleteChat = useDeleteChat();
+    const deleteMyChat = useDeleteMyChat();
 
     // 내 채팅 목록 로드
     useEffect(() => {
@@ -72,9 +73,18 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         setState(prev => ({ ...prev, input }));
     }, []);
 
-    const setCurrentChat = useCallback((chat: ChatView | null) => {
-        setState(prev => ({ ...prev, currentChat: chat, messages: [] }));
-    }, []);
+    const setCurrentChat = useCallback(
+        (chat: ChatView | null) => {
+            setState(prev => ({ ...prev, currentChat: chat, messages: [] }));
+            if (chat && !state.myChats.find(c => c.id === chat.id)) {
+                setState(prev => ({
+                    ...prev,
+                    myChats: [chat, ...prev.myChats],
+                }));
+            }
+        },
+        [state.myChats]
+    );
 
     const addMessage = useCallback(
         async (messageContent: string) => {
@@ -82,7 +92,6 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 return;
             }
 
-            // 1. 사용자 메시지를 즉시 표시
             const userMessage: ChatView = {
                 id: generateUUID(),
                 content: messageContent.trim(),
@@ -177,8 +186,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
     const deleteConversation = useCallback(
         async (id: string) => {
             try {
-                await deleteChat.mutateAsync(id);
-                await queryClient.invalidateQueries(myChatbotKeys.invalidateList());
+                await deleteMyChat.mutateAsync(id);
 
                 setState(prev => {
                     const remainingChats = prev.myChats.filter(chat => chat.id !== id);
@@ -198,7 +206,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 toast({ title: '채팅 삭제에 실패했습니다.' });
             }
         },
-        [deleteChat, queryClient]
+        [deleteMyChat, queryClient]
     );
 
     const togglePinConversation = useCallback((id: string) => {

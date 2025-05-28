@@ -88,7 +88,7 @@ export const fetchMyChats = async (params: Params): Promise<ListResult<ChatView>
             method: 'GET',
             baseURL: `${CHATBOTS_ENDPOINT}/chats/0/list`,
         })
-        .setParams({ stereo: 'root', view: 'mine', name: '!', ...params })
+        .setParams({ ...params })
         .execute<ListResult<ChatView>>();
 
     return { ...data };

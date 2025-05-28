@@ -30,7 +30,7 @@ export const ChatHeader = ({ modelName, onClose, onNewChat, onTestChat, onPricin
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[100px] px-3 bg-chatbot-card">
                         <DropdownMenuItem className="text-xs" onClick={onNewChat}>
-                            새채팅 모달
+                            새 채팅 만들기
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
                         <DropdownMenuItem onClick={onTestChat} className="text-xs">

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import { Images } from '@eurekabox/assets';
-import { useMyChats, useStartMyChat } from '@eurekabox/chatbots';
+import { MY_CHAT_PARAMS, useMyChats, useStartMyChat } from '@eurekabox/chatbots';
 import { useTheme } from '@eurekabox/theme';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
@@ -21,7 +21,7 @@ export const ChatBotButton = () => {
 
     const startMyChat = useStartMyChat();
 
-    const { data: myChatsData, refetch: refetchMyChats, isFetching } = useMyChats({ page: 0 }, { enabled: false });
+    const { data: myChatsData, refetch: refetchMyChats, isFetching } = useMyChats(MY_CHAT_PARAMS, { enabled: false });
 
     const handleOpenChat = async () => {
         if (isCreating || isFetching) {

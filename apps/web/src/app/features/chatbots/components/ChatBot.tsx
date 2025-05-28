@@ -51,6 +51,21 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
     });
 
     useEffect(() => {
+        const shouldClose =
+            chatState.myChats.length === 0 &&
+            !chatState.isLoading &&
+            !chatState.isWaitingResponse &&
+            !chatState.isChatsLoading;
+
+        if (shouldClose) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 200);
+            return () => clearTimeout(timer);
+        }
+    }, [chatState.myChats.length, chatState.isLoading, chatState.isWaitingResponse, chatState.isChatsLoading, onClose]);
+
+    useEffect(() => {
         if (chatState.currentChat) {
             forceScrollToBottom();
         }
@@ -85,10 +100,6 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
         }
     };
 
-    const handleNewChat = () => {
-        setNewChatModalOpen(false);
-    };
-
     const handleFaqClick = useCallback(
         async (faqText: string) => {
             if (chatState.isLoading || chatState.isWaitingResponse) {
@@ -118,6 +129,13 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
         [chatState.currentChat?.id, chatState.setCurrentChat, chatState.isLoading, chatState.isWaitingResponse]
     );
 
+    const handleNewChatCreated = useCallback(
+        (newChat: ChatView) => {
+            chatState.setCurrentChat(newChat);
+        },
+        [chatState.setCurrentChat]
+    );
+
     const editingMessage = editingMessageId ? chatState.messages.find(msg => msg.id === editingMessageId) : null;
 
     return (
@@ -133,7 +151,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             ) : (
                 <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                     <ChatHeader
-                        modelName="Gpt-4o-mini"
+                        modelName={chatState.currentChat?.name || 'New Chat'}
                         onClose={onClose}
                         onNewChat={() => setNewChatModalOpen(true)}
                         onTestChat={() => setTestChatSelectModalOpen(true)}
@@ -141,7 +159,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                     />
 
                     <main ref={containerRef} onScroll={handleScroll} className="px-4 w-full overflow-auto flex-1">
-                        {!chatState.currentChat ? (
+                        {!chatState.currentChat || chatState.displayMessages.length === 0 ? (
                             <div className="py-[10px]">
                                 <img
                                     src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
@@ -221,7 +239,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                     <NewChatModal
                         open={newChatModalOpen}
                         onOpenChange={setNewChatModalOpen}
-                        onNewChat={handleNewChat}
+                        onChatCreated={handleNewChatCreated}
                     />
                     <TestChatSelectModal open={testChatSelectModalOpen} onOpenChange={setTestChatSelectModalOpen} />
                     <PricingModal open={pricingModalOpen} onOpenChange={setPricingModalOpen} />

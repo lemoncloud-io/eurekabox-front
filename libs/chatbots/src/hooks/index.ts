@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import type {
     BrainView,
@@ -55,8 +55,36 @@ export const brainKeys = createQueryKeys('brains');
 export const promptKeys = createQueryKeys('prompts');
 export const docsKeys = createQueryKeys('docs');
 
+export const MY_CHAT_PARAMS = { stereo: 'root', view: 'mine', name: '!' };
+
 export const useStartMyChat = () => {
+    const queryClient = useQueryClient();
+
     return useCustomMutation((data: CreateChatDTO) => startMyChat(data), {
+        onSuccess: async (newChat: ChatView) => {
+            await queryClient.setQueryData(myChatbotKeys.list(MY_CHAT_PARAMS), (oldData: any) => {
+                if (!oldData) {
+                    return {
+                        data: [newChat],
+                        list: [newChat],
+                        total: 1,
+                        page: 0,
+                    };
+                }
+
+                const existingChat = oldData.data?.find((chat: ChatView) => chat.id === newChat.id);
+                if (existingChat) {
+                    return oldData;
+                }
+
+                return {
+                    ...oldData,
+                    data: [newChat, ...(oldData.data || [])],
+                    list: [newChat, ...(oldData.data || [])],
+                    total: (oldData.total || 0) + 1,
+                };
+            });
+        },
         onError: error => {
             toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },
@@ -72,6 +100,32 @@ export const useMyChats = (params: Params) =>
         },
         refetchOnWindowFocus: false,
     });
+
+export const useDeleteMyChat = () => {
+    const queryClient = useQueryClient();
+
+    return useCustomMutation((id: string) => deleteChat(id), {
+        onSuccess: async (_, deletedId) => {
+            await queryClient.setQueryData(myChatbotKeys.list(MY_CHAT_PARAMS), (oldData: any) => {
+                if (!oldData || !oldData.data) {
+                    return oldData;
+                }
+
+                const filteredData = oldData.data.filter((chat: ChatView) => chat.id !== deletedId);
+
+                return {
+                    ...oldData,
+                    data: filteredData,
+                    list: filteredData,
+                    total: Math.max((oldData.total || 0) - 1, 0),
+                };
+            });
+        },
+        onError: error => {
+            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
+        },
+    });
+};
 
 export const useRootChats = (params: Params) =>
     useQuery<PaginationType<ChatView[]>>({
