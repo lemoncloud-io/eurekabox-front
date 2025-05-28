@@ -116,9 +116,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                     },
                 });
 
-                // 메시지 전송 후 갱신
                 await updateChatMessages(state.currentChat.id, res.list || []);
-                // await queryClient.invalidateQueries(chatKeys.list({ rootId: state.currentChat.id }));
 
                 setState(prev => ({
                     ...prev,

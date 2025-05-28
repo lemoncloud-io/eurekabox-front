@@ -230,7 +230,37 @@ export const useDeleteChat = () => {
 };
 
 export const useUpdateChat = () => {
+    const queryClient = useQueryClient();
+
     return useCustomMutation((dto: UpdateChatDTO) => updateChat(dto), {
+        onSuccess: async (updatedMessage: ChatView, variables: UpdateChatDTO) => {
+            const rootId = updatedMessage.parentId;
+
+            if (rootId) {
+                await queryClient.setQueryData(chatKeys.list({ rootId, limit: -1 }), (oldData: any) => {
+                    if (!oldData || !oldData.pages) {
+                        return oldData;
+                    }
+
+                    const updatedPages = oldData.pages.map((page: any) => {
+                        if (!page.data) return page;
+
+                        const updatedData = page.data.map((message: ChatView) =>
+                            message.id === variables.id
+                                ? { ...message, content: variables.content, updatedAt: new Date().toISOString() }
+                                : message
+                        );
+
+                        return { ...page, data: updatedData };
+                    });
+
+                    return {
+                        ...oldData,
+                        pages: updatedPages,
+                    };
+                });
+            }
+        },
         onError: error => {
             toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
         },

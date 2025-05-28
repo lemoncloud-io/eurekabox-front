@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import { Images } from '@eurekabox/assets';
+import { useUpdateChat } from '@eurekabox/chatbots';
 import { useTheme } from '@eurekabox/theme';
 
 import { ChatHeader } from './ChatHeader';
@@ -38,6 +39,8 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
     // Help panel state
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [activeHelpTab, setActiveHelpTab] = useState<'faq' | 'chat'>('faq');
+
+    const updateChat = useUpdateChat();
 
     const { containerRef, handleScroll, forceScrollToBottom, shouldAutoScroll } = useAutoScroll({
         dependencies: [chatState.displayMessages.length, chatState.isWaitingResponse, chatState.currentChat?.id],
@@ -79,9 +82,22 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
         setEditingMessageId(messageId);
     };
 
-    const handleSaveEdit = (messageId: string, newContent: string) => {
-        chatState.updateMessage(messageId, newContent);
-    };
+    const handleSaveEdit = useCallback(
+        async (messageId: string, newContent: string) => {
+            // eslint-disable-next-line no-useless-catch
+            try {
+                await updateChat.mutateAsync({
+                    chatId: messageId,
+                    content: newContent,
+                });
+
+                chatState.updateMessage(messageId, newContent);
+            } catch (error) {
+                throw error;
+            }
+        },
+        [updateChat, chatState.updateMessage]
+    );
 
     const handleCancelEdit = () => {
         setEditingMessageId(null);
@@ -136,7 +152,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
         [chatState.setCurrentChat]
     );
 
-    const editingMessage = editingMessageId ? chatState.messages.find(msg => msg.id === editingMessageId) : null;
+    const editingMessage = editingMessageId ? chatState.displayMessages.find(msg => msg.id === editingMessageId) : null;
 
     return (
         <motion.div
@@ -147,7 +163,12 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             className="fixed bottom-6 right-6 text-text flex gap-6"
         >
             {editingMessage ? (
-                <MessageEditView message={editingMessage} onSave={handleSaveEdit} onCancel={handleCancelEdit} />
+                <MessageEditView
+                    message={editingMessage}
+                    onSave={handleSaveEdit}
+                    onCancel={handleCancelEdit}
+                    isLoading={updateChat.isPending}
+                />
             ) : (
                 <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                     <ChatHeader

@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-import { ChevronRight, ChevronUp, Copy, PencilLine, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Check, ChevronRight, ChevronUp, Copy, PencilLine, X } from 'lucide-react';
+import remarkGfm from 'remark-gfm';
 
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
-
 
 import { Images } from '@eurekabox/assets';
 import { Button } from '@eurekabox/lib/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
+import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useTheme } from '@eurekabox/theme';
 
 interface MessageItemProps {
@@ -18,6 +20,74 @@ interface MessageItemProps {
 export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     const { isDarkTheme } = useTheme();
     const [isDocumentsOpen, setIsDocumentsOpen] = useState(true);
+    const [copyState, setCopyState] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
+
+    const handleCopy = async () => {
+        if (!message.content || copyState === 'copying') return;
+        setCopyState('copying');
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(message.content);
+            } else {
+                // Fallback: execCommand 방식
+                const textArea = document.createElement('textarea');
+                textArea.value = message.content;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                if (!successful) {
+                    throw new Error('Copy command failed');
+                }
+            }
+            setCopyState('copied');
+            setTimeout(() => setCopyState('idle'), 1000);
+        } catch (error) {
+            console.error('Copy failed:', error);
+            setCopyState('error');
+            toast({
+                title: '복사 실패',
+                description: '텍스트 복사에 실패했습니다.',
+            });
+            setTimeout(() => setCopyState('idle'), 1000);
+        }
+    };
+
+    const getCopyTooltipText = () => {
+        switch (copyState) {
+            case 'copying':
+                return '복사 중';
+            case 'copied':
+                return '복사됨';
+            case 'error':
+                return '복사 실패';
+            default:
+                return '복사';
+        }
+    };
+
+    const getCopyIcon = () => {
+        if (copyState === 'copying') {
+            return (
+                <div className="w-[14px] h-[14px] border border-[#9FA2A7] border-t-transparent rounded-full animate-spin" />
+            );
+        }
+        if (copyState === 'copied') {
+            return <Check className="w-[14px] h-[14px] text-[#8F19F6]" />;
+        }
+        if (copyState === 'error') {
+            return <X className="w-[14px] h-[14px] text-red-600" />;
+        }
+        return (
+            <Copy className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
+        );
+    };
 
     const isUserMessage = message.stereo === 'query';
     const isAssistantMessage = message.stereo === 'answer';
@@ -25,8 +95,17 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     if (isUserMessage) {
         return (
             <div className="pt-[10px] pb-[14px] flex flex-col items-end justify-end">
-                <div className="py-2 px-[14px] max-w-[292px] bg-[#F4F5F5] dark:bg-[#3A3C40] rounded-tl-[18px] rounded-tr-[3px] rounded-br-[18px] rounded-bl-[18px]">
+                <div
+                    className={`py-2 px-[14px] max-w-[292px] rounded-tl-[18px] rounded-tr-[3px] rounded-br-[18px] rounded-bl-[18px] ${
+                        message['isError']
+                            ? 'bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-800'
+                            : 'bg-[#F4F5F5] dark:bg-[#3A3C40]'
+                    }`}
+                >
                     {message.content}
+                    {message['isError'] && (
+                        <div className="text-xs text-red-600 dark:text-red-400 mt-1">전송 실패 - 다시 시도해주세요</div>
+                    )}
                 </div>
             </div>
         );
@@ -42,9 +121,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                         className="w-6 h-6"
                     />
                     <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
-                        {/*TODO: add <ReactMarkdown remarkPlugins={[remarkGfm]}>*/}
-                        {message.content || ''}
-                        {/*</ReactMarkdown>*/}
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content || ''}</ReactMarkdown>
                     </div>
                 </div>
 
@@ -84,25 +161,45 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button variant="ghost" className="p-[2px] h-auto group">
-                                    <Copy className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
+                                <Button
+                                    variant="ghost"
+                                    className="p-[2px] h-auto group"
+                                    onClick={handleCopy}
+                                    disabled={copyState === 'copying'}
+                                >
+                                    {getCopyIcon()}
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent className="dark:bg-[#787878] p-1">
-                                <p className="dark:text-white">복사</p>
+                                <p className="dark:text-white">{getCopyTooltipText()}</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
 
-                    <button className="p-[2px]">
-                        <ThumbsUp className="w-[14px] h-[14px] text-[#8F19F6]" />
-                    </button>
-                    <button className="p-[2px]">
-                        <ThumbsDown className="w-[14px] h-[14px] text-[#9FA2A7]" />
-                    </button>
-                    <Button variant="ghost" className="p-[2px] h-auto group" onClick={() => onEdit?.(message.id || '')}>
-                        <PencilLine className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
-                    </Button>
+                    {/*TODO: add like / dislike */}
+                    {/*<button className="p-[2px]">*/}
+                    {/*    <ThumbsUp className="w-[14px] h-[14px] text-[#8F19F6]" />*/}
+                    {/*</button>*/}
+                    {/*<button className="p-[2px]">*/}
+                    {/*    <ThumbsDown className="w-[14px] h-[14px] text-[#9FA2A7]" />*/}
+                    {/*</button>*/}
+
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="p-[2px] h-auto group"
+                                    onClick={() => onEdit?.(message.id || '')}
+                                >
+                                    <PencilLine className="w-[14px] h-[14px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent className="dark:bg-[#787878] p-1">
+                                <p className="dark:text-white">편집</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             </div>
         );
