@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { refreshAuthToken } from '../api';
 import { LANGUAGE_KEY, webCore } from '../core';
 
 export type UserProfile = never;
@@ -48,8 +49,11 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
         set({ isInitialized: false, error: null });
         try {
             await webCore.init();
-            const isAuthenticated = await webCore.isAuthenticated();
             await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
+            const isAuthenticated = await webCore.isAuthenticated();
+            if (isAuthenticated) {
+                await refreshAuthToken();
+            }
             set({ isInitialized: true, isAuthenticated });
         } catch (error: unknown) {
             const e = error as Error;
