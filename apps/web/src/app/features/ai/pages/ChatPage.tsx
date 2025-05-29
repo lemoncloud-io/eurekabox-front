@@ -285,7 +285,7 @@ export const ChatPage = () => {
                                 </div>
                             </div>
 
-                            <div className={`grid ${getGridColumns(childChatsData?.data?.length)} gap-4`}>
+                            <div className="grid grid-cols-3 gap-6 pt-[22px] pb-[150px] overflow-auto">
                                 {childChatsData?.data.map((chat, index) => (
                                     <ChatCard
                                         key={`chat_card_${chat.id}_${index}`}
