@@ -19,9 +19,7 @@ import {
 } from '@eurekabox/ui-kit/components/ui/alert-dialog';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 
-
 import { ChatCard, ChatInput, ChatbotSettings, ModelSelectionDialog, PromptSettings } from '../components';
-
 
 const SCROLL_THROTTLE_MS = 16; // 60fps
 
@@ -78,7 +76,7 @@ export const ChatPage = () => {
             scrollRefs.current = [];
             setAreChatsReady(false);
         };
-    }, [childChatsData, id]); // Add id to dependencies
+    }, [childChatsData, id]);
 
     const sendMessage = useSendMessage();
 
@@ -261,9 +259,6 @@ export const ChatPage = () => {
     return (
         <>
             <div className="flex-1 bg-background">
-                {/*<div className="w-60 flex flex-col absolute z-50 top-[54px] bottom-0">*/}
-                {/*    <RootChats />*/}
-                {/*</div>*/}
                 <div className="bg-background p-4">
                     {error ? (
                         <div className="h-full flex items-center justify-center">
@@ -305,13 +300,13 @@ export const ChatPage = () => {
                                 ))}
                             </div>
 
-                            <div className="fixed bottom-0 left-60 right-0 z-[51]">
-                                <div className="shadow-custom flex items-center justify-center gap-4 bg-background border-t border-[#EAEAEC] dark:border-[#3A3C40] p-4">
+                            <footer className="h-[116px] flex items-center justify-center fixed bottom-0 right-0 left-0 border-t border-[#BABCC0] dark:border-[#787878] bg-chatbot-card">
+                                <div className="shadow-custom flex items-center justify-center gap-4 bg-background">
                                     <ChatbotSettings
                                         selectedStrategy={selectedStrategy}
                                         setSelectedStrategy={setSelectedStrategy}
                                     />
-                                    <div className="w-full">
+                                    <div className="w-[600px]">
                                         <ChatInput
                                             value={inputValue}
                                             onChange={e => setInputValue(e.target.value)}
@@ -321,7 +316,7 @@ export const ChatPage = () => {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </footer>
                         </>
                     ) : (
                         <div className="h-full flex items-center justify-center">

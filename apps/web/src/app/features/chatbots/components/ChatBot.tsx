@@ -14,12 +14,8 @@ import { HelpPanel } from './HelpPanel';
 import { MessageEditView } from './MessageEditView';
 import { MessageItem } from './MessageItem';
 import { NewMessageBadge } from './NewMessageBadge';
-import { useAutoScroll } from '../hooks/useAutoScroll';
-import { useChatState } from '../hooks/useChatState';
-import { useNewMessageBadge } from '../hooks/useNewMessageBadge';
-import { NewChatModal } from '../modals/NewChatModal';
-import { PricingModal } from '../modals/PricingModal';
-import { TestChatSelectModal } from '../modals/TestChatSelectModal';
+import { useAutoScroll, useChatState, useNewMessageBadge } from '../hooks';
+import { NewChatModal, PricingModal, TestChatSelectModal } from '../modals';
 
 interface ChatBotProps {
     onClose: () => void;

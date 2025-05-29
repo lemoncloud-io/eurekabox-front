@@ -166,6 +166,7 @@ export const TestChatSelectModal = ({
                                 onOpenChange(false);
                                 resetAllSelections();
                                 console.log(newChat);
+                                // TODO: open dialog
                                 // navigate(`/ai/chat/${newChat.id}`);
                             },
                         });
