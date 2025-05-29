@@ -69,13 +69,28 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         }
     }, [messagesData]);
 
+    const clearPendingMessage = useCallback(() => {
+        setState(prev => ({
+            ...prev,
+            pendingMessage: null,
+            isWaitingResponse: false,
+        }));
+    }, []);
+
     const setInput = useCallback((input: string) => {
         setState(prev => ({ ...prev, input }));
     }, []);
 
     const setCurrentChat = useCallback(
         (chat: ChatView | null) => {
-            setState(prev => ({ ...prev, currentChat: chat, messages: [] }));
+            setState(prev => ({
+                ...prev,
+                currentChat: chat,
+                messages: [],
+                pendingMessage: null,
+                isWaitingResponse: false,
+            }));
+
             if (chat && !state.myChats.find(c => c.id === chat.id)) {
                 setState(prev => ({
                     ...prev,
@@ -97,7 +112,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 content: messageContent.trim(),
                 stereo: 'query',
                 createdAt: new Date().toISOString(),
-                childNo: (state.messages.length + 1) * 10, // 임시 순서
+                childNo: (state.messages.length + 1) * 10,
             } as ChatView;
 
             setState(prev => ({
@@ -117,12 +132,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 });
 
                 await updateChatMessages(state.currentChat.id, res.list || []);
-
-                setState(prev => ({
-                    ...prev,
-                    pendingMessage: null,
-                    isWaitingResponse: false,
-                }));
+                clearPendingMessage();
             } catch (error) {
                 console.error('Failed to send message:', error);
                 setState(prev => ({
@@ -138,7 +148,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 toast({ title: '메시지 전송에 실패했습니다.' });
             }
         },
-        [state.currentChat, sendMessage, queryClient]
+        [state.currentChat, sendMessage, queryClient, clearPendingMessage]
     );
 
     const displayMessages = useMemo(() => {
@@ -159,6 +169,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 ...(profile?.$user?.gender && { gender: profile?.$user?.gender }),
                 ...(profile?.$user?.name && { name: profile?.$user?.name }),
             };
+
             await startMyChat.mutateAsync(
                 { name: `새 채팅 ${new Date().toLocaleTimeString()}`, profile$ },
                 {
@@ -169,6 +180,8 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                             currentChat: newChat,
                             messages: [],
                             input: '',
+                            pendingMessage: null,
+                            isWaitingResponse: false,
                         }));
                     },
                 }
@@ -249,6 +262,7 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         deleteConversation,
         togglePinConversation,
         updateMessage,
+        clearPendingMessage,
         isChatsLoading: chatsLoading,
     };
 };
