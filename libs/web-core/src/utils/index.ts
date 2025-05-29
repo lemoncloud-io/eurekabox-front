@@ -77,7 +77,7 @@ export const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 4, 
                 throw error;
             }
             // retry
-            const delay = Math.pow(2, attempt) * 1000;
+            const delay = Math.pow(2, attempt) * 1000 * 60;
             console.warn(
                 `${context} failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms:`,
                 classification.message

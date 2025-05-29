@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import { Check, ChevronRight, ChevronUp, Copy, PencilLine, X } from 'lucide-react';
 import remarkGfm from 'remark-gfm';
 
-import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
 import type { DocumentHead } from '@lemoncloud/ssocio-chatbots-api/dist/modules/chatbots/model';
 
 import { Images } from '@eurekabox/assets';
@@ -15,20 +14,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurek
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useTheme } from '@eurekabox/theme';
 
+import type { MyChatView } from '../types';
+import { UpdatedContentCard } from './UpdatedContentCard';
+
 interface MessageItemProps {
-    message: ChatView;
+    message: MyChatView;
     onEdit?: (messageId: string) => void;
 }
 
 export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     const { isDarkTheme } = useTheme();
-    const [isDocumentsOpen, setIsDocumentsOpen] = useState(true);
+    const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
     const [copyState, setCopyState] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
 
-    const { data: selectedDocument, isLoading: isDocumentLoading } = useDocument(selectedDocId || '', {
-        enabled: !!selectedDocId, // selectedDocId가 있을 때만 쿼리 실행
-    });
+    const { data: selectedDocument, isLoading: isDocumentLoading } = useDocument(selectedDocId || '');
 
     const handleDocumentClick = (document: DocumentHead) => {
         setSelectedDocId(document.id);
@@ -39,29 +39,14 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     };
 
     const handleCopy = async () => {
-        if (!message.content || copyState === 'copying') return;
+        if (!message.content || copyState === 'copying') {
+            return;
+        }
+
         setCopyState('copying');
+
         try {
-            if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(message.content);
-            } else {
-                // Fallback: execCommand 방식
-                const textArea = document.createElement('textarea');
-                textArea.value = message.content;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                textArea.style.top = '-999999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-
-                const successful = document.execCommand('copy');
-                document.body.removeChild(textArea);
-
-                if (!successful) {
-                    throw new Error('Copy command failed');
-                }
-            }
+            await navigator.clipboard.writeText(message.content);
             setCopyState('copied');
             setTimeout(() => setCopyState('idle'), 1000);
         } catch (error) {
@@ -252,6 +237,14 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                         </Tooltip>
                     </TooltipProvider>
                 </div>
+
+                {message.updatedContent && (
+                    <UpdatedContentCard
+                        content={message.updatedContent}
+                        onMaximize={() => onEdit?.(message.id || '')}
+                        title="질문 요약"
+                    />
+                )}
             </div>
         );
     }

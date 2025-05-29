@@ -65,6 +65,10 @@ export const ChatBotButton = () => {
         setCurrentChat(null);
     };
 
+    if (!profile) {
+        return null;
+    }
+
     return (
         <>
             <motion.button

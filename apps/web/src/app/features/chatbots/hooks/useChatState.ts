@@ -227,10 +227,10 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
         }));
     }, []);
 
-    const updateMessage = useCallback((messageId: string, newContent: string) => {
+    const updateMessage = useCallback((messageId: string, updatedContent: string) => {
         setState(prev => ({
             ...prev,
-            messages: prev.messages.map(msg => (msg.id === messageId ? { ...msg, content: newContent } : msg)),
+            messages: prev.messages.map(msg => (msg.id === messageId ? { ...msg, updatedContent } : msg)),
         }));
     }, []);
 

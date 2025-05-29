@@ -1,10 +1,16 @@
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
+export interface MyChatView extends ChatView {
+    isError?: any;
+    updatedContent?: string;
+    isPinned?: boolean;
+}
+
 export interface ChatState {
-    myChats: ChatView[];
-    currentChat: ChatView | null;
-    messages: ChatView[];
-    pendingMessage: ChatView | null;
+    myChats: MyChatView[];
+    currentChat: MyChatView | null;
+    messages: MyChatView[];
+    pendingMessage: MyChatView | null;
     isLoading: boolean;
     isWaitingResponse: boolean;
     input: string;
