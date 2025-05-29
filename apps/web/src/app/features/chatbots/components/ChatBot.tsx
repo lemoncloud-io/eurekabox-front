@@ -258,7 +258,11 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                         onOpenChange={setNewChatModalOpen}
                         onChatCreated={handleNewChatCreated}
                     />
-                    <TestChatSelectModal open={testChatSelectModalOpen} onOpenChange={setTestChatSelectModalOpen} />
+                    <TestChatSelectModal
+                        open={testChatSelectModalOpen}
+                        onOpenChange={setTestChatSelectModalOpen}
+                        closeChatbot={onClose}
+                    />
                     <PricingModal open={pricingModalOpen} onOpenChange={setPricingModalOpen} />
                 </>
             )}

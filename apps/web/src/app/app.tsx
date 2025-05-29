@@ -12,7 +12,6 @@ import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
 
 import { Router } from './routes';
 import i18n from '../i18n';
-import { ChatBotButton } from './features/chatbots';
 
 export function App() {
     const queryClient = new QueryClient({
@@ -41,7 +40,6 @@ export function App() {
                                 <Router />
                                 <GlobalLoader />
                                 <Toaster />
-                                <ChatBotButton />
                             </ThemeProvider>
                             {/*{process.env.NODE_ENV !== 'prod' && <ReactQueryDevtools />}*/}
                         </QueryClientProvider>

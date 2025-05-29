@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, X } from 'lucide-react';
@@ -13,9 +14,9 @@ import type {
     PromptView,
 } from '@lemoncloud/ssocio-chatbots-api';
 
+import type { BulkCreateChildBotsBody } from '@eurekabox/chatbots';
 import {
     chatbotsKeys,
-    formatDate,
     rootChatbotsKeys,
     useBrains,
     useCreateChildChats,
@@ -23,7 +24,6 @@ import {
     useEmbeddings,
     usePrompts,
 } from '@eurekabox/chatbots';
-import type { BulkCreateChildBotsBody } from '@eurekabox/chatbots';
 import { Button } from '@eurekabox/lib/components/ui/button';
 import {
     Dialog,
@@ -36,18 +36,21 @@ import {
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
+
 export const TestChatSelectModal = ({
     open,
     onOpenChange,
     newChatName,
+    closeChatbot,
 }: {
     open: boolean;
     onOpenChange: (value: boolean) => void;
     newChatName?: string;
+    closeChatbot?: () => void;
 }) => {
     const queryClient = useQueryClient();
-    // const navigate = useNavigate();
     const { profile } = useWebCoreStore();
+    const navigate = useNavigate();
 
     // Data fetching hooks
     const { data: embeddingsData } = useEmbeddings({});
@@ -143,9 +146,8 @@ export const TestChatSelectModal = ({
                 ...(profile?.$user?.name && { name: profile?.$user?.name }),
             };
 
-            const chatName = newChatName || `${profile$.name}_${formatDate(new Date().getTime(), 'YYMMDD_HHmm')}`;
             await createRootChat.mutateAsync(
-                { name: chatName, profile$ },
+                { name: newChatName, profile$ },
                 {
                     onSuccess: async (newChat: ChatView) => {
                         // Phase 2: Create child chats using the new chat ID
@@ -165,9 +167,8 @@ export const TestChatSelectModal = ({
                                 toast({ title: '채팅 그룹이 성공적으로 생성되었습니다.' });
                                 onOpenChange(false);
                                 resetAllSelections();
-                                console.log(newChat);
-                                // TODO: open dialog
-                                // navigate(`/ai/chat/${newChat.id}`);
+                                navigate(`/ai/chat/${newChat.id}`);
+                                closeChatbot();
                             },
                         });
                     },
