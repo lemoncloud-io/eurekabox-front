@@ -5,9 +5,12 @@ import { Check, ChevronRight, ChevronUp, Copy, PencilLine, X } from 'lucide-reac
 import remarkGfm from 'remark-gfm';
 
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
+import type { DocumentHead } from '@lemoncloud/ssocio-chatbots-api/dist/modules/chatbots/model';
 
 import { Images } from '@eurekabox/assets';
+import { useDocument } from '@eurekabox/chatbots';
 import { Button } from '@eurekabox/lib/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/lib/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useTheme } from '@eurekabox/theme';
@@ -20,7 +23,20 @@ interface MessageItemProps {
 export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     const { isDarkTheme } = useTheme();
     const [isDocumentsOpen, setIsDocumentsOpen] = useState(true);
+    const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
     const [copyState, setCopyState] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
+
+    const { data: selectedDocument, isLoading: isDocumentLoading } = useDocument(selectedDocId || '', {
+        enabled: !!selectedDocId, // selectedDocId가 있을 때만 쿼리 실행
+    });
+
+    const handleDocumentClick = (document: DocumentHead) => {
+        setSelectedDocId(document.id);
+    };
+
+    const handleCloseDialog = () => {
+        setSelectedDocId(null);
+    };
 
     const handleCopy = async () => {
         if (!message.content || copyState === 'copying') return;
@@ -124,8 +140,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content || ''}</ReactMarkdown>
                     </div>
                 </div>
-
-                {message.documentIds && message.documentIds.length > 0 && (
+                {message.documentIds && message.documentIds.length > 0 && message.document$$?.length > 0 && (
                     <div>
                         <div
                             className="flex items-center gap-1 pl-[3px] mb-1 cursor-pointer"
@@ -142,12 +157,13 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                         {isDocumentsOpen && (
                             <div className="py-[2px] px-[9px] bg-[#F4F5F5] dark:bg-[#3A3C40] rounded-lg w-fit max-w-full">
                                 <ul className="flex flex-col space-y-[3px]">
-                                    {message.documentIds.map((docId, index) => (
+                                    {message.document$$.map((document, index) => (
                                         <li
                                             key={index}
-                                            className="flex items-center gap-[3px] cursor-pointer text-text-800"
+                                            className="flex items-center gap-[3px] cursor-pointer text-text-800 hover:text-text-900 transition-colors"
+                                            onClick={() => handleDocumentClick(document)}
                                         >
-                                            <div className="text-xs truncate hover:underline">{docId}</div>
+                                            <div className="text-xs truncate hover:underline">{document.name}</div>
                                             <ChevronRight className="w-[13px] h-[13px] shrink-0" />
                                         </li>
                                     ))}
@@ -156,6 +172,41 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                         )}
                     </div>
                 )}
+
+                <Dialog open={!!selectedDocId} onOpenChange={handleCloseDialog}>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle>참고문서 상세</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            {isDocumentLoading ? (
+                                <div className="flex items-center gap-2 justify-center py-8">
+                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                                    <span className="text-sm text-text-500">문서를 불러오는 중...</span>
+                                </div>
+                            ) : selectedDocument ? (
+                                <div className="space-y-3">
+                                    <div className="border-b border-border pb-2">
+                                        <div className="font-semibold text-sm text-text-700">문서명</div>
+                                        <div className="text-sm">{selectedDocument.name || '제목 없음'}</div>
+                                    </div>
+                                    <div className="border-b border-border pb-2">
+                                        <div className="font-semibold text-sm text-text-700">문서 ID</div>
+                                        <div className="text-xs font-mono text-text-500">{selectedDocument.id}</div>
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-sm text-text-700 mb-2">내용</div>
+                                        <div className="whitespace-pre-wrap text-sm leading-relaxed bg-[#F8F9FA] dark:bg-[#2A2D31] p-4 rounded-lg border">
+                                            {selectedDocument.content || '내용이 없습니다.'}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8 text-text-500">문서를 찾을 수 없습니다.</div>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
                 <div className="flex items-center gap-[6px]">
                     <TooltipProvider>

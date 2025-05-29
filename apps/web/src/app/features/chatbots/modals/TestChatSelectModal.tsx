@@ -46,7 +46,7 @@ export const TestChatSelectModal = ({
     newChatName?: string;
 }) => {
     const queryClient = useQueryClient();
-
+    // const navigate = useNavigate();
     const { profile } = useWebCoreStore();
 
     // Data fetching hooks
@@ -166,6 +166,7 @@ export const TestChatSelectModal = ({
                                 onOpenChange(false);
                                 resetAllSelections();
                                 console.log(newChat);
+                                // navigate(`/ai/chat/${newChat.id}`);
                             },
                         });
                     },

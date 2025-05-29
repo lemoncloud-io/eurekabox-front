@@ -96,7 +96,12 @@ export const useMyChats = (params: Params) =>
         queryKey: myChatbotKeys.list(params ?? {}),
         queryFn: async () => {
             const result = await fetchMyChats(params);
-            return { ...result, data: result.list.filter(data => !data.deletedAt) || [] } as PaginationType<ChatView[]>;
+            return {
+                ...result,
+                // TODO: how to check my chat
+                data:
+                    result.list.filter(data => !data.deletedAt).filter(data => !!data.promptId && !!data.agentId) || [],
+            } as PaginationType<ChatView[]>;
         },
         refetchOnWindowFocus: false,
     });
