@@ -1,5 +1,50 @@
 # Changelog
 
+## [2025-05-29] - root@0.23.0, @eurekabox/web@0.23.0
+
+### Features
+
+-   add chatbots api and hooks
+-   (types) add Params type
+-   (toast) update toast to accept title object
+-   add chatbots components
+-   (chatbot) add edit functionality to messages
+-   (chatbots) implement chat creation modal
+-   update chatbot api
+-   (auth) implement token refresh logic
+-   implement retry logic for API calls
+-   implement agent bot
+-   add useAutoScroll, useNewMessageBadge
+-   (chatbot) improve conversation interaction
+-   (chatbot) reuse existing chat if available
+-   update ChatBot component to delete chat
+-   (chatbot) enable message editing
+-   (chat) add clear pending message functionality
+-   update ai test
+-   (chat) add updated content to messages
+-   (chat) add textarea and send button
+-   (ui) improve chatbot settings layout
+-   (chat) improve layout of child chats
+-   navigate to chat after creation
+
+### Bug Fixes
+
+-   (dialog) prevent focus issue on close
+
+### Documentation
+
+-   update license to EurekaBox Proprietary
+
+### Refactor
+
+-   refactor chatbot components
+-   remove unused code
+
+### Chores
+
+-   (types) move types to shared directory
+-   update dependencies
+
 ## [2025-05-26] - root@0.22.2, @eurekabox/web@0.22.2
 
 ### Refactor
