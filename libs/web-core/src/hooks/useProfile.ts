@@ -1,6 +1,7 @@
 import { OAUTH_ENDPOINT, webCore } from '../core';
 import type { UserProfile } from '../stores';
 import { useWebCoreStore } from '../stores';
+import { MAX_RETRIES, withRetry } from '../utils';
 
 /**
  * Hook for managing user profile operations
@@ -18,17 +19,19 @@ export const useProfile = () => {
      * - Handles fetch errors gracefully
      */
     const fetchProfile = async () => {
-        try {
-            const { data } = await webCore
-                .buildSignedRequest({
-                    method: 'GET',
-                    baseURL: `${OAUTH_ENDPOINT}/users/0/profile`,
-                })
-                .execute<UserProfile>();
-            setProfile(data);
-        } catch (error) {
-            console.error('Failed to fetch profile:', error);
-        }
+        return withRetry(
+            async () => {
+                const { data } = await webCore
+                    .buildSignedRequest({
+                        method: 'GET',
+                        baseURL: `${OAUTH_ENDPOINT}/users/0/profile`,
+                    })
+                    .execute<UserProfile>();
+                setProfile(data);
+            },
+            MAX_RETRIES,
+            'Profile fetch'
+        );
     };
 
     return { fetchProfile };

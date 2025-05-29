@@ -11,6 +11,7 @@ interface ImportMetaEnv {
     VITE_CONTENT_ENDPOINT: string;
     VITE_HOST: string;
     VITE_IMAGE_API_ENDPOINT: string;
+    VITE_CHATBOTS_API_ENDPOINT: string;
 }
 
 interface ImportMeta {

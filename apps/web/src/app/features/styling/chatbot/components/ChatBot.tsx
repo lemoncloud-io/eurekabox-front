@@ -71,15 +71,6 @@ export const ChatBot = () => {
 
     return (
         <div className="text-text flex gap-6">
-            {/* 챗봇 진입 버튼 */}
-            <button className="rounded-full w-[62px] h-[62px] flex items-center justify-center border-[#7932FF] border-[0.5px] bg-chatbot-card shadow-[2px_2px_10px_0px_rgba(0,0,0,0.10)] overflow-hidden">
-                <img
-                    src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
-                    alt="chatbot button"
-                    className="w-[51px] h-[51px]"
-                />
-            </button>
-
             {/* 챗봇 질문/응답 */}
             <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                 <header className="py-[10px] px-3 flex items-center justify-between sticky top-0">

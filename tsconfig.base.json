@@ -16,6 +16,7 @@
         "baseUrl": ".",
         "paths": {
             "@eurekabox/assets": ["assets/src/index.ts"],
+            "@eurekabox/chatbots": ["libs/chatbots/src/index.ts"],
             "@eurekabox/contents": ["libs/contents/src/index.ts"],
             "@eurekabox/lib/*": ["libs/ui-kit/src/*"],
             "@eurekabox/shared": ["libs/shared/src/index.ts"],

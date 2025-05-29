@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useWebCoreStore } from '../stores';
 
@@ -12,8 +12,14 @@ import { useWebCoreStore } from '../stores';
 export const useInitWebCore = () => {
     const initializeCore = useWebCoreStore(state => state.initialize);
     const isInitialized = useWebCoreStore(state => state.isInitialized);
+    const hasInitialized = useRef(false);
 
     useEffect(() => {
+        if (hasInitialized.current) {
+            return;
+        }
+
+        hasInitialized.current = true;
         initializeCore();
     }, [initializeCore]);
 
