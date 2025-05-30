@@ -17,8 +17,6 @@ import {
     DropdownMenuTrigger,
 } from '@eurekabox/ui-kit/components/ui/dropdown-menu';
 
-
-
 interface ChatWindowProps {
     chat: ChatView;
     onScroll: (index: number, event: React.UIEvent<HTMLDivElement>) => void;
@@ -80,8 +78,8 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                 className={`relative max-w-[80%] group ${
                                     message.stereo === 'query'
                                         ? message.isError
-                                            ? 'bg-accent rounded-2xl p-4 border-2 border-destructive rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-destructive transition-all'
-                                            : 'bg-accent rounded-2xl p-4 rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition-all'
+                                            ? 'bg-accent rounded-2xl p-4 border-2 border-destructive hover:ring-2 hover:ring-offset-2 hover:ring-destructive transition-all'
+                                            : 'bg-accent rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition-all'
                                         : message.isError
                                         ? 'bg-destructive text-destructive-foreground rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-destructive transition-all'
                                         : 'bg-primary text-primary-foreground rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-primary transition-all'

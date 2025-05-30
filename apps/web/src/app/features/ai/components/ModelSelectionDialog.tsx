@@ -17,9 +17,6 @@ import { Checkbox } from '@eurekabox/ui-kit/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/ui-kit/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@eurekabox/ui-kit/components/ui/popover';
 
-
-
-
 interface ModelSelectionDialogProps {
     open: boolean;
     onClose: () => void;
@@ -151,7 +148,7 @@ export const ModelSelectionDialog: React.FC<ModelSelectionDialogProps> = ({ open
                 }
             }}
         >
-            <DialogContent showCloseButton={false} className="max-w-[600px] pt-0 flex flex-col">
+            <DialogContent className="max-w-[600px] pt-0 flex flex-col">
                 <DialogHeader>
                     <DialogTitle>모델 조합 선택</DialogTitle>
                 </DialogHeader>

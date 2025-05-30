@@ -17,7 +17,7 @@ body {
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: var(--text);
+    color: hsl(var(--text));
     font-size: 14px;
 }
 
@@ -48,7 +48,7 @@ body {
         --accent: 180 5% 96%;
         --accent-foreground: 222.2 47.4% 11.2%;
 
-        --destructive: 0 84.2% 60.2%;
+        --destructive: 11 90% 54%;
         --destructive-foreground: 210 40% 98%;
 
         --border: 180 5% 96%;
@@ -67,6 +67,8 @@ body {
         --chatbot-card: 0 0 100%;
         --button-disabled: 225 4% 82%;
         --button-disabled-text: 0 0 100%;
+
+        --primary-foreground: 210 40% 98%;
     }
 
     .dark {
@@ -91,7 +93,7 @@ body {
         --accent: 225 5% 34%;
         --accent-foreground: 210 40% 98%;
 
-        --destructive: 0 62.8% 30.6%;
+        --destructive: 11 89% 54%;
         --destructive-foreground: 210 40% 98%;
 
         --border: 220 5% 24%;
@@ -108,6 +110,8 @@ body {
         --chatbot-card: 240 2% 11%;
         --button-disabled: 0 0% 33%;
         --button-disabled-text: 220 5% 74%;
+
+        --primary-foreground: 210 40% 85%;
 
         & .yoopta-block-actions button {
             color: #fff !important;

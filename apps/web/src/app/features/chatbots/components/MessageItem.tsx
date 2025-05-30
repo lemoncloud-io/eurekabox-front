@@ -193,7 +193,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                     </DialogContent>
                 </Dialog>
 
-                <div className="flex items-center gap-[6px]">
+                <div className="flex items-center gap-[6px] ml-[33px]">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>

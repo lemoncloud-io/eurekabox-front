@@ -1,16 +1,7 @@
 import { useState } from 'react';
 
-import { X } from 'lucide-react';
-
 import { Button } from '@eurekabox/lib/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@eurekabox/lib/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/lib/components/ui/dialog';
 import { cn } from '@eurekabox/lib/utils';
 
 export const PricingModal = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
@@ -18,15 +9,11 @@ export const PricingModal = ({ open, onOpenChange }: { open: boolean; onOpenChan
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-[500px] p-0 !rounded-[22px] gap-0 overflow-hidden text-text">
-                <DialogHeader className="sticky top-0 flex-row items-center justify-between pt-[14px] px-3 pb-4 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] bg-popup">
-                    <DialogTitle className="text-base flex-1 text-center pl-6">비용 안내</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                    <DialogClose className="!m-0">
-                        <X />
-                    </DialogClose>
+            <DialogContent className="p-0">
+                <DialogHeader>
+                    <DialogTitle>비용 안내</DialogTitle>
                 </DialogHeader>
-                <div className="p-[18px]">
+                <div className="px-[18px]">
                     <div className="flex items-center gap-5">
                         <button
                             onClick={() => setActiveTab('billing')}
@@ -91,7 +78,7 @@ export const PricingModal = ({ open, onOpenChange }: { open: boolean; onOpenChan
                             </>
                         )}
                         {activeTab === 'conversation' && (
-                            <ul className="flex flex-col space-y-[6px] max-h-[220px] overflow-auto">
+                            <ul className="flex flex-col space-y-[6px] max-h-[314px] overflow-auto">
                                 <li className="py-[9px] px-[11px] bg-[#F4F5F5] dark:bg-[#222325] rounded-[14px] flex flex-col gap-[3px]">
                                     <div className="flex items-center justify-between">
                                         <div className="text-text-700">질문명</div>
@@ -139,7 +126,7 @@ export const PricingModal = ({ open, onOpenChange }: { open: boolean; onOpenChan
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-2 pt-[18px] pb-6 mt-auto">
-                    <Button className="w-[182px] h-[46px] text-[18px]">확인</Button>
+                    <Button size="lg">확인</Button>
                 </div>
             </DialogContent>
         </Dialog>

@@ -110,11 +110,11 @@ export const TestChatSelectModal = ({
                     </div>
                     <div className="flex items-center justify-center gap-2 pt-[9px]">
                         <DialogClose className="!m-0">
-                            <Button variant="outline" className="w-[182px] h-[46px] text-[18px]">
+                            <Button variant="outline" size="lg">
                                 취소
                             </Button>
                         </DialogClose>
-                        <Button className="w-[182px] h-[46px] text-[18px]" disabled>
+                        <Button size="lg" disabled>
                             생성
                         </Button>
                     </div>

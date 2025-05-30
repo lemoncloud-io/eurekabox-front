@@ -102,12 +102,12 @@ export const ChatPage = () => {
 
     const getCardHeight = (modelCount: number) => {
         if (modelCount <= 2) {
-            return 'h-[calc(100vh-240px)]';
+            return 'h-[calc(100vh-271px)]';
         }
         if (modelCount <= 4) {
-            return 'h-[600px]';
+            return 'h-[566px]';
         }
-        return 'h-[400px]';
+        return 'h-[566px]';
     };
 
     const updateChatMessages = async (chatId: string, newMessages: ChatView[]) => {
@@ -272,7 +272,7 @@ export const ChatPage = () => {
                     ) : id ? (
                         <>
                             <div className="mb-4">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-end justify-between">
                                     <div>
                                         <h1 className="text-2xl font-bold">{selectedChat?.name || 'AI'} 메세지 비교</h1>
                                         <p className="text-muted-foreground">
@@ -285,7 +285,7 @@ export const ChatPage = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-6 pt-[22px] pb-[150px] overflow-auto">
+                            <div className="grid grid-cols-3 gap-6 pb-[116px] overflow-auto">
                                 {childChatsData?.data.map((chat, index) => (
                                     <ChatCard
                                         key={`chat_card_${chat.id}_${index}`}
@@ -300,21 +300,19 @@ export const ChatPage = () => {
                                 ))}
                             </div>
 
-                            <footer className="h-[116px] flex items-center justify-center fixed bottom-0 right-0 left-0 border-t border-[#BABCC0] dark:border-[#787878] bg-chatbot-card">
-                                <div className="shadow-custom flex items-center justify-center gap-4 bg-background">
-                                    <ChatbotSettings
-                                        selectedStrategy={selectedStrategy}
-                                        setSelectedStrategy={setSelectedStrategy}
+                            <footer className="h-[116px] flex items-center justify-center fixed bottom-0 right-0 left-0 border-t border-[#BABCC0] dark:border-[#787878] bg-white dark:bg-[#1C1C1D]">
+                                <ChatbotSettings
+                                    selectedStrategy={selectedStrategy}
+                                    setSelectedStrategy={setSelectedStrategy}
+                                />
+                                <div className="w-[600px]">
+                                    <ChatInput
+                                        value={inputValue}
+                                        onChange={e => setInputValue(e.target.value)}
+                                        onSubmit={handleMessageSubmit}
+                                        isDisabled={isAnySending}
+                                        isLoading={isAnySending}
                                     />
-                                    <div className="w-[600px]">
-                                        <ChatInput
-                                            value={inputValue}
-                                            onChange={e => setInputValue(e.target.value)}
-                                            onSubmit={handleMessageSubmit}
-                                            isDisabled={isAnySending}
-                                            isLoading={isAnySending}
-                                        />
-                                    </div>
                                 </div>
                             </footer>
                         </>
@@ -342,7 +340,6 @@ export const ChatPage = () => {
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogTitle>채팅 삭제</AlertDialogTitle>
-
                     <AlertDialogDescription>정말로 이 채팅을 삭제하시겠습니까?</AlertDialogDescription>
                     <AlertDialogFooter>
                         <AlertDialogCancel type="button" onClick={() => setIsDeleteDialogOpen(false)}>
