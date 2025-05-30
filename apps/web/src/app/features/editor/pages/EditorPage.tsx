@@ -300,6 +300,7 @@ export const EditorPage = () => {
                 title={title}
                 isLoading={loading}
                 contentId={contentId}
+                content={content}
                 handleSave={handleClickSave}
                 handleExport={handleClickExport}
             >
