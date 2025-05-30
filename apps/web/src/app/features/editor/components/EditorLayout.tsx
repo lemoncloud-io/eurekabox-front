@@ -10,7 +10,7 @@ import { Download, EllipsisVertical, LogOut, Menu, Save, Star, Trash2 } from 'lu
 import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Images } from '@eurekabox/assets';
-import { contentsKeys, useContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
+import { contentsKeys, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -43,11 +43,12 @@ interface EditorLayoutProps {
     isLoading: boolean;
     handleSave?: () => void;
     handleExport?: (type: 'markdown' | 'html') => void;
+    content: ContentView | null;
 }
 
 export const EditorLayout = ({
     children,
-    contentId,
+    content,
     title,
     isLoading = false,
     handleSave,
@@ -56,8 +57,6 @@ export const EditorLayout = ({
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-
-    const { data: content, isLoading: isContentLoading } = useContent(contentId);
 
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
     const [sidebarOpen, setSidebarOpen] = useState(true);

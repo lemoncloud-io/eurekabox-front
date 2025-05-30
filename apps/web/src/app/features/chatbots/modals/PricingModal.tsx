@@ -126,7 +126,9 @@ export const PricingModal = ({ open, onOpenChange }: { open: boolean; onOpenChan
                     </div>
                 </div>
                 <div className="flex items-center justify-center gap-2 pt-[18px] pb-6 mt-auto">
-                    <Button size="lg">확인</Button>
+                    <Button size="lg" onClick={() => onOpenChange(false)}>
+                        확인
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>

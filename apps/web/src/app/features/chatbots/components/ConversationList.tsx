@@ -1,14 +1,11 @@
-import { useMemo } from 'react';
-
-import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
-
+import { usePinnedConversations } from '../hooks';
 import { ConversationItem } from './ConversationItem';
+import type { MyChatView } from '../types';
 
 interface ConversationListProps {
-    conversations: ChatView[];
+    conversations: MyChatView[];
     onDeleteConversation: (id: string) => void;
-    onTogglePinConversation: (id: string) => void;
-    onConversationClick: (conversation: ChatView) => void;
+    onConversationClick: (conversation: MyChatView) => void;
     currentChatId?: string;
     isDisabled?: boolean;
 }
@@ -16,24 +13,11 @@ interface ConversationListProps {
 export const ConversationList = ({
     conversations,
     onDeleteConversation,
-    onTogglePinConversation,
     onConversationClick,
     currentChatId,
     isDisabled = false,
 }: ConversationListProps) => {
-    const { pinnedConversations, recentConversations } = useMemo(() => {
-        const pinned = conversations.filter(conv => conv['isPinned']);
-        const recent = conversations.filter(conv => !conv['isPinned']);
-
-        // Sort by updatedAt descending
-        const sortByDate = (a: ChatView, b: ChatView) =>
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-
-        return {
-            pinnedConversations: pinned.sort(sortByDate),
-            recentConversations: recent.sort(sortByDate),
-        };
-    }, [conversations]);
+    const { pinnedConversations, recentConversations, togglePin, isPinned } = usePinnedConversations(conversations);
 
     return (
         <>
@@ -44,7 +28,7 @@ export const ConversationList = ({
                             key={conversation.id}
                             conversation={conversation}
                             onDelete={() => onDeleteConversation(conversation.id!)}
-                            onTogglePin={() => onTogglePinConversation(conversation.id!)}
+                            onTogglePin={() => togglePin(conversation.id!)}
                             onConversationClick={() => onConversationClick(conversation)}
                             isCurrentChat={currentChatId === conversation.id}
                             isDisabled={isDisabled}
@@ -63,7 +47,7 @@ export const ConversationList = ({
                                 key={conversation.id}
                                 conversation={conversation}
                                 onDelete={() => onDeleteConversation(conversation.id!)}
-                                onTogglePin={() => onTogglePinConversation(conversation.id!)}
+                                onTogglePin={() => togglePin(conversation.id!)}
                                 onConversationClick={() => onConversationClick(conversation)}
                                 isCurrentChat={currentChatId === conversation.id}
                                 isDisabled={isDisabled}
