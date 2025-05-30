@@ -13,7 +13,7 @@ import { useGlobalLoader } from '@eurekabox/shared';
 
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
 import { EditorLayout } from '../components';
-import { useEditorContent, usePageLeaveBlocker } from '../hooks';
+import { useEditorContent, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
 import { exportContent, updateContentInCache } from '../utils';
 
 const MAX_TITLE_LENGTH = 50;
@@ -37,6 +37,7 @@ export const EditorPage = () => {
     const hasChangesRef = useRef(false);
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
+    const { captureFocusState, restoreFocus } = useSaveFocusRestoration(editor, titleInputRef);
 
     const focusBlockWithOptions = useCallback((editor: YooEditor, blockId: string) => {
         if (!editor || !blockId) {
@@ -143,9 +144,7 @@ export const EditorPage = () => {
             return;
         }
 
-        const isTitleFocused = document.activeElement === titleInputRef.current;
-        const currentPath = editor.path;
-        savedSelectionRef.current = saveSelection();
+        const focusState = captureFocusState();
 
         try {
             await handleSave(title);
@@ -163,19 +162,7 @@ export const EditorPage = () => {
                 description: t('editorPage.save.success'),
             });
 
-            // Post-save focus logic
-            if (isTitleFocused && titleInputRef.current) {
-                titleInputRef.current.focus();
-            } else if (currentPath.current !== null) {
-                const previousBlock = Object.entries(currentContent)[currentPath.current];
-                if (previousBlock?.length) {
-                    focusBlockWithOptions(editor, previousBlock[0]);
-                } else {
-                    editor.focus();
-                }
-            } else {
-                editor.focus();
-            }
+            restoreFocus(focusState, currentContent, focusBlockWithOptions);
         } catch (error) {
             console.error('Save failed:', error);
             toast({
@@ -184,7 +171,18 @@ export const EditorPage = () => {
                 description: t('editorPage.save.error'),
             });
         }
-    }, [handleSave, queryClient, contentId, title, editor, t, checkForChanges, focusBlockWithOptions]);
+    }, [
+        handleSave,
+        queryClient,
+        contentId,
+        title,
+        editor,
+        t,
+        checkForChanges,
+        captureFocusState,
+        restoreFocus,
+        focusBlockWithOptions,
+    ]);
 
     // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
