@@ -39,51 +39,54 @@ export const EditorPage = () => {
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
     const { captureFocusState, restoreFocus } = useSaveFocusRestoration(editor, titleInputRef);
 
-    const focusBlockWithOptions = useCallback((editor: YooEditor, blockId: string) => {
-        if (!editor || !blockId) {
-            console.log('Invalid editor or blockId');
-            return;
-        }
-
-        const performFocus = () => {
-            try {
-                const baseOptions = {
-                    waitExecution: true,
-                    waitExecutionMs: 0,
-                };
-
-                const isValidSelection =
-                    savedSelectionRef.current &&
-                    typeof savedSelectionRef.current.start === 'number' &&
-                    typeof savedSelectionRef.current.end === 'number';
-
-                if (isValidSelection && savedSelectionRef.current!.start === savedSelectionRef.current!.end) {
-                    const focusOptions = {
-                        ...baseOptions,
-                        focusAt: {
-                            path: [0],
-                            offset: savedSelectionRef.current!.end,
-                        },
-                    };
-                    editor.focusBlock(blockId, focusOptions);
-                } else {
-                    editor.focusBlock(blockId, baseOptions);
-                }
-            } catch (innerError) {
-                console.log('Focus block failed in timeout:', innerError);
-                editor.focus();
-            } finally {
-                savedSelectionRef.current = null;
+    const focusBlockWithOptions = useCallback(
+        (editor: YooEditor, blockId: string) => {
+            if (!editor || !blockId) {
+                console.log('Invalid editor or blockId');
+                return;
             }
-        };
 
-        try {
-            setTimeout(performFocus, 0);
-        } catch (error) {
-            console.log('Focus block failed:', error);
-            editor.focus();
-        }
-    }, []);
+            const performFocus = () => {
+                try {
+                    const baseOptions = {
+                        waitExecution: true,
+                        waitExecutionMs: 0,
+                    };
+
+                    const isValidSelection =
+                        savedSelectionRef.current &&
+                        typeof savedSelectionRef.current.start === 'number' &&
+                        typeof savedSelectionRef.current.end === 'number';
+
+                    if (isValidSelection && savedSelectionRef.current!.start === savedSelectionRef.current!.end) {
+                        const focusOptions = {
+                            ...baseOptions,
+                            focusAt: {
+                                path: [0],
+                                offset: savedSelectionRef.current!.end,
+                            },
+                        };
+                        editor.focusBlock(blockId, focusOptions);
+                    } else {
+                        editor.focusBlock(blockId, baseOptions);
+                    }
+                } catch (innerError) {
+                    console.log('Focus block failed in timeout:', innerError);
+                    editor.focus();
+                } finally {
+                    savedSelectionRef.current = null;
+                }
+            };
+
+            try {
+                setTimeout(performFocus, 0);
+            } catch (error) {
+                console.log('Focus block failed:', error);
+                editor.focus();
+            }
+        },
+        [savedSelectionRef]
+    );
 
     useEffect(() => {
         if (error) {
