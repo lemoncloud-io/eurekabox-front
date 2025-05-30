@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-05-30] - root@0.23.1, @eurekabox/web@0.23.1
+
+### Refactor
+
+-   chat detail style
+-   text color
+
 ## [2025-05-29] - root@0.23.0, @eurekabox/web@0.23.0
 
 ### Features
