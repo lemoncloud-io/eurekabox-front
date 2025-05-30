@@ -43,3 +43,14 @@ export interface UpdateItem {
     type: string;
     depth: number;
 }
+
+export interface EditorNotificationEvents {
+    'load-error': { error: Error };
+    'save-success': { title?: string };
+    'save-error': { error: unknown };
+    'export-success': { format?: string };
+    'export-error': { error: unknown };
+}
+
+export type EditorNotificationEventType = keyof EditorNotificationEvents;
+export type EditorNotificationEventData<T extends EditorNotificationEventType> = EditorNotificationEvents[T];

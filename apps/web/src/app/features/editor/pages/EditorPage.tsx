@@ -12,7 +12,13 @@ import { useGlobalLoader } from '@eurekabox/shared';
 
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
 import { EditorLayout, EditorWrapper, ErrorAlert, TitleInput } from '../components';
-import { useEditorContent, useKeyboardShortcuts, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
+import {
+    useEditorContent,
+    useEditorNotifications,
+    useKeyboardShortcuts,
+    usePageLeaveBlocker,
+    useSaveFocusRestoration,
+} from '../hooks';
 import { exportContent, updateContentInCache } from '../utils';
 
 const MAX_TITLE_LENGTH = 50;
@@ -35,6 +41,7 @@ export const EditorPage = () => {
     const lastSavedContentRef = useRef('');
     const hasChangesRef = useRef(false);
 
+    const { notifyLoadError, notifySaveSuccess, notifySaveError } = useEditorNotifications();
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
     const { captureFocusState, restoreFocus } = useSaveFocusRestoration(editor, titleInputRef);
 
@@ -98,13 +105,9 @@ export const EditorPage = () => {
 
     useEffect(() => {
         if (error) {
-            toast({
-                variant: 'destructive',
-                title: t('editorPage.error.title'),
-                description: `${error.toString()}`,
-            });
+            notifyLoadError(error);
         }
-    }, [error, t]);
+    }, [error, notifyLoadError]);
 
     // 컨텐츠가 처음 로드될 때 lastSavedContent 초기화
     useEffect(() => {
@@ -169,26 +172,17 @@ export const EditorPage = () => {
             if (contentId) {
                 updateContentInCache(queryClient, contentId, { title });
             }
-            toast({
-                title: t('editorPage.save.complete'),
-                description: t('editorPage.save.success'),
-            });
-
+            notifySaveSuccess(title);
             restoreFocus(focusState, currentContent, focusBlockWithOptions);
         },
-        [contentId, queryClient, title, t, restoreFocus, focusBlockWithOptions]
+        [contentId, title, notifySaveSuccess, restoreFocus]
     );
 
     const handleSaveError = useCallback(
         (error: unknown) => {
-            console.error('Save failed:', error);
-            toast({
-                variant: 'destructive',
-                title: t('editorPage.save.failed'),
-                description: t('editorPage.save.error'),
-            });
+            notifySaveError(error);
         },
-        [t]
+        [notifySaveError]
     );
 
     const saveContent = useCallback(async () => {
