@@ -104,24 +104,20 @@ export const EditorPage = () => {
                 description: `${error.toString()}`,
             });
         }
-    }, [error]);
+    }, [error, t]);
 
     // 컨텐츠가 처음 로드될 때 lastSavedContent 초기화
     useEffect(() => {
-        if (content) {
-            const currentContent = editor.getEditorValue();
-            lastSavedContentRef.current = JSON.stringify(currentContent);
-            hasChangesRef.current = false;
-        }
-    }, [content, editor]);
-
-    useEffect(() => {
-        if (content?.title) {
-            setTitle(content.title);
-        } else {
+        if (!content) {
             setTitle('');
+            return;
         }
-    }, [content]);
+        setTitle(content.title || '');
+        // 저장 상태 초기화
+        const currentContent = editor.getEditorValue();
+        lastSavedContentRef.current = JSON.stringify(currentContent);
+        hasChangesRef.current = false;
+    }, [content, editor]);
 
     const checkForChanges = useCallback(() => {
         const currentContent = editor.getEditorValue();
@@ -134,7 +130,10 @@ export const EditorPage = () => {
 
     useEffect(() => {
         setIsLoading(loading);
+        return () => setIsLoading(false);
+    }, [loading, setIsLoading]);
 
+    useEffect(() => {
         if (loading) {
             savedSelectionRef.current = saveSelection();
             editor.blur();
@@ -147,8 +146,7 @@ export const EditorPage = () => {
                 editor.focus();
             }
         }
-        return () => setIsLoading(false);
-    }, [loading, setIsLoading, editor, content]);
+    }, [loading, editor, content?.title, content?.element$$?.length]);
 
     const saveContent = useCallback(async () => {
         if (!hasChangesRef.current || !checkForChanges()) {
