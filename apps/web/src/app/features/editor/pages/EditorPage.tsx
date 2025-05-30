@@ -148,50 +148,63 @@ export const EditorPage = () => {
         }
     }, [loading, editor, content?.title, content?.element$$?.length]);
 
-    const saveContent = useCallback(async () => {
+    const prepareSave = useCallback(() => {
         if (!hasChangesRef.current || !checkForChanges()) {
-            return;
+            return null;
         }
 
         const focusState = captureFocusState();
+        return { focusState };
+    }, [checkForChanges, captureFocusState]);
 
-        try {
-            await handleSave(title);
+    const updateLocalState = useCallback(() => {
+        const currentContent = editor.getEditorValue();
+        lastSavedContentRef.current = JSON.stringify(currentContent);
+        hasChangesRef.current = false;
+        return currentContent;
+    }, [editor]);
 
-            const currentContent = editor.getEditorValue();
-            lastSavedContentRef.current = JSON.stringify(currentContent);
-            hasChangesRef.current = false;
-
+    const updateUI = useCallback(
+        (currentContent: any, focusState: any) => {
             if (contentId) {
                 updateContentInCache(queryClient, contentId, { title });
             }
-
             toast({
                 title: t('editorPage.save.complete'),
                 description: t('editorPage.save.success'),
             });
 
             restoreFocus(focusState, currentContent, focusBlockWithOptions);
-        } catch (error) {
+        },
+        [contentId, queryClient, title, t, restoreFocus, focusBlockWithOptions]
+    );
+
+    const handleSaveError = useCallback(
+        (error: unknown) => {
             console.error('Save failed:', error);
             toast({
                 variant: 'destructive',
                 title: t('editorPage.save.failed'),
                 description: t('editorPage.save.error'),
             });
+        },
+        [t]
+    );
+
+    const saveContent = useCallback(async () => {
+        const saveContext = prepareSave();
+        if (!saveContext) return;
+
+        const { focusState } = saveContext;
+
+        try {
+            await handleSave(title);
+            const currentContent = updateLocalState();
+            updateUI(currentContent, focusState);
+        } catch (error) {
+            handleSaveError(error);
         }
-    }, [
-        handleSave,
-        queryClient,
-        contentId,
-        title,
-        editor,
-        t,
-        checkForChanges,
-        captureFocusState,
-        restoreFocus,
-        focusBlockWithOptions,
-    ]);
+    }, [prepareSave, handleSave, title, updateLocalState, updateUI, handleSaveError]);
 
     // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
