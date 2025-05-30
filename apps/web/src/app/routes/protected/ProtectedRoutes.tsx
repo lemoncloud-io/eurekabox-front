@@ -6,11 +6,13 @@ import { EditorRoutes } from '../../features/editor';
 import { HomeRoutes } from '../../features/home';
 import { StylingRoutes } from '../../features/styling/routes';
 
+const isProd = import.meta.env.VITE_ENV === 'PROD';
+
 const AppLayout = () => {
     return (
         <>
             <Outlet />
-            <ChatBotButton />
+            {!isProd && <ChatBotButton />}
         </>
     );
 };

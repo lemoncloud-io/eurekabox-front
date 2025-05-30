@@ -18,6 +18,7 @@ import {
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
+import { usePinnedConversationsStore } from '../stores';
 import type { ChatState } from '../types';
 
 interface UseChatStateProps {
@@ -27,6 +28,7 @@ interface UseChatStateProps {
 export const useChatState = ({ initialChat }: UseChatStateProps) => {
     const queryClient = useQueryClient();
     const { profile } = useWebCoreStore();
+    const { removePin } = usePinnedConversationsStore();
 
     const [state, setState] = useState<ChatState>({
         myChats: [],
@@ -202,6 +204,8 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 setState(prev => {
                     const remainingChats = prev.myChats.filter(chat => chat.id !== id);
                     const newCurrentChat = prev.currentChat?.id === id ? remainingChats[0] || null : prev.currentChat;
+
+                    removePin(id);
 
                     return {
                         ...prev,
