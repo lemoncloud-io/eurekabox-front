@@ -1,5 +1,31 @@
 # Changelog
 
+## [2025-05-30] - root@0.24.0, @eurekabox/web@0.24.0
+
+### Features
+
+-   implement pinned conversations using Zustand
+-   (editor) pass content to EditorLayout
+-   (editor) refactor export logic to utils
+-   (editor) update content cache util
+-   save and restore focus after save
+-   (editor) add error alert component
+-   (editor) wrap yoopta editor in component
+-   (editor) add useKeyboardShortcuts hook
+-   (editor) add useEditorNotifications hook
+-   (pricing) close modal on button click
+
+### Bug Fixes
+
+-   (editor) retain focus after block insertion
+-   prevent duplicate content loading
+-   reset title when content is empty
+
+### Refactor
+
+-   improve save content logic
+-   group title input handlers
+
 ## [2025-05-30] - root@0.23.1, @eurekabox/web@0.23.1
 
 ### Refactor
