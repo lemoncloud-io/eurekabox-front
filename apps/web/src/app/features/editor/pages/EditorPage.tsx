@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import type { Tools, YooEditor } from '@yoopta/editor';
-import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
+import { createYooptaEditor } from '@yoopta/editor';
 
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
-import { EditorLayout, ErrorAlert, TitleInput } from '../components';
+import { EditorLayout, EditorWrapper, ErrorAlert, TitleInput } from '../components';
 import { useEditorContent, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
 import { exportContent, updateContentInCache } from '../utils';
 
@@ -37,6 +37,15 @@ export const EditorPage = () => {
 
     const { content, loading, error, handleSave } = useEditorContent(contentId, editor);
     const { captureFocusState, restoreFocus } = useSaveFocusRestoration(editor, titleInputRef);
+
+    const editorConfig = useMemo(
+        () => ({
+            plugins,
+            tools: TOOLS as Partial<Tools>,
+            marks: MARKS,
+        }),
+        []
+    );
 
     const focusBlockWithOptions = useCallback(
         (editor: YooEditor, blockId: string) => {
@@ -274,17 +283,7 @@ export const EditorPage = () => {
                         placeholder={t('editorPage.newPage')}
                         maxLength={MAX_TITLE_LENGTH}
                     />
-                    <div ref={selectionRef}>
-                        <YooptaEditor
-                            selectionBoxRoot={selectionRef}
-                            editor={editor}
-                            plugins={plugins}
-                            tools={TOOLS as Partial<Tools>}
-                            marks={MARKS}
-                            width="100%"
-                            autoFocus={true}
-                        />
-                    </div>
+                    <EditorWrapper ref={selectionRef} editor={editor} config={editorConfig} />
                 </div>
             </EditorLayout>
         </>
