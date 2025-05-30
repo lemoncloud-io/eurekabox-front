@@ -12,7 +12,7 @@ import { useGlobalLoader } from '@eurekabox/shared';
 
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
 import { EditorLayout, EditorWrapper, ErrorAlert, TitleInput } from '../components';
-import { useEditorContent, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
+import { useEditorContent, useKeyboardShortcuts, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
 import { exportContent, updateContentInCache } from '../utils';
 
 const MAX_TITLE_LENGTH = 50;
@@ -218,17 +218,7 @@ export const EditorPage = () => {
         };
     }, [editor]);
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-                event.preventDefault();
-                saveContent();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [saveContent]);
+    useKeyboardShortcuts([{ key: 's', ctrlOrMeta: true, handler: saveContent }]);
 
     const titleHandlers = useMemo(
         () => ({
