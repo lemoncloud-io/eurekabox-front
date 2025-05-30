@@ -128,7 +128,7 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                                     <TooltipTrigger className="hover:cursor-help">
                                         <span className="inline-flex items-center gap-1.5 max-w-[300px] truncate">
                                             {/* <span className="text-muted-foreground shrink-0">·</span> */}
-                                            <span className="text-muted-foreground text-xs whitespace-nowrap">
+                                            <span className="whitespace-nowrap">
                                                 {formatPromptName(chat.prompt$?.name) || 'np'} ·{' '}
                                                 {formatBrainName(chat.brain$?.name) || 'nb'} ·{' '}
                                                 {formatEmbeddingName(chat.embedding$?.name)}

@@ -82,7 +82,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             : 'bg-accent rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-gray-300 transition-all'
                                         : message.isError
                                         ? 'bg-destructive text-destructive-foreground rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-destructive transition-all'
-                                        : 'bg-primary text-text rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-primary transition-all'
+                                        : 'bg-primary text-primary-foreground rounded-2xl p-4 hover:ring-2 hover:ring-offset-2 hover:ring-primary transition-all'
                                 }`}
                             >
                                 {message.documentIds && message.documentIds.length > 0 && (
@@ -128,7 +128,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             table: ({ children, className, ...props }) => (
                                                 <table
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } border-collapse w-full my-4`}
                                                     {...props}
                                                 >
@@ -138,7 +138,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             thead: ({ children, className, ...props }) => (
                                                 <thead
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } bg-muted/50`}
                                                     {...props}
                                                 >
@@ -148,7 +148,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             tbody: ({ children, className, ...props }) => (
                                                 <tbody
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -158,7 +158,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             tr: ({ children, className, ...props }) => (
                                                 <tr
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } border-b border-border/50`}
                                                     {...props}
                                                 >
@@ -168,7 +168,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             th: ({ children, className, ...props }) => (
                                                 <th
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } p-2 text-left font-semibold`}
                                                     {...props}
                                                 >
@@ -178,7 +178,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             td: ({ children, className, ...props }) => (
                                                 <td
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } p-2`}
                                                     {...props}
                                                 >
@@ -188,7 +188,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             p: ({ children, className, ...props }) => (
                                                 <p
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -198,7 +198,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             strong: ({ children, className, ...props }) => (
                                                 <strong
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -208,7 +208,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             em: ({ children, className, ...props }) => (
                                                 <em
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -218,7 +218,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             h1: ({ children, className, ...props }) => (
                                                 <h1
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -228,7 +228,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             h2: ({ children, className, ...props }) => (
                                                 <h2
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -238,7 +238,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             h3: ({ children, className, ...props }) => (
                                                 <h3
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -248,7 +248,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             ul: ({ children, className, ...props }) => (
                                                 <ul
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -258,7 +258,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             ol: ({ children, className, ...props }) => (
                                                 <ol
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -268,7 +268,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             li: ({ children, className, ...props }) => (
                                                 <li
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -279,7 +279,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                                 <blockquote
                                                     className={`${className || ''} ${
                                                         message.stereo === 'answer'
-                                                            ? 'border-primary-foreground/30 text-text'
+                                                            ? 'border-primary-foreground/30 text-primary-foreground'
                                                             : 'border-gray-300'
                                                     }`}
                                                     {...props}
@@ -290,7 +290,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             code: ({ className, children, ...props }) => (
                                                 <code
                                                     className={`${className} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -300,7 +300,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             pre: ({ children, className, ...props }) => (
                                                 <pre
                                                     className={`${className || ''} ${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     }`}
                                                     {...props}
                                                 >
@@ -313,7 +313,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className={`${
-                                                        message.stereo === 'answer' ? 'text-text' : ''
+                                                        message.stereo === 'answer' ? 'text-primary-foreground' : ''
                                                     } hover:underline`}
                                                     {...props}
                                                 >
