@@ -7,7 +7,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { Tools, YooEditor } from '@yoopta/editor';
 import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
 
-import { contentsKeys } from '@eurekabox/contents';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
@@ -15,7 +14,7 @@ import { useGlobalLoader } from '@eurekabox/shared';
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
 import { EditorLayout } from '../components';
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
-import { exportContent } from '../utils';
+import { exportContent, updateContentInCache } from '../utils';
 
 const MAX_TITLE_LENGTH = 50;
 
@@ -143,6 +142,7 @@ export const EditorPage = () => {
         if (!hasChangesRef.current || !checkForChanges()) {
             return;
         }
+
         const isTitleFocused = document.activeElement === titleInputRef.current;
         const currentPath = editor.path;
         savedSelectionRef.current = saveSelection();
@@ -155,16 +155,7 @@ export const EditorPage = () => {
             hasChangesRef.current = false;
 
             if (contentId) {
-                queryClient.setQueryData(contentsKeys.list({ limit: -1, activity: 1 }), (oldData: any) => {
-                    if (!oldData) {
-                        return oldData;
-                    }
-                    return {
-                        ...oldData,
-                        data: oldData.data.map(item => (item.id === contentId ? { ...item, title } : item)),
-                        list: oldData.list.map(item => (item.id === contentId ? { ...item, title } : item)),
-                    };
-                });
+                updateContentInCache(queryClient, contentId, { title });
             }
 
             toast({
@@ -193,7 +184,7 @@ export const EditorPage = () => {
                 description: t('editorPage.save.error'),
             });
         }
-    }, [handleSave, queryClient, contentId, title, editor, t]);
+    }, [handleSave, queryClient, contentId, title, editor, t, checkForChanges, focusBlockWithOptions]);
 
     // 에디터 변경 감지는 항상 동작하도록
     useEffect(() => {
@@ -258,11 +249,6 @@ export const EditorPage = () => {
         },
         [editor]
     );
-
-    useEffect(() => {
-        setIsLoading(loading);
-        return () => setIsLoading(false);
-    }, [loading, setIsLoading]);
 
     return (
         <>
