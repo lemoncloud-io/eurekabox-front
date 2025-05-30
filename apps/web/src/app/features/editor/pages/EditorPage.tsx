@@ -7,12 +7,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { Tools, YooEditor } from '@yoopta/editor';
 import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
 
-import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
 import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
-import { EditorLayout } from '../components';
+import { EditorLayout, ErrorAlert, TitleInput } from '../components';
 import { useEditorContent, usePageLeaveBlocker, useSaveFocusRestoration } from '../hooks';
 import { exportContent, updateContentInCache } from '../utils';
 
@@ -253,16 +252,11 @@ export const EditorPage = () => {
 
     return (
         <>
-            {error && (
-                <Alert variant="destructive" className="fixed top-20 right-4 z-50 w-80">
-                    <AlertDescription>
-                        {t('editorPage.load.error')}
-                        <button onClick={() => window.location.reload()} className="ml-2 underline hover:no-underline">
-                            {t('editorPage.load.refresh')}
-                        </button>
-                    </AlertDescription>
-                </Alert>
-            )}
+            <ErrorAlert
+                error={error}
+                errorMessage={t('editorPage.load.error')}
+                retryLabel={t('editorPage.load.refresh')}
+            />
             <EditorLayout
                 title={title}
                 isLoading={loading}
@@ -272,13 +266,11 @@ export const EditorPage = () => {
                 handleExport={handleClickExport}
             >
                 <div className="px-20 py-6 max-sm:px-[50px] w-full flex flex-col justify-center max-w-screen-xl mx-auto">
-                    <input
-                        type="text"
+                    <TitleInput
                         ref={titleInputRef}
                         value={title}
-                        onChange={e => handleTitleChange(e.target.value)}
+                        onChange={handleTitleChange}
                         onKeyDown={handleTitleKeyDown}
-                        className="w-full bg-background text-[24px] font-semibold border-none focus:outline-none caret-text-text pb-4"
                         placeholder={t('editorPage.newPage')}
                         maxLength={MAX_TITLE_LENGTH}
                     />
