@@ -6,16 +6,16 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import type { Tools, YooEditor } from '@yoopta/editor';
 import YooptaEditor, { createYooptaEditor } from '@yoopta/editor';
-import { markdown } from '@yoopta/exports';
 
 import { contentsKeys } from '@eurekabox/contents';
 import { Alert, AlertDescription } from '@eurekabox/lib/components/ui/alert';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 
-import { MARKS, TOOLS, exportToHTML, plugins, saveSelection } from '../../../shared';
+import { MARKS, TOOLS, plugins, saveSelection } from '../../../shared';
 import { EditorLayout } from '../components';
 import { useEditorContent, usePageLeaveBlocker } from '../hooks';
+import { exportContent } from '../utils';
 
 const MAX_TITLE_LENGTH = 50;
 
@@ -44,41 +44,44 @@ export const EditorPage = () => {
             console.log('Invalid editor or blockId');
             return;
         }
-        try {
-            setTimeout(() => {
-                try {
-                    const baseOptions = {
-                        waitExecution: true,
-                        waitExecutionMs: 0,
+
+        const performFocus = () => {
+            try {
+                const baseOptions = {
+                    waitExecution: true,
+                    waitExecutionMs: 0,
+                };
+
+                const isValidSelection =
+                    savedSelectionRef.current &&
+                    typeof savedSelectionRef.current.start === 'number' &&
+                    typeof savedSelectionRef.current.end === 'number';
+
+                if (isValidSelection && savedSelectionRef.current!.start === savedSelectionRef.current!.end) {
+                    const focusOptions = {
+                        ...baseOptions,
+                        focusAt: {
+                            path: [0],
+                            offset: savedSelectionRef.current!.end,
+                        },
                     };
-
-                    // selection이 유효한지 한번 더 체크
-                    const isValidSelection =
-                        savedSelectionRef.current &&
-                        typeof savedSelectionRef.current?.start === 'number' &&
-                        typeof savedSelectionRef.current?.end === 'number';
-
-                    const focusOptions =
-                        isValidSelection && savedSelectionRef.current?.start === savedSelectionRef.current?.end
-                            ? {
-                                  ...baseOptions,
-                                  focusAt: {
-                                      path: [0],
-                                      offset: savedSelectionRef.current?.end,
-                                  },
-                              }
-                            : baseOptions;
                     editor.focusBlock(blockId, focusOptions);
-                } catch (innerError) {
-                    console.log('Focus block failed in timeout:', innerError);
-                    editor.focus(); // fallback: 에디터 자체에 포커스
-                } finally {
-                    savedSelectionRef.current = null;
+                } else {
+                    editor.focusBlock(blockId, baseOptions);
                 }
-            }, 0);
+            } catch (innerError) {
+                console.log('Focus block failed in timeout:', innerError);
+                editor.focus();
+            } finally {
+                savedSelectionRef.current = null;
+            }
+        };
+
+        try {
+            setTimeout(performFocus, 0);
         } catch (error) {
             console.log('Focus block failed:', error);
-            editor.focus(); // fallback: 에디터 자체에 포커스
+            editor.focus();
         }
     }, []);
 
@@ -223,30 +226,7 @@ export const EditorPage = () => {
     const handleClickExport = useCallback(
         async (type: 'markdown' | 'html') => {
             try {
-                let content: string;
-                let mimeType: string;
-                let fileExtension: string;
-
-                if (type === 'markdown') {
-                    content = markdown.serialize(editor, editor.getEditorValue());
-                    mimeType = 'text/markdown';
-                    fileExtension = 'md';
-                } else {
-                    content = exportToHTML(editor, title);
-                    mimeType = 'text/html';
-                    fileExtension = 'html';
-                }
-
-                const blob = new Blob([content], { type: mimeType });
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${title}.${fileExtension}`;
-
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
+                const { filename } = exportContent({ type, editor, title });
 
                 toast({
                     title: t('editorPage.export.complete'),
