@@ -230,9 +230,21 @@ export const EditorPage = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [saveContent]);
 
-    const handleClickSave = useCallback(async () => {
-        await saveContent();
-    }, [saveContent]);
+    const titleHandlers = useMemo(
+        () => ({
+            onChange: (newTitle: string) => {
+                setTitle(newTitle);
+                hasChangesRef.current = true;
+            },
+            onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    editor.focus();
+                }
+            },
+        }),
+        [editor]
+    );
 
     const handleClickExport = useCallback(
         async (type: 'markdown' | 'html') => {
@@ -255,19 +267,12 @@ export const EditorPage = () => {
         [title, editor, t]
     );
 
-    const handleTitleChange = useCallback((newTitle: string) => {
-        setTitle(newTitle);
-        hasChangesRef.current = true;
-    }, []);
-
-    const handleTitleKeyDown = useCallback(
-        (e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                editor.focus();
-            }
-        },
-        [editor]
+    const actionHandlers = useMemo(
+        () => ({
+            save: saveContent,
+            export: handleClickExport,
+        }),
+        [saveContent, handleClickExport]
     );
 
     return (
@@ -282,15 +287,15 @@ export const EditorPage = () => {
                 isLoading={loading}
                 contentId={contentId}
                 content={content}
-                handleSave={handleClickSave}
-                handleExport={handleClickExport}
+                handleSave={actionHandlers.save}
+                handleExport={actionHandlers.export}
             >
                 <div className="px-20 py-6 max-sm:px-[50px] w-full flex flex-col justify-center max-w-screen-xl mx-auto">
                     <TitleInput
                         ref={titleInputRef}
                         value={title}
-                        onChange={handleTitleChange}
-                        onKeyDown={handleTitleKeyDown}
+                        onChange={titleHandlers.onChange}
+                        onKeyDown={titleHandlers.onKeyDown}
                         placeholder={t('editorPage.newPage')}
                         maxLength={MAX_TITLE_LENGTH}
                     />
