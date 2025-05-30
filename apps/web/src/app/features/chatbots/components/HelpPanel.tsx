@@ -36,7 +36,7 @@ export const HelpPanel = ({
     isDisabled = false,
 }: HelpPanelProps) => {
     return (
-        <div className="p-[6px] bg-[#F4F5F5] dark:bg-[#222325] border border-[#EAEAEC] dark:border-[#3A3C40] rounded-b-lg border-t-0">
+        <div className="m-4 mt-0 p-[6px] bg-[#F4F5F5] dark:bg-[#222325] border border-t-0 border-[#EAEAEC] dark:border-[#3A3C40] rounded-b-lg">
             <div className="flex items-center sticky top-0">
                 <Button variant="ghost" className="h-auto p-[2px] group" onClick={onClose}>
                     <X className="w-[18px] h-[18px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />

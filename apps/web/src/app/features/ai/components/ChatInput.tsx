@@ -36,7 +36,7 @@ export const ChatInput = ({ value, onChange, onSubmit, isDisabled, isLoading }: 
 
     return (
         <form ref={formRef} onSubmit={onSubmit}>
-            <div className="w-full pt-[6px] pr-[16px] pb-[14px] pl-[16px] mt-auto">
+            <div className="w-full pt-[6px] px-4 pb-[14px] mt-auto">
                 <div
                     className={cn(
                         'py-[6px] px-[10px] w-full border border-[#EAEAEC] dark:border-[#3A3C40] rounded-lg overflow-hidden transition-all duration-200 focus-within:border-[#7932FF] dark:focus-within:border-[#7932FF]'

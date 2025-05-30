@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 import type {
@@ -27,15 +27,12 @@ import {
 import { Button } from '@eurekabox/lib/components/ui/button';
 import {
     Dialog,
-    DialogClose,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from '@eurekabox/lib/components/ui/dialog';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
-
 
 export const TestChatSelectModal = ({
     open,
@@ -195,15 +192,11 @@ export const TestChatSelectModal = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="h-full max-w-[500px] p-0 !rounded-[22px] gap-0 overflow-hidden text-text">
-                <DialogHeader className="sticky top-0 flex-row items-center justify-between pt-[14px] px-3 pb-4 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] bg-popup">
-                    <DialogTitle className="text-base flex-1 text-center pl-6">테스트 모델 조합 선택</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                    <DialogClose className="!m-0">
-                        <X />
-                    </DialogClose>
+            <DialogContent className="p-0">
+                <DialogHeader>
+                    <DialogTitle>테스트 모델 조합 선택</DialogTitle>
                 </DialogHeader>
-                <div className="p-[18px] overflow-auto">
+                <div className="px-[18px] overflow-auto">
                     <div className="text-[18px] font-medium mb-7">
                         에이전트를 직접 조합한 후에
                         <br />
@@ -314,16 +307,14 @@ export const TestChatSelectModal = ({
                 </div>
 
                 <div className="pb-4 pt-[10px] px-4 bg-popup border-t border-[#BABCC0] dark:border-[#53555B]">
-                    <div className="text-text-800 pb-[19px] pt-[18px] text-center">
-                        {combinations.length === 0 ? (
-                            <>
-                                선택된 조합이 없습니다.
-                                <br />위 4가지 유형에서 조합할 항목을 선택해주세요.
-                            </>
-                        ) : (
-                            `선택된 조합 (${combinations.length})`
-                        )}
-                    </div>
+                    {combinations.length === 0 ? (
+                        <div className="text-text-800 pb-[19px] pt-[18px] text-center">
+                            선택된 조합이 없습니다.
+                            <br />위 4가지 유형에서 조합할 항목을 선택해주세요.
+                        </div>
+                    ) : (
+                        ''
+                    )}
                     {combinations.length > 0 && (
                         <div>
                             <div className="font-medium mb-[10px]">선택된 조합 ({combinations.length})</div>
@@ -343,19 +334,10 @@ export const TestChatSelectModal = ({
                         </div>
                     )}
                     <div className="flex items-center justify-center gap-2 pt-[9px]">
-                        <Button
-                            variant="outline"
-                            className="w-[182px] h-[46px] text-[18px]"
-                            onClick={handleCancel}
-                            disabled={isPending}
-                        >
+                        <Button variant="outline" size="lg" onClick={handleCancel} disabled={isPending}>
                             취소
                         </Button>
-                        <Button
-                            className="w-[182px] h-[46px] text-[18px]"
-                            disabled={combinations.length === 0 || isPending}
-                            onClick={handleSubmit}
-                        >
+                        <Button size="lg" disabled={combinations.length === 0 || isPending} onClick={handleSubmit}>
                             {isPending ? (
                                 <div className="flex items-center gap-2">
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />

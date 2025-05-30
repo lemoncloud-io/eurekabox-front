@@ -35,11 +35,11 @@ export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, d
     };
 
     return (
-        <div className="w-full pt-[6px] pr-[16px] pb-[14px] pl-[16px] mt-auto">
+        <div className="w-full pt-[6px] px-4 mt-auto">
             <div
                 className={cn(
                     'py-[6px] px-[10px] w-full border border-[#EAEAEC] dark:border-[#3A3C40] rounded-lg overflow-hidden transition-all duration-200 focus-within:border-[#7932FF] dark:focus-within:border-[#7932FF]',
-                    isHelpOpen ? 'pb-[9px] rounded-b-none' : ''
+                    isHelpOpen ? 'pb-[9px] rounded-b-none border-b-0' : 'mb-[14px]'
                 )}
             >
                 <textarea

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { X } from 'lucide-react';
 
 import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
@@ -10,7 +9,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from '@eurekabox/lib/components/ui/dialog';
@@ -18,7 +16,6 @@ import { Input } from '@eurekabox/lib/components/ui/input';
 import { Label } from '@eurekabox/lib/components/ui/label';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
-
 
 export const CHAT_MODELS = [
     {
@@ -99,25 +96,20 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-[500px] p-0 !rounded-[22px] gap-0 overflow-hidden text-text">
-                <DialogHeader className="sticky top-0 flex-row items-center justify-between pt-[14px] px-3 pb-4 shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] bg-popup">
-                    <DialogTitle className="text-base flex-1 text-center pl-6">새 채팅 만들기</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                    <DialogClose className="!m-0">
-                        <X />
-                    </DialogClose>
+            <DialogContent className="p-0">
+                <DialogHeader>
+                    <DialogTitle>새 채팅 만들기</DialogTitle>
                 </DialogHeader>
-
-                <div className="p-[18px] space-y-6">
+                <div className="px-[18px] space-y-6">
                     <div className="space-y-2">
                         <Label className="text-sm font-medium">채팅 모델</Label>
                         <div className="space-y-[10px] max-h-[300px] overflow-auto">
                             {CHAT_MODELS.map(model => (
                                 <div
                                     key={model.id}
-                                    className={`dark:bg-[#02060E] border cursor-pointer transition-all duration-200 ${
+                                    className={`dark:bg-[#02060E] border-[1.5px] cursor-pointer transition-all duration-200 ${
                                         selectedModelId === model.id
-                                            ? 'border-[1.5px] border-[#7932FF] bg-[#7932FF]/5 dark:border-[#7932FF]'
+                                            ? 'border-[#7932FF] bg-[#7932FF]/5 dark:border-[#7932FF]'
                                             : 'border-[#babcc0] dark:border-[#787878] hover:border-[#7932FF]/50 hover:dark:border-[#7932FF]/50'
                                     } rounded-lg py-[10px] px-[14px]`}
                                     onClick={() => setSelectedModelId(model.id)}
@@ -159,22 +151,17 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
                             onChange={e => setChatName(e.target.value)}
                             onKeyDown={handleKeyDown}
                             disabled={isCreating}
-                            className="h-[42px]"
                         />
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2 pt-7 pb-6 mt-auto bg-popup border-t border-[#EAEAEC] dark:border-[#3A3C40]">
+                <div className="flex items-center justify-center gap-2 pt-7 pb-6 mt-auto bg-popup">
                     <DialogClose asChild>
-                        <Button variant="outline" className="w-[182px] h-[46px] text-[18px]" disabled={isCreating}>
+                        <Button variant="outline" size="lg" disabled={isCreating}>
                             취소
                         </Button>
                     </DialogClose>
-                    <Button
-                        className="w-[182px] h-[46px] text-[18px]"
-                        onClick={handleCreateChat}
-                        disabled={!chatName.trim() || isCreating}
-                    >
+                    <Button size="lg" onClick={handleCreateChat} disabled={!chatName.trim() || isCreating}>
                         {isCreating ? '생성 중...' : '생성'}
                     </Button>
                 </div>

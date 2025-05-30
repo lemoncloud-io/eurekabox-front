@@ -18,8 +18,6 @@ import {
 } from '@eurekabox/ui-kit/components/ui/dropdown-menu';
 import { Textarea } from '@eurekabox/ui-kit/components/ui/textarea';
 
-
-
 export const PromptSettings = () => {
     const queryClient = useQueryClient();
     const { setIsLoading } = useGlobalLoader();
@@ -108,7 +106,7 @@ export const PromptSettings = () => {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-full justify-between">
+                    <Button variant="outline" className="w-full justify-between bg-background">
                         <div className="flex items-center text-sm">
                             <ScrollText className="h-4 w-4 mr-2" />
                             프롬프트
@@ -177,23 +175,21 @@ export const PromptSettings = () => {
                         />
                         <Edit2 className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </DialogTitle>
-                    <div className="py-6 px-4">
-                        <Textarea
-                            value={editingText}
-                            onChange={e => setEditingText(e.target.value)}
-                            className="min-h-[600px] font-mono text-sm border"
-                        />
-                    </div>
+                    <Textarea
+                        value={editingText}
+                        onChange={e => setEditingText(e.target.value)}
+                        className="min-h-[600px] font-mono text-sm border"
+                    />
                     <div className="flex items-center gap-2 justify-center">
                         <Button
                             variant="outline"
+                            size="lg"
                             onClick={() => setEditingPrompt(null)}
                             disabled={updatePrompt.isPending}
-                            className="flex-1"
                         >
                             취소
                         </Button>
-                        <Button onClick={handleSave} disabled={updatePrompt.isPending} className="flex-1">
+                        <Button onClick={handleSave} disabled={updatePrompt.isPending} size="lg">
                             {updatePrompt.isPending ? (
                                 <div className="flex items-center gap-2">
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
@@ -207,11 +203,11 @@ export const PromptSettings = () => {
             </Dialog>
 
             <Dialog open={!!selectedPrompt} onOpenChange={() => setSelectedPrompt(null)}>
-                <DialogContent showCloseButton={false} className="pt-0">
+                <DialogContent className="p-0">
                     <DialogHeader>
                         <DialogTitle>{selectedPrompt?.name || 'Untitled Prompt'}</DialogTitle>
                     </DialogHeader>
-                    <div className="p-4 overflow-auto">
+                    <div className="overflow-auto p-[18px] pt-0">
                         <div className="whitespace-pre-wrap text-sm">{selectedPrompt?.contents?.join('\n')}</div>
                     </div>
                 </DialogContent>

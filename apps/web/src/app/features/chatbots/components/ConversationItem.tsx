@@ -69,13 +69,7 @@ export const ConversationItem = ({
 
     return (
         <>
-            <li
-                className={`relative p-[6px] text-xs rounded-[5px] max-h-10 flex items-center justify-between gap-2 transition-all duration-200 ${
-                    isCurrentChat
-                        ? 'bg-[#F8F9FA] dark:bg-[#2A2D31] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-[2px] after:h-4 after:bg-[#7932FF] after:rounded-full'
-                        : 'text-text-800 bg-white dark:bg-[#02060E] hover:bg-gray-50 dark:hover:bg-[#1a1a1a]'
-                }`}
-            >
+            <li className="relative p-[6px] text-xs rounded-[5px] max-h-10 flex items-center justify-between gap-2 transition-all duration-200 text-text-800 bg-white dark:bg-[#02060E] hover:bg-gray-50 dark:hover:bg-[#1a1a1a]">
                 <div
                     className="flex items-center gap-[9px] flex-1 min-w-0 cursor-pointer"
                     onClick={handleConversationClick}
@@ -100,7 +94,7 @@ export const ConversationItem = ({
                         {conversation.name || '새 대화'}
                     </div>
 
-                    {isCurrentChat && <Check className="w-3 h-3 text-[#7932FF] shrink-0" />}
+                    {isCurrentChat && <Check className="w-4 h-4 text-[#7932FF] dark:text-[#8F19F6] shrink-0" />}
                 </div>
 
                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -109,12 +103,12 @@ export const ConversationItem = ({
                             <Ellipsis className="text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[100px] px-3 bg-chatbot-card">
+                    <DropdownMenuContent align="end" className="px-3 bg-chatbot-card">
                         <DropdownMenuItem className="text-xs" onClick={onTogglePin}>
                             {isPinned ? '고정해제' : '고정'}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
-                        <DropdownMenuItem className="text-xs text-[#F34822]" onClick={handleDeleteClick}>
+                        <DropdownMenuItem className="text-xs text-destructive" onClick={handleDeleteClick}>
                             삭제
                         </DropdownMenuItem>
                     </DropdownMenuContent>

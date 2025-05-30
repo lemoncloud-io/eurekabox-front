@@ -64,12 +64,7 @@ export const MessageEditView = ({ message, onSave, onCancel, isLoading = false }
                     </Button>
                     <div className="font-medium truncate">메시지 편집</div>
                 </div>
-                <Button
-                    size="sm"
-                    className="dark:bg-[#7932FF] bg-[#7932FF] hover:bg-[#6028E0]"
-                    onClick={handleSave}
-                    disabled={!canSave}
-                >
+                <Button size="sm" className="bg-[#7932FF] hover:bg-[#6028E0]" onClick={handleSave} disabled={!canSave}>
                     {isSaving ? '저장 중...' : '수정 완료'}
                 </Button>
             </div>

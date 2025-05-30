@@ -41,10 +41,10 @@ export const NewChatModal = ({ open, onOpenChange }: { open: boolean; onOpenChan
                     </li>
                 </ul>
                 <div className="flex items-center justify-center gap-2 pt-7 pb-6 mt-auto">
-                    <Button variant="outline" className="w-[182px] h-[46px] text-[18px]">
+                    <Button variant="outline" size="lg">
                         취소
                     </Button>
-                    <Button className="w-[182px] h-[46px] text-[18px]">저장</Button>
+                    <Button size="lg">저장</Button>
                 </div>
             </DialogContent>
         </Dialog>

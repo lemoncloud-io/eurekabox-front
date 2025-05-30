@@ -6,7 +6,6 @@ import { Button } from '@eurekabox/lib/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@eurekabox/lib/components/ui/tooltip';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 
-
 interface UpdatedContentCardProps {
     content: string;
     onMaximize: () => void;
@@ -76,7 +75,7 @@ export const UpdatedContentCard = ({
 
     return (
         <div
-            className={`max-w-[278px] min-h-[197px] rounded-xl border border-[#F4F5F5] dark:border-[#3A3C40] bg-white dark:bg-[#262626] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] py-3 px-4 flex flex-col ${className}`}
+            className={`max-w-[278px] min-h-[197px] ml-[33px] rounded-xl border border-[#F4F5F5] dark:border-[#3A3C40] bg-white dark:bg-[#262626] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.08)] py-3 px-4 flex flex-col ${className}`}
         >
             <div className="flex items-center gap-[14px] sticky top-0">
                 <TooltipProvider>
