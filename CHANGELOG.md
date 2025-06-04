@@ -1,5 +1,17 @@
 # Changelog
 
+## [2025-06-04] - root@0.25.0, @eurekabox/web@0.25.0
+
+### Features
+
+-   add locales for ai
+-   add locales for ai
+-   add locales for ai chatbot
+
+### Bug Fixes
+
+-   (dialog) prevent focus trap on close
+
 ## [2025-06-04] - root@0.24.1, @eurekabox/web@0.24.1
 
 ### Refactor
