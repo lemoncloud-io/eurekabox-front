@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { EllipsisVertical, X } from 'lucide-react';
 
 import { Button } from '@eurekabox/lib/components/ui/button';
@@ -18,6 +20,8 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader = ({ modelName, onClose, onNewChat, onTestChat, onPricing }: ChatHeaderProps) => {
+    const { t } = useTranslation();
+
     return (
         <header className="py-[10px] px-3 flex items-center justify-between sticky top-0">
             <div className="text-sm font-medium">{modelName}</div>
@@ -30,15 +34,15 @@ export const ChatHeader = ({ modelName, onClose, onNewChat, onTestChat, onPricin
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[100px] px-3 bg-chatbot-card">
                         <DropdownMenuItem className="text-xs" onClick={onNewChat}>
-                            새 채팅 만들기
+                            {t('ai.chatbot.new_chat')}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
                         <DropdownMenuItem onClick={onTestChat} className="text-xs">
-                            채팅 테스트
+                            {t('ai.chatbot.test_chat')}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
                         <DropdownMenuItem onClick={onPricing} className="text-xs">
-                            비용 안내
+                            {t('ai.chatbot.pricing')}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

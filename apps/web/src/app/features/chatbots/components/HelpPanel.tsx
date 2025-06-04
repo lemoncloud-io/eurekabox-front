@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { X } from 'lucide-react';
 
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
@@ -21,8 +23,6 @@ interface HelpPanelProps {
     isDisabled?: boolean;
 }
 
-const FAQ_ITEMS = ['유레카박스란 무엇인가요?', '유레카코즈와 유레카박스의 차이는 무엇인가요?'];
-
 export const HelpPanel = ({
     activeTab,
     onTabChange,
@@ -35,6 +35,10 @@ export const HelpPanel = ({
     currentChatId,
     isDisabled = false,
 }: HelpPanelProps) => {
+    const { t } = useTranslation();
+
+    const FAQ_ITEMS = [t('help.faq.what_is_eurekabox'), t('help.faq.difference_between_eurekacause_and_eurekabox')];
+
     return (
         <div className="m-4 mt-0 p-[6px] bg-[#F4F5F5] dark:bg-[#222325] border border-t-0 border-[#EAEAEC] dark:border-[#3A3C40] rounded-b-lg">
             <div className="flex items-center sticky top-0">
@@ -49,7 +53,7 @@ export const HelpPanel = ({
                             activeTab === 'faq' ? 'text-text-800' : 'text-[#BABCC0] dark:text-[#787878]'
                         )}
                     >
-                        자주 하는 질문
+                        {t('help.tabs.faq')}
                         {activeTab === 'faq' && (
                             <div className="absolute left-1/2 -translate-x-1/2 bottom-[-3px] w-[18px] h-[2px] bg-text-800 rounded-[100px]" />
                         )}
@@ -62,7 +66,7 @@ export const HelpPanel = ({
                             activeTab === 'chat' ? 'text-text-800' : 'text-[#BABCC0] dark:text-[#787878]'
                         )}
                     >
-                        채팅 내역
+                        {t('help.tabs.chat_history')}
                         {activeTab === 'chat' && (
                             <div className="absolute left-1/2 -translate-x-1/2 bottom-[-3px] w-[18px] h-[2px] bg-text-800 rounded-[100px]" />
                         )}

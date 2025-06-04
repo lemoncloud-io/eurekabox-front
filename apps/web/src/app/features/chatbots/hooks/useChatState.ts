@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -26,6 +27,7 @@ interface UseChatStateProps {
 }
 
 export const useChatState = ({ initialChat }: UseChatStateProps) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { profile } = useWebCoreStore();
     const { removePin } = usePinnedConversationsStore();
@@ -147,10 +149,10 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                         : null,
                     isWaitingResponse: false,
                 }));
-                toast({ title: '메시지 전송에 실패했습니다.' });
+                toast({ title: t('chat.send_message_failed') });
             }
         },
-        [state.currentChat, sendMessage, queryClient, clearPendingMessage]
+        [state.currentChat, sendMessage, queryClient, clearPendingMessage, t]
     );
 
     const displayMessages = useMemo(() => {
@@ -172,8 +174,13 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                 ...(profile?.$user?.name && { name: profile?.$user?.name }),
             };
 
+            // i18n 적용: 채팅 이름 생성
+            const chatName = t('chat.new_chat_with_time', {
+                time: new Date().toLocaleTimeString(),
+            });
+
             await startMyChat.mutateAsync(
-                { name: `새 채팅 ${new Date().toLocaleTimeString()}`, profile$ },
+                { name: chatName, profile$ },
                 {
                     onSuccess: async (newChat: ChatView) => {
                         await queryClient.invalidateQueries(myChatbotKeys.invalidateList());
@@ -190,11 +197,11 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
             );
         } catch (error) {
             console.error('Failed to create new conversation:', error);
-            toast({ title: '새 채팅 생성에 실패했습니다.' });
+            toast({ title: t('chat.create_new_chat_failed') });
         } finally {
             setState(prev => ({ ...prev, isLoading: false }));
         }
-    }, [startMyChat, queryClient]);
+    }, [startMyChat, queryClient, t, profile]);
 
     const deleteConversation = useCallback(
         async (id: string) => {
@@ -215,13 +222,13 @@ export const useChatState = ({ initialChat }: UseChatStateProps) => {
                     };
                 });
 
-                toast({ title: '채팅이 삭제되었습니다.' });
+                toast({ title: t('chat.delete_chat_success') });
             } catch (error) {
                 console.error('Failed to delete conversation:', error);
-                toast({ title: '채팅 삭제에 실패했습니다.' });
+                toast({ title: t('chat.delete_chat_failed') });
             }
         },
-        [deleteMyChat, queryClient]
+        [deleteMyChat, queryClient, removePin, t]
     );
 
     const togglePinConversation = useCallback((id: string) => {

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { MessageCircleWarning, MessageSquareText, Paperclip, SendHorizontal } from 'lucide-react';
 
@@ -15,6 +16,8 @@ interface ChatInputProps {
 }
 
 export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, disabled = false }: ChatInputProps) => {
+    const { t } = useTranslation();
+
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isTextareaFocused, setIsTextareaFocused] = useState(false);
 
@@ -47,7 +50,7 @@ export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, d
                 <textarea
                     ref={textareaRef}
                     rows={1}
-                    placeholder="AI에게 무엇이든 물어보세요"
+                    placeholder={t('ai.chatbot.chat_input_placeholder')}
                     className="w-full max-h-[231px] overflow-auto resize-none outline-none bg-transparent"
                     value={value}
                     onChange={e => onChange(e.target.value)}

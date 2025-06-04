@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ChevronLeft } from 'lucide-react';
 
@@ -14,6 +15,7 @@ interface MessageEditViewProps {
 }
 
 export const MessageEditView = ({ message, onSave, onCancel, isLoading = false }: MessageEditViewProps) => {
+    const { t } = useTranslation();
     const [editedContent, setEditedContent] = useState(message.content || '');
     const [isSaving, setIsSaving] = useState(false);
 
@@ -62,10 +64,10 @@ export const MessageEditView = ({ message, onSave, onCancel, isLoading = false }
                     <Button variant="ghost" className="h-auto p-[2px] group" onClick={onCancel} disabled={isSaving}>
                         <ChevronLeft className="w-[18px] h-[18px] text-[#9FA2A7] group-hover:text-text transition-colors duration-200" />
                     </Button>
-                    <div className="font-medium truncate">메시지 편집</div>
+                    <div className="font-medium truncate">{t('message.edit_title')}</div>
                 </div>
                 <Button size="sm" className="bg-[#7932FF] hover:bg-[#6028E0]" onClick={handleSave} disabled={!canSave}>
-                    {isSaving ? '저장 중...' : '수정 완료'}
+                    {isSaving ? t('message.saving') : t('message.complete_edit')}
                 </Button>
             </div>
 
@@ -75,16 +77,16 @@ export const MessageEditView = ({ message, onSave, onCancel, isLoading = false }
                     onChange={e => setEditedContent(e.target.value)}
                     onKeyDown={handleKeyDown}
                     className="w-full flex-1 min-h-[200px] bg-transparent border-none outline-none resize-none text-text placeholder:text-text-500"
-                    placeholder="메시지를 수정하세요..."
+                    placeholder={t('message.edit_placeholder')}
                     disabled={isSaving || isLoading}
                     autoFocus
                 />
 
                 <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#E5E7EB] dark:border-[#374151]">
                     <div className="text-xs text-text-500">
-                        {hasChanges ? '변경사항이 있습니다' : '변경사항이 없습니다'}
+                        {hasChanges ? t('message.has_changes') : t('message.no_changes')}
                     </div>
-                    <div className="text-xs text-text-500">Ctrl+Enter로 저장, Esc로 취소</div>
+                    <div className="text-xs text-text-500">{t('message.keyboard_shortcuts')}</div>
                 </div>
             </div>
         </div>
