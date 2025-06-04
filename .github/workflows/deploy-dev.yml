@@ -187,6 +187,7 @@ jobs:
                   VITE_CONTENT_ENDPOINT: ${{ vars.VITE_CONTENT_ENDPOINT }}
                   VITE_IMAGE_API_ENDPOINT: ${{ vars.VITE_IMAGE_API_ENDPOINT }}
                   VITE_CODES_HOST: ${{ vars.VITE_CODES_HOST }}
+                  VITE_CHATBOTS_API_ENDPOINT: ${{ vars.VITE_CHATBOTS_API_ENDPOINT }}
               run: |
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
                   yarn ${{ matrix.project }}:deploy:dev
