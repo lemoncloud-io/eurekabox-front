@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-06-04] - root@0.24.1, @eurekabox/web@0.24.1
+
+### Refactor
+
+-   input style
+-   select focus style
+
 ## [2025-05-30] - root@0.24.0, @eurekabox/web@0.24.0
 
 ### Features
