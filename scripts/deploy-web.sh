@@ -32,9 +32,10 @@ fi
 
 # sync data to AWS S3
 echo 'deploy to' $DEPLOY
-aws s3 ${PROFILE} sync dist/apps/${APP_NAME} s3://${BUCKET_NAME}/${DEPLOY} --metadata-directive REPLACE --acl public-read --exclude "index.html" --exclude "*.css" --exclude "*.js" || { echo 'ERROR: s3 sync failed' ; exit 1; }
+aws s3 ${PROFILE} sync dist/apps/${APP_NAME} s3://${BUCKET_NAME}/${DEPLOY} --metadata-directive REPLACE --acl public-read --exclude "index.html" --exclude "*.css" --exclude "*.js" --exclude "locales/" || { echo 'ERROR: s3 sync failed' ; exit 1; }
 aws s3 ${PROFILE} sync dist/apps/${APP_NAME} s3://${BUCKET_NAME}/${DEPLOY} --metadata-directive REPLACE --acl public-read --exclude "*" --include "*.css" --include "*.js" --exclude 'assets/*' || { echo 'ERROR: s3 js/css sync failed' ; exit 1; }
 aws s3 ${PROFILE} sync dist/apps/${APP_NAME} s3://${BUCKET_NAME}/${DEPLOY} --metadata-directive REPLACE --acl public-read --exclude "*" --include "assets/*" || { echo 'ERROR: s3 sync failed' ; exit 1; }
+aws s3 ${PROFILE} sync dist/apps/${APP_NAME}/locales s3://${BUCKET_NAME}/${DEPLOY}/locales --metadata-directive REPLACE --acl public-read --cache-control "max-age=0,s-maxage=0,no-cache,no-store,must-revalidate,proxy-revalidate" || { echo 'ERROR: s3 locales sync failed' ; exit 1; }
 aws s3 ${PROFILE} cp dist/apps/${APP_NAME}/index.html s3://${BUCKET_NAME}/${DEPLOY}/index.html --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html --acl public-read || { echo 'ERROR: s3 cp index failed' ; exit 1; }
 
 if [ "$DEPLOY" = "dev" ] ; then
