@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { MessageCircleWarning, MessageSquareText, Paperclip, SendHorizontal } from 'lucide-react';
 
@@ -16,6 +16,7 @@ interface ChatInputProps {
 
 export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, disabled = false }: ChatInputProps) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [isTextareaFocused, setIsTextareaFocused] = useState(false);
 
     const handleInput = () => {
         const el = textareaRef.current;
@@ -38,7 +39,8 @@ export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, d
         <div className="w-full pt-[6px] px-4 mt-auto">
             <div
                 className={cn(
-                    'py-[6px] px-[10px] w-full border border-[#EAEAEC] dark:border-[#3A3C40] rounded-lg overflow-hidden transition-all duration-200 focus-within:border-[#7932FF] dark:focus-within:border-[#7932FF]',
+                    'py-[6px] px-[10px] w-full border border-[#EAEAEC] dark:border-[#3A3C40] rounded-lg overflow-hidden transition-all duration-200 ',
+                    isTextareaFocused ? 'border-[#7932FF]' : '',
                     isHelpOpen ? 'pb-[9px] rounded-b-none border-b-0' : 'mb-[14px]'
                 )}
             >
@@ -51,6 +53,8 @@ export const ChatInput = ({ value, onChange, onSubmit, onHelpOpen, isHelpOpen, d
                     onChange={e => onChange(e.target.value)}
                     onInput={handleInput}
                     onKeyDown={handleKeyDown}
+                    onFocus={() => setIsTextareaFocused(true)}
+                    onBlur={() => setIsTextareaFocused(false)}
                     disabled={disabled}
                 />
 
