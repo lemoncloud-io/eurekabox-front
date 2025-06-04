@@ -101,5 +101,95 @@
     },
     "pageLeave": {
         "unsavedChanges": "There are unsaved changes. Do you want to leave the page?"
+    },
+    "common": {
+        "workspace": "Workspace",
+        "project": "Project",
+        "loading": "Loading...",
+        "cancel": "Cancel",
+        "retry": "Retry",
+        "save": "Save",
+        "create": "Create",
+        "delete": "Delete"
+    },
+    "ai": {
+        "prompt": {
+            "load_error": "Failed to load prompts",
+            "update_success": "Prompt has been updated",
+            "update_error": "Failed to update prompt",
+            "reload": "Reload Prompts",
+            "title": "Prompts",
+            "no_prompts": "No Prompts found",
+            "system_prompt": "System Prompts",
+            "user_prompt": "User Prompts",
+            "untitled": "Untitled"
+        },
+        "model": {
+            "dialog_title": "Select Model Combinations",
+            "embedding": {
+                "title": "Embedding Model",
+                "description": "A model that converts text into vectors to quantify meaning. Used for document search and similarity analysis."
+            },
+            "chat": {
+                "title": "Chat Model",
+                "description": "An interactive AI model that generates responses to user questions. Includes language models like GPT."
+            },
+            "system_prompt": {
+                "title": "System Prompt",
+                "description": "A prompt that defines the AI's behavior and response style."
+            },
+            "user_prompt": {
+                "title": "User Prompt",
+                "description": "A prompt that includes user questions and related documents for AI requests. Enhances question context and guides accurate answers."
+            },
+            "combinations": "Selected Combinations",
+            "cancel": "Cancel",
+            "create": "Create",
+            "success_message": "Chat group has been created successfully."
+        },
+        "chatbot": {
+            "strategy": "Strategy",
+            "strategy_placeholder": "Select Strategy",
+            "edit": "Edit",
+            "delete": "Delete",
+            "cancel": "Cancel",
+            "edit_chat": "Edit Chat",
+            "name": "Name",
+            "name_placeholder": "Enter chat name",
+            "embedding_model": "Embedding Model",
+            "embedding_placeholder": "Select embedding model",
+            "chat_type": "Chat Type",
+            "chat_type_placeholder": "Select chat type",
+            "prompt": "Prompt",
+            "prompt_placeholder": "Select prompt",
+            "input_placeholder": "How can I help you?",
+            "reference_documents": "Reference Documents",
+            "no_messages": "There are no messages yet"
+        },
+        "chat": {
+            "title": "AI Chat",
+            "load_error": "Failed to load chat list",
+            "load_error_message": "Failed to load chats. Please try again.",
+            "create_success": "New chat has been created",
+            "delete_success": "Chat has been deleted",
+            "delete_error": "Failed to delete chat",
+            "list_title": "Chat List",
+            "no_chats": "No chats found",
+            "untitled": "Untitled Chat",
+            "create_title": "Create New Chat",
+            "name_label": "Chat Name",
+            "name_placeholder": "Enter chat name",
+            "delete_title": "Delete Chat",
+            "delete_confirm": "Are you sure you want to delete this chat?",
+            "send_error": "Failed to send messages",
+            "compare_title": "{{name}} Message Comparison",
+            "compare_description": "Compare {{count}} AI responses",
+            "select_chat": "Please select a chat",
+            "select_chat_description": "Select an existing chat from the left sidebar\nor create a new chat",
+            "delete_confirmation": "Are you sure you want to delete this chat?"
+        },
+        "agent": {
+            "title": "AI Agent"
+        }
     }
 }

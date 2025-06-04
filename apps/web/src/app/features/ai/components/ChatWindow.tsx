@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import { Check, EllipsisVertical, Quote, X } from 'lucide-react';
@@ -25,6 +26,7 @@ interface ChatWindowProps {
 }
 
 export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps) => {
+    const { t } = useTranslation();
     // TODO: update value
     const isReadyToReaction = false;
     const containerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +109,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align={message.stereo === 'query' ? 'start' : 'end'}>
                                                 <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">
-                                                    참고문서
+                                                    {t('ai.chatbot.reference_documents')}
                                                 </div>
                                                 {message.documentIds.map((documentId: string, idx: number) => (
                                                     <DropdownMenuItem
@@ -360,7 +362,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                         </div>
                     ))
                 ) : !isFetching && !isFetchingNextPage && !isSending ? (
-                    <div className="text-center text-sm text-muted-foreground">아직 메시지가 없습니다</div>
+                    <div className="text-center text-sm text-muted-foreground">{t('ai.chatbot.no_messages')}</div>
                 ) : null}
                 {(isFetching || isFetchingNextPage || isSending) && (
                     <div className="text-center text-sm text-muted-foreground p-2">
@@ -377,7 +379,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                     <div className="space-y-4">
                         {selectedDocument ? (
                             <div className="whitespace-pre-wrap text-sm">
-                                <div className="font-semibold mb-2">문서 ID: {selectedDocument.id}</div>
+                                <div className="font-semibold mb-2">Document ID: {selectedDocument.id}</div>
                                 <div>{selectedDocument.content}</div>
                             </div>
                         ) : (

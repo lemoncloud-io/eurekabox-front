@@ -101,5 +101,95 @@
     },
     "pageLeave": {
         "unsavedChanges": "저장되지 않은 변경사항이 있습니다. 페이지를 나가시겠습니까?"
+    },
+    "common": {
+        "workspace": "워크스페이스",
+        "project": "프로젝트",
+        "loading": "로딩 중...",
+        "cancel": "취소",
+        "save": "저장",
+        "retry": "다시 시도",
+        "create": "생성",
+        "delete": "삭제"
+    },
+    "ai": {
+        "prompt": {
+            "load_error": "프롬프트 목록을 불러오는데 실패했습니다",
+            "update_success": "프롬프트가 수정되었습니다",
+            "update_error": "프롬프트 수정에 실패했습니다",
+            "reload": "프롬프트 다시 불러오기",
+            "title": "프롬프트",
+            "no_prompts": "프롬프트가 없습니다",
+            "system_prompt": "시스템 프롬프트",
+            "user_prompt": "유저 프롬프트",
+            "untitled": "제목 없음"
+        },
+        "model": {
+            "dialog_title": "모델 조합 선택",
+            "embedding": {
+                "title": "임베딩 모델",
+                "description": "텍스트를 벡터로 변환하여 의미를 수치화하는 모델입니다. 문서 검색 및 유사도 분석에 사용됩니다."
+            },
+            "chat": {
+                "title": "채팅 모델",
+                "description": "사용자의 질문에 답변을 생성하는 대화형 AI 모델입니다. GPT와 같은 언어 모델을 포함합니다."
+            },
+            "system_prompt": {
+                "title": "시스템 프롬프트",
+                "description": "AI의 동작 방식과 응답 스타일을 정의하는 프롬프트입니다."
+            },
+            "user_prompt": {
+                "title": "유저 프롬프트",
+                "description": "사용자의 질문과 관련 문서를 포함하여 AI에 요청하는 프롬프트입니다. 질문의 문맥을 강화하고 정확한 답변을 유도합니다."
+            },
+            "combinations": "선택된 조합",
+            "cancel": "취소",
+            "create": "생성",
+            "success_message": "채팅 그룹이 성공적으로 생성되었습니다."
+        },
+        "chatbot": {
+            "strategy": "전략",
+            "strategy_placeholder": "전략 선택",
+            "edit": "수정",
+            "delete": "삭제",
+            "cancel": "취소",
+            "edit_chat": "채팅 수정",
+            "name": "이름",
+            "name_placeholder": "채팅 이름을 입력하세요",
+            "embedding_model": "임베딩 모델",
+            "embedding_placeholder": "임베딩 모델을 선택하세요",
+            "chat_type": "채팅 타입",
+            "chat_type_placeholder": "채팅 타입을 선택하세요",
+            "prompt": "프롬프트",
+            "prompt_placeholder": "프롬프트를 선택하세요",
+            "input_placeholder": "어떤 도움이 필요하세요?",
+            "reference_documents": "참고문서",
+            "no_messages": "아직 메시지가 없습니다"
+        },
+        "chat": {
+            "title": "AI 채팅",
+            "load_error": "채팅 목록을 불러오는데 실패했습니다",
+            "load_error_message": "채팅 목록을 불러오는데 실패했습니다. 다시 시도해주세요.",
+            "create_success": "새로운 채팅이 생성되었습니다",
+            "delete_success": "채팅이 삭제되었습니다",
+            "delete_error": "채팅 삭제에 실패했습니다",
+            "list_title": "채팅 리스트",
+            "no_chats": "채팅이 없습니다",
+            "untitled": "제목 없는 채팅",
+            "create_title": "새로운 채팅 만들기",
+            "name_label": "채팅방 이름",
+            "name_placeholder": "채팅방 이름을 입력하세요",
+            "delete_title": "채팅 삭제",
+            "delete_confirm": "정말로 이 채팅을 삭제하시겠습니까?",
+            "send_error": "메시지 전송에 실패했습니다",
+            "compare_title": "{{name}} 메세지 비교",
+            "compare_description": "{{count}}개의 AI 응답을 비교해보세요",
+            "select_chat": "채팅을 선택해주세요",
+            "select_chat_description": "왼쪽 사이드바에서 기존 채팅을 선택하거나\n새로운 채팅을 만들어주세요",
+            "delete_confirmation": "정말로 이 채팅을 삭제하시겠습니까?"
+        },
+        "agent": {
+            "title": "AI 에이전트"
+        }
     }
 }
