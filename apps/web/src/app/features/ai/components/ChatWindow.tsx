@@ -374,7 +374,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
             <Dialog open={!!selectedDocId} onOpenChange={() => setSelectedDocId(null)}>
                 <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>참고문서 상세</DialogTitle>
+                        <DialogTitle>{t('ai.chatbot.reference_documents')}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                         {selectedDocument ? (

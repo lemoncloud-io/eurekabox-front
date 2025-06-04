@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -28,10 +29,8 @@ import { useWebCoreStore } from '@eurekabox/web-core';
 
 import { usePagination } from '../../../shared';
 
-
-
-
 export const RootChats = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { id } = useParams();
     const { setIsLoading } = useGlobalLoader();
@@ -58,7 +57,7 @@ export const RootChats = () => {
     useEffect(() => {
         setIsLoading(isLoading);
         if (error) {
-            toast({ title: '채팅 목록을 불러오는데 실패했습니다.' });
+            toast({ title: t('ai.chat.load_error') });
         }
     }, [isLoading, error, setIsLoading]);
 
@@ -98,7 +97,7 @@ export const RootChats = () => {
                         await queryClient.invalidateQueries(rootChatbotsKeys.invalidateList());
                         setNewChatName('');
                         setIsOpen(false);
-                        toast({ title: '새로운 채팅이 생성되었습니다.' });
+                        toast({ title: t('ai.chat.create_success') });
                         navigate(`/ai/chat/${newChat.id}`);
                     },
                 }
@@ -129,12 +128,12 @@ export const RootChats = () => {
                     await createAsyncDelay(500);
                     await queryClient.invalidateQueries(rootChatbotsKeys.invalidateList());
                     navigate(-1);
-                    toast({ title: '채팅이 삭제되었습니다.' });
+                    toast({ title: t('ai.chat.delete_success') });
                 },
             });
         } catch (error) {
             console.error('Failed to delete chat:', error);
-            toast({ title: '채팅 삭제에 실패했습니다.' });
+            toast({ title: t('ai.chat.delete_error') });
         } finally {
             setIsLoading(false);
         }
@@ -146,14 +145,14 @@ export const RootChats = () => {
                 <CardHeader>
                     <CardTitle className="font-medium flex items-center">
                         <MessageSquare className="h-5 w-5 mr-2" />
-                        채팅 리스트
+                        {t('ai.chat.list_title')}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
                     <div className="flex flex-col items-center gap-2">
-                        <div className="text-red-500">Failed to load chats. Please try again.</div>
+                        <div className="text-red-500">{t('ai.chat.load_error_message')}</div>
                         <Button variant="outline" size="sm" onClick={() => refetch()}>
-                            Retry
+                            {t('common.retry')}
                         </Button>
                     </div>
                 </CardContent>
@@ -168,7 +167,7 @@ export const RootChats = () => {
                     <CardTitle className="font-medium flex items-center justify-between">
                         <div className="flex items-center">
                             <MessageSquare className="h-5 w-5 mr-2" />
-                            채팅 리스트
+                            {t('ai.chat.list_title')}
                         </div>
                         <Button
                             variant="outline"
@@ -183,9 +182,9 @@ export const RootChats = () => {
                 <CardContent className="flex-1 p-0 flex flex-col overflow-auto">
                     <div className="h-full space-y-1 p-2 flex-1 flex flex-col">
                         {isLoading ? (
-                            <div className="p-4 text-center">Loading...</div>
+                            <div className="p-4 text-center">{t('common.loading')}</div>
                         ) : rootChatsData?.data?.length === 0 ? (
-                            <div className="p-4 text-center text-gray-500">No chats found</div>
+                            <div className="p-4 text-center text-gray-500">{t('ai.chat.no_chats')}</div>
                         ) : (
                             <>
                                 <div className="flex-1 space-y-1 overflow-auto">
@@ -196,7 +195,7 @@ export const RootChats = () => {
                                                 className="w-full justify-start text-sm h-9"
                                                 onClick={() => handleChatSelect(chat.id)}
                                             >
-                                                {chat.name || 'Untitled Chat'}
+                                                <span className="truncate">{chat.name || t('ai.chat.untitled')}</span>
                                             </Button>
                                             <Button
                                                 variant="ghost"
@@ -254,12 +253,12 @@ export const RootChats = () => {
                 }}
             >
                 <DialogContent>
-                    <DialogTitle className="text-center">새로운 채팅 만들기</DialogTitle>
+                    <DialogTitle className="text-center">{t('ai.chat.create_title')}</DialogTitle>
                     <div className="px-6 pt-6">
                         <div>
-                            <Label>채팅방 이름</Label>
+                            <Label>{t('ai.chat.name_label')}</Label>
                             <Input
-                                placeholder="채팅방 이름을 입력하세요"
+                                placeholder={t('ai.chat.name_placeholder')}
                                 value={newChatName}
                                 onChange={e => setNewChatName(e.target.value)}
                             />
@@ -274,7 +273,7 @@ export const RootChats = () => {
                                 }}
                                 disabled={createRootChat.isPending}
                             >
-                                취소
+                                {t('common.cancel')}
                             </Button>
                             <Button
                                 onClick={handleCreateChat}
@@ -286,7 +285,7 @@ export const RootChats = () => {
                                         <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                     </div>
                                 ) : (
-                                    '생성'
+                                    t('common.create')
                                 )}
                             </Button>
                         </div>
@@ -296,15 +295,15 @@ export const RootChats = () => {
 
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogContent>
-                    <AlertDialogTitle>채팅 삭제</AlertDialogTitle>
-                    <AlertDialogDescription>정말로 이 채팅을 삭제하시겠습니까?</AlertDialogDescription>
+                    <AlertDialogTitle>{t('ai.chat.delete_title')}</AlertDialogTitle>
+                    <AlertDialogDescription>{t('ai.chat.delete_confirm')}</AlertDialogDescription>
                     <AlertDialogFooter>
                         <AlertDialogCancel
                             type="button"
                             onClick={() => setIsDeleteDialogOpen(false)}
                             disabled={deleteChat.isPending}
                         >
-                            취소
+                            {t('common.cancel')}
                         </AlertDialogCancel>
                         <AlertDialogAction type="button" onClick={handleConfirmDelete} disabled={deleteChat.isPending}>
                             {deleteChat.isPending ? (
@@ -312,7 +311,7 @@ export const RootChats = () => {
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                 </div>
                             ) : (
-                                '삭제'
+                                t('common.delete')
                             )}
                         </AlertDialogAction>
                     </AlertDialogFooter>

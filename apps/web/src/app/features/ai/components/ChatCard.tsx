@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { MonitorSmartphone, MoreVertical, Pencil, Trash } from 'lucide-react';
@@ -34,6 +35,7 @@ interface ChatCardProps {
 }
 
 export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef, cardHeight }: ChatCardProps) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     const { data: embeddingsData } = useEmbeddings({ limit: -1 });
@@ -163,11 +165,11 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                                     <Pencil className="h-4 w-4 mr-1" />
-                                    수정
+                                    {t('ai.chatbot.edit')}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onDelete(chat.id)}>
                                     <Trash className="h-4 w-4 mr-1 text-destructive" />
-                                    <span className="text-destructive">삭제</span>
+                                    <span className="text-destructive">{t('ai.chatbot.delete')}</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -185,25 +187,27 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                 <DialogContent>
-                    <DialogTitle className="text-center">{chat.name || `Chat #${chat.id}`} 수정</DialogTitle>
+                    <DialogTitle className="text-center">
+                        {chat.name || `Chat #${chat.id}`} {t('ai.chatbot.edit')}
+                    </DialogTitle>
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
-                            <Label>Name</Label>
+                            <Label>{t('ai.chatbot.name')}</Label>
                             <Input
                                 value={editForm.name}
                                 onChange={e => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                                placeholder="Enter chat name"
+                                placeholder={t('ai.chatbot.name_placeholder')}
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Embedding Model</Label>
+                            <Label>{t('ai.chatbot.embedding_model')}</Label>
                             <Select
                                 disabled
                                 value={editForm.embeddingId}
                                 onValueChange={value => setEditForm(prev => ({ ...prev, embeddingId: value }))}
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select embedding model" />
+                                    <SelectValue placeholder={t('ai.chatbot.embedding_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {embeddingsData?.data.map(embedding => (
@@ -215,14 +219,14 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label>Chat Type</Label>
+                            <Label>{t('ai.chatbot.chat_type')}</Label>
                             <Select
                                 disabled
                                 value={editForm.brainId}
                                 onValueChange={value => setEditForm(prev => ({ ...prev, brainId: value }))}
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select chat type" />
+                                    <SelectValue placeholder={t('ai.chatbot.chat_type_placeholder')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {brainsData?.data.map(brain => (
@@ -234,7 +238,7 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                             </Select>
                         </div>
                         <div className="space-y-2">
-                            <Label>Prompt</Label>
+                            <Label>{t('ai.chatbot.prompt')}</Label>
                             <Select
                                 disabled
                                 value={editForm.promptId}
@@ -260,7 +264,7 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                             onClick={() => setIsEditDialogOpen(false)}
                             disabled={updateChat.isPending}
                         >
-                            취소
+                            {t('ai.chatbot.cancel')}
                         </Button>
                         <Button onClick={handleUpdateChat} disabled={updateChat.isPending} size="lg">
                             {updateChat.isPending ? (
@@ -268,7 +272,7 @@ export const ChatCard = ({ chat, index, isSending, onDelete, onScroll, scrollRef
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                 </div>
                             ) : (
-                                '수정'
+                                t('ai.chatbot.edit')
                             )}
                         </Button>
                     </div>
