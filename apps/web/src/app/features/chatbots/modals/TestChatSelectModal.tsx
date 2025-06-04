@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -25,12 +26,7 @@ import {
     usePrompts,
 } from '@eurekabox/chatbots';
 import { Button } from '@eurekabox/lib/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@eurekabox/lib/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/lib/components/ui/dialog';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 import { useWebCoreStore } from '@eurekabox/web-core';
 
@@ -45,6 +41,7 @@ export const TestChatSelectModal = ({
     newChatName?: string;
     closeChatbot?: () => void;
 }) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { profile } = useWebCoreStore();
     const navigate = useNavigate();
@@ -161,7 +158,7 @@ export const TestChatSelectModal = ({
                                 await createAsyncDelay(200);
                                 await queryClient.invalidateQueries(rootChatbotsKeys.invalidateList());
                                 await queryClient.invalidateQueries(chatbotsKeys.invalidateList());
-                                toast({ title: '채팅 그룹이 성공적으로 생성되었습니다.' });
+                                toast({ title: t('testChatModal.chat_group_created_success') });
                                 onOpenChange(false);
                                 resetAllSelections();
                                 navigate(`/ai/chat/${newChat.id}`);
@@ -174,8 +171,8 @@ export const TestChatSelectModal = ({
         } catch (error) {
             console.error('Failed to create chat:', error);
             toast({
-                title: '채팅 생성 실패',
-                description: '채팅 생성 중 오류가 발생했습니다.',
+                title: t('testChatModal.chat_creation_failed'),
+                description: t('testChatModal.chat_creation_error'),
                 variant: 'destructive',
             });
         } finally {
@@ -194,21 +191,21 @@ export const TestChatSelectModal = ({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="p-0">
                 <DialogHeader>
-                    <DialogTitle>테스트 모델 조합 선택</DialogTitle>
+                    <DialogTitle>{t('testChatModal.title')}</DialogTitle>
                 </DialogHeader>
                 <div className="px-[18px] overflow-auto">
                     <div className="text-[18px] font-medium mb-7">
-                        에이전트를 직접 조합한 후에
+                        {t('testChatModal.description_line1')}
                         <br />
-                        채팅 테스트를 진행해 보세요
+                        {t('testChatModal.description_line2')}
                     </div>
 
                     {/* 임베딩 모델 */}
-                    <div className="text-base font-medium mb-[2px]">임베딩 모델</div>
+                    <div className="text-base font-medium mb-[2px]">{t('testChatModal.embedding_model.title')}</div>
                     <div className="text-xs text-text-700">
-                        컴퓨터가 이해할 수 있도록 데이터를 숫자로
+                        {t('testChatModal.embedding_model.description_line1')}
                         <br />
-                        이루어진 배열로 바꾸는 모델
+                        {t('testChatModal.embedding_model.description_line2')}
                     </div>
                     <div className="mt-[10px] flex flex-col space-y-[6px]">
                         {embeddingsData?.data.map(embedding => {
@@ -233,8 +230,8 @@ export const TestChatSelectModal = ({
                     <div className="w-full h-[1px] bg-[#F0F0F0] dark:bg-[#53555B] my-[18px]"></div>
 
                     {/* 시스템 프롬프트 */}
-                    <div className="text-base font-medium mb-[2px]">시스템 프롬프트</div>
-                    <div className="text-xs text-text-700">AI 행동 방식, 말투, 역할과 같은 페르소나</div>
+                    <div className="text-base font-medium mb-[2px]">{t('testChatModal.system_prompt.title')}</div>
+                    <div className="text-xs text-text-700">{t('testChatModal.system_prompt.description')}</div>
                     <div className="mt-[10px] flex flex-col space-y-[6px]">
                         {systemPromptsData?.data.map(prompt => {
                             const isSelected = selectedPrompts.some(p => p.id === prompt.id);
@@ -258,8 +255,8 @@ export const TestChatSelectModal = ({
                     <div className="w-full h-[1px] bg-[#F0F0F0] dark:bg-[#53555B] my-[18px]"></div>
 
                     {/* 채팅 모델 */}
-                    <div className="text-base font-medium mb-[2px]">채팅 모델</div>
-                    <div className="text-xs text-text-700">인공지능 모델</div>
+                    <div className="text-base font-medium mb-[2px]">{t('testChatModal.chat_model.title')}</div>
+                    <div className="text-xs text-text-700">{t('testChatModal.chat_model.description')}</div>
                     <div className="mt-[10px] flex flex-col space-y-[6px]">
                         {brainsData?.data.map(brain => {
                             const isSelected = selectedChatModels.some(m => m.id === brain.id);
@@ -283,8 +280,8 @@ export const TestChatSelectModal = ({
                     <div className="w-full h-[1px] bg-[#F0F0F0] dark:bg-[#53555B] my-[18px]"></div>
 
                     {/* 사용자 프롬프트 */}
-                    <div className="text-base font-medium mb-[2px]">사용자 프롬프트</div>
-                    <div className="text-xs text-text-700">사용자의 질문과 관련 문서를 포함하여 AI에게 요청</div>
+                    <div className="text-base font-medium mb-[2px]">{t('testChatModal.user_prompt.title')}</div>
+                    <div className="text-xs text-text-700">{t('testChatModal.user_prompt.description')}</div>
                     <div className="mt-[10px] flex flex-col space-y-[6px]">
                         {userPromptsData?.data.map(prompt => {
                             const isSelected = selectedUserPrompts.some(p => p.id === prompt.id);
@@ -309,15 +306,18 @@ export const TestChatSelectModal = ({
                 <div className="pb-4 pt-[10px] px-4 bg-popup border-t border-[#BABCC0] dark:border-[#53555B]">
                     {combinations.length === 0 ? (
                         <div className="text-text-800 pb-[19px] pt-[18px] text-center">
-                            선택된 조합이 없습니다.
-                            <br />위 4가지 유형에서 조합할 항목을 선택해주세요.
+                            {t('testChatModal.no_combinations_line1')}
+                            <br />
+                            {t('testChatModal.no_combinations_line2')}
                         </div>
                     ) : (
                         ''
                     )}
                     {combinations.length > 0 && (
                         <div>
-                            <div className="font-medium mb-[10px]">선택된 조합 ({combinations.length})</div>
+                            <div className="font-medium mb-[10px]">
+                                {t('testChatModal.selected_combinations', { count: combinations.length })}
+                            </div>
                             <div className="flex flex-col space-y-1 overflow-auto max-h-[140px]">
                                 {combinations.map((combo, index) => (
                                     <div
@@ -335,7 +335,7 @@ export const TestChatSelectModal = ({
                     )}
                     <div className="flex items-center justify-center gap-2 pt-[9px]">
                         <Button variant="outline" size="lg" onClick={handleCancel} disabled={isPending}>
-                            취소
+                            {t('common.cancel')}
                         </Button>
                         <Button size="lg" disabled={combinations.length === 0 || isPending} onClick={handleSubmit}>
                             {isPending ? (
@@ -343,7 +343,7 @@ export const TestChatSelectModal = ({
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                 </div>
                             ) : (
-                                '생성'
+                                t('common.create')
                             )}
                         </Button>
                     </div>

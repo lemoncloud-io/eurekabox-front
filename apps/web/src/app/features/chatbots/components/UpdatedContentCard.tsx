@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Check, Copy, Maximize2, X } from 'lucide-react';
 
@@ -13,13 +14,11 @@ interface UpdatedContentCardProps {
     className?: string;
 }
 
-export const UpdatedContentCard = ({
-    content,
-    onMaximize,
-    title = '질문 요약',
-    className = '',
-}: UpdatedContentCardProps) => {
+export const UpdatedContentCard = ({ content, onMaximize, title, className = '' }: UpdatedContentCardProps) => {
+    const { t } = useTranslation();
     const [copyState, setCopyState] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
+
+    const cardTitle = title || t('updatedContent.question_summary');
 
     const handleCopy = async () => {
         if (!content || copyState === 'copying') {
@@ -36,8 +35,8 @@ export const UpdatedContentCard = ({
             console.error('Copy failed:', error);
             setCopyState('error');
             toast({
-                title: '복사 실패',
-                description: '텍스트 복사에 실패했습니다.',
+                title: t('updatedContent.copy_failed'),
+                description: t('updatedContent.copy_failed_description'),
             });
             setTimeout(() => setCopyState('idle'), 1000);
         }
@@ -63,13 +62,13 @@ export const UpdatedContentCard = ({
     const getCopyTooltipText = () => {
         switch (copyState) {
             case 'copying':
-                return '복사 중';
+                return t('updatedContent.copying');
             case 'copied':
-                return '복사됨';
+                return t('updatedContent.copied');
             case 'error':
-                return '복사 실패';
+                return t('updatedContent.copy_failed');
             default:
-                return '복사';
+                return t('updatedContent.copy');
         }
     };
 
@@ -86,11 +85,11 @@ export const UpdatedContentCard = ({
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent className="dark:bg-[#787878] p-1">
-                            <p className="dark:text-white">편집하기</p>
+                            <p className="dark:text-white">{t('updatedContent.edit')}</p>
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-                <div className="text-[13px] font-medium text-[#84888F]">{title}</div>
+                <div className="text-[13px] font-medium text-[#84888F]">{cardTitle}</div>
             </div>
 
             <div

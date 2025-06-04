@@ -101,5 +101,236 @@
     },
     "pageLeave": {
         "unsavedChanges": "There are unsaved changes. Do you want to leave the page?"
+    },
+    "common": {
+        "workspace": "Workspace",
+        "project": "Project",
+        "loading": "Loading...",
+        "cancel": "Cancel",
+        "retry": "Retry",
+        "save": "Save",
+        "create": "Create",
+        "delete": "Delete",
+        "confirm": "Confirm"
+    },
+    "ai": {
+        "prompt": {
+            "load_error": "Failed to load prompts",
+            "update_success": "Prompt has been updated",
+            "update_error": "Failed to update prompt",
+            "reload": "Reload Prompts",
+            "title": "Prompts",
+            "no_prompts": "No Prompts found",
+            "system_prompt": "System Prompts",
+            "user_prompt": "User Prompts",
+            "untitled": "Untitled"
+        },
+        "model": {
+            "dialog_title": "Select Model Combinations",
+            "embedding": {
+                "title": "Embedding Model",
+                "description": "A model that converts text into vectors to quantify meaning. Used for document search and similarity analysis."
+            },
+            "chat": {
+                "title": "Chat Model",
+                "description": "An interactive AI model that generates responses to user questions. Includes language models like GPT."
+            },
+            "system_prompt": {
+                "title": "System Prompt",
+                "description": "A prompt that defines the AI's behavior and response style."
+            },
+            "user_prompt": {
+                "title": "User Prompt",
+                "description": "A prompt that includes user questions and related documents for AI requests. Enhances question context and guides accurate answers."
+            },
+            "combinations": "Selected Combinations",
+            "cancel": "Cancel",
+            "create": "Create",
+            "success_message": "Chat group has been created successfully."
+        },
+        "chatbot": {
+            "strategy": "Strategy",
+            "strategy_placeholder": "Select Strategy",
+            "edit": "Edit",
+            "delete": "Delete",
+            "cancel": "Cancel",
+            "edit_chat": "Edit Chat",
+            "name": "Name",
+            "name_placeholder": "Enter chat name",
+            "embedding_model": "Embedding Model",
+            "embedding_placeholder": "Select embedding model",
+            "chat_type": "Chat Type",
+            "chat_type_placeholder": "Select chat type",
+            "prompt": "Prompt",
+            "prompt_placeholder": "Select prompt",
+            "input_placeholder": "How can I help you?",
+            "reference_documents": "Reference Documents",
+            "no_messages": "There are no messages yet",
+            "greeting": "How can I help you?",
+            "generating_response": "Generating response",
+            "loading_messages": "Loading messages...",
+            "new_chat": "New Chat",
+            "test_chat": "Test Chat",
+            "pricing": "Pricing Info",
+            "chat_input_placeholder": "Ask AI anything"
+        },
+        "chat": {
+            "title": "AI Chat",
+            "load_error": "Failed to load chat list",
+            "load_error_message": "Failed to load chats. Please try again.",
+            "create_success": "New chat has been created",
+            "delete_success": "Chat has been deleted",
+            "delete_error": "Failed to delete chat",
+            "list_title": "Chat List",
+            "no_chats": "No chats found",
+            "untitled": "Untitled Chat",
+            "create_title": "Create New Chat",
+            "name_label": "Chat Name",
+            "name_placeholder": "Enter chat name",
+            "delete_title": "Delete Chat",
+            "delete_confirm": "Are you sure you want to delete this chat?",
+            "send_error": "Failed to send messages",
+            "compare_title": "{{name}} Message Comparison",
+            "compare_description": "Compare {{count}} AI responses",
+            "select_chat": "Please select a chat",
+            "select_chat_description": "Select an existing chat from the left sidebar\nor create a new chat",
+            "delete_confirmation": "Are you sure you want to delete this chat?"
+        },
+        "agent": {
+            "title": "AI Agent"
+        }
+    },
+    "conversation": {
+        "new_chat": "New Chat",
+        "pin": "Pin",
+        "unpin": "Unpin",
+        "delete_confirmation_title": "Are you sure you want to delete this chat?",
+        "delete_confirmation_description": "Deleted chats cannot be recovered.",
+        "pinned_icon_alt": "Pinned icon",
+        "latest": "Latest"
+    },
+    "help": {
+        "tabs": {
+            "faq": "FAQ",
+            "chat_history": "Chat History"
+        },
+        "faq": {
+            "what_is_eurekabox": "What is EurekaBox?",
+            "difference_between_eurekacause_and_eurekabox": "What is the difference between EurekaCause and EurekaBox?"
+        }
+    },
+    "message": {
+        "edit_title": "Edit Message",
+        "saving": "Saving...",
+        "complete_edit": "Complete Edit",
+        "edit_placeholder": "Edit your message...",
+        "has_changes": "You have unsaved changes",
+        "no_changes": "No changes made",
+        "keyboard_shortcuts": "Ctrl+Enter to save, Esc to cancel",
+        "copy_failed": "Copy Failed",
+        "copy_failed_description": "Failed to copy text.",
+        "copying": "Copying",
+        "copied": "Copied",
+        "copy": "Copy",
+        "send_failed": "Failed to send - Please try again",
+        "chatbot_image_alt": "Chatbot image",
+        "related_documents": "Related Documents",
+        "document_detail": "Reference Document Detail",
+        "loading_document": "Loading document...",
+        "document_name": "Document Name",
+        "untitled": "Untitled",
+        "document_id": "Document ID",
+        "content": "Content",
+        "no_content": "No content available.",
+        "document_not_found": "Document not found.",
+        "edit": "Edit",
+        "question_summary": "Question Summary",
+        "new_message": "New Message"
+    },
+    "updatedContent": {
+        "question_summary": "Question Summary",
+        "copy_failed": "Copy Failed",
+        "copy_failed_description": "Failed to copy text.",
+        "copying": "Copying",
+        "copied": "Copied",
+        "copy": "Copy",
+        "edit": "Edit"
+    },
+    "chat": {
+        "new_chat_with_time": "New Chat {{time}}",
+        "send_message_failed": "Failed to send message",
+        "create_new_chat_failed": "Failed to create new chat",
+        "delete_chat_success": "Chat has been deleted",
+        "delete_chat_failed": "Failed to delete chat"
+    },
+    "chatModels": {
+        "gpt4o": {
+            "description": "The most powerful AI model optimized for complex tasks"
+        },
+        "gpt4oMini": {
+            "description": "Fast and efficient AI model for everyday tasks"
+        }
+    },
+    "newChatModal": {
+        "enter_chat_name": "Please enter a chat name",
+        "chat_created_success": "New chat has been created",
+        "chat_created_failed": "Failed to create chat",
+        "create_new_chat": "Create New Chat",
+        "chat_model": "Chat Model",
+        "recommended": "Recommended",
+        "pricing": "input ${{input}} / Cached input ${{cachedInput}} / Output ${{output}}",
+        "chat_name": "Chat Name",
+        "enter_chat_name_placeholder": "Enter chat name",
+        "creating": "Creating..."
+    },
+    "pricing": {
+        "title": "Pricing Information",
+        "tabs": {
+            "billing": "Billing Cost",
+            "conversation": "Cost per Conversation"
+        },
+        "billing": {
+            "agent_model": "Agent Model",
+            "base_fee": "Base Fee",
+            "realtime_fee": "Real-time Fee",
+            "realtime_token_usage": "Real-time Token Usage",
+            "cumulative_fee": "Cumulative Fee",
+            "cumulative_token_usage": "Cumulative Token Usage",
+            "total_cost": "Total Cost"
+        },
+        "conversation": {
+            "question_name": "Question Name",
+            "token_usage": "Token Usage",
+            "billing_fee": "Billing Fee",
+            "question_title_display": "Question Title Display"
+        }
+    },
+    "testChatModal": {
+        "title": "Select Test Model Combinations",
+        "description_line1": "After combining agents yourself,",
+        "description_line2": "try a chat test",
+        "embedding_model": {
+            "title": "Embedding Model",
+            "description_line1": "A model that converts data into arrays",
+            "description_line2": "of numbers for computer understanding"
+        },
+        "system_prompt": {
+            "title": "System Prompt",
+            "description": "AI behavior, tone, role and persona"
+        },
+        "chat_model": {
+            "title": "Chat Model",
+            "description": "Artificial Intelligence Model"
+        },
+        "user_prompt": {
+            "title": "User Prompt",
+            "description": "Requests to AI including user questions and related documents"
+        },
+        "no_combinations_line1": "No combinations selected.",
+        "no_combinations_line2": "Please select items to combine from the 4 types above.",
+        "selected_combinations": "Selected Combinations ({{count}})",
+        "chat_group_created_success": "Chat group has been successfully created.",
+        "chat_creation_failed": "Failed to create chat",
+        "chat_creation_error": "An error occurred while creating the chat."
     }
 }

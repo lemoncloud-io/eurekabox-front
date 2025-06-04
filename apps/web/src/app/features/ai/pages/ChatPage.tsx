@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ import { ChatCard, ChatInput, ChatbotSettings, ModelSelectionDialog, PromptSetti
 const SCROLL_THROTTLE_MS = 16; // 60fps
 
 export const ChatPage = () => {
+    const { t } = useTranslation();
     const { id } = useParams();
     const queryClient = useQueryClient();
 
@@ -44,7 +46,7 @@ export const ChatPage = () => {
     useEffect(() => {
         setIsLoading(isLoading);
         if (error) {
-            toast({ title: '채팅 목록을 불러오는데 실패했습니다.' });
+            toast({ title: t('ai.chat.load_error') });
         }
     }, [isLoading, error, setIsLoading]);
 
@@ -173,7 +175,7 @@ export const ChatPage = () => {
             setInputValue('');
         } catch (error) {
             console.error('Failed to send messages:', error);
-            toast({ title: 'Failed to send messages' });
+            toast({ title: t('ai.chat.send_error') });
         }
     };
 
@@ -245,12 +247,12 @@ export const ChatPage = () => {
                 onSuccess: async () => {
                     setIsDeleteDialogOpen(false);
                     await queryClient.invalidateQueries(chatKeys.list({ rootId: id }));
-                    toast({ title: '채팅이 삭제되었습니다.' });
+                    toast({ title: t('ai.chat.delete_success') });
                 },
             });
         } catch (error) {
             console.error('Failed to delete chat:', error);
-            toast({ title: '채팅 삭제에 실패했습니다.' });
+            toast({ title: t('ai.chat.delete_error') });
         } finally {
             setIsLoading(false);
         }
@@ -263,9 +265,9 @@ export const ChatPage = () => {
                     {error ? (
                         <div className="h-full flex items-center justify-center">
                             <div className="text-center space-y-4">
-                                <h2 className="text-2xl font-bold">데이터를 불러오는데 실패했습니다</h2>
+                                <h2 className="text-2xl font-bold">{t('ai.chat.load_error')}</h2>
                                 <Button onClick={() => refetch()} variant="outline">
-                                    다시 시도
+                                    {t('common.retry')}
                                 </Button>
                             </div>
                         </div>
@@ -274,9 +276,11 @@ export const ChatPage = () => {
                             <div className="mb-4">
                                 <div className="flex items-end justify-between">
                                     <div>
-                                        <h1 className="text-2xl font-bold">{selectedChat?.name || 'AI'} 메세지 비교</h1>
+                                        <h1 className="text-2xl font-bold">
+                                            {t('ai.chat.compare_title', { name: selectedChat?.name || 'AI' })}
+                                        </h1>
                                         <p className="text-muted-foreground">
-                                            {childChatsData?.data?.length}개의 AI 응답을 비교해보세요
+                                            {t('ai.chat.compare_description', { count: childChatsData?.data?.length })}
                                         </p>
                                     </div>
                                     <div className="w-[200px]">
@@ -319,12 +323,8 @@ export const ChatPage = () => {
                     ) : (
                         <div className="h-full flex items-center justify-center">
                             <div className="text-center space-y-4">
-                                <h2 className="text-2xl font-bold">채팅을 선택해주세요</h2>
-                                <p className="text-muted-foreground">
-                                    왼쪽 사이드바에서 기존 채팅을 선택하거나
-                                    <br />
-                                    새로운 채팅을 만들어주세요
-                                </p>
+                                <h2 className="text-2xl font-bold">{t('ai.chat.select_chat')}</h2>
+                                <p className="text-muted-foreground">{t('ai.chat.select_chat_description')}</p>
                             </div>
                         </div>
                     )}
@@ -339,13 +339,13 @@ export const ChatPage = () => {
 
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogContent>
-                    <AlertDialogTitle>채팅 삭제</AlertDialogTitle>
-                    <AlertDialogDescription>정말로 이 채팅을 삭제하시겠습니까?</AlertDialogDescription>
+                    <AlertDialogTitle>{t('ai.chat.delete_title')}</AlertDialogTitle>
+                    <AlertDialogDescription>{t('ai.chat.delete_confirmation')}</AlertDialogDescription>
                     <AlertDialogFooter>
                         <AlertDialogCancel type="button" onClick={() => setIsDeleteDialogOpen(false)}>
-                            취소
+                            {t('common.cancel')}
                         </AlertDialogCancel>
-                        <AlertDialogAction onClick={handleConfirmDelete}>삭제</AlertDialogAction>
+                        <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

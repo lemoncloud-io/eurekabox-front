@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, Edit2, ScrollText } from 'lucide-react';
@@ -19,6 +20,7 @@ import {
 import { Textarea } from '@eurekabox/ui-kit/components/ui/textarea';
 
 export const PromptSettings = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { setIsLoading } = useGlobalLoader();
 
@@ -52,7 +54,7 @@ export const PromptSettings = () => {
     useEffect(() => {
         setIsLoading(isLoading);
         if (error) {
-            toast({ title: '프롬프트 목록을 불러오는데 실패했습니다.' });
+            toast({ title: t('ai.prompt.load_error') });
         }
     }, [isLoading, error, setIsLoading]);
 
@@ -83,13 +85,13 @@ export const PromptSettings = () => {
                                 prompt.id === editingPrompt.id ? updated : prompt
                             ),
                         }));
-                        toast({ title: '프롬프트가 수정되었습니다.' });
+                        toast({ title: t('ai.prompt.update_success') });
                         setEditingPrompt(null);
                     },
                 }
             );
         } catch (error) {
-            toast({ title: '프롬프트 수정에 실패했습니다.' });
+            toast({ title: t('ai.prompt.update_error') });
         }
     };
 
@@ -97,7 +99,7 @@ export const PromptSettings = () => {
         return (
             <Button variant="outline" onClick={() => refetch()} className="w-full">
                 <ScrollText className="h-4 w-4 mr-2" />
-                프롬프트 다시 불러오기
+                {t('ai.prompt.reload')}
             </Button>
         );
     }
@@ -109,25 +111,25 @@ export const PromptSettings = () => {
                     <Button variant="outline" className="w-full justify-between bg-background">
                         <div className="flex items-center text-sm">
                             <ScrollText className="h-4 w-4 mr-2" />
-                            프롬프트
+                            {t('ai.prompt.title')}
                         </div>
                         <ChevronDown className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[200px]">
                     {isLoading ? (
-                        <DropdownMenuItem disabled>Loading...</DropdownMenuItem>
+                        <DropdownMenuItem disabled>{t('common.loading')}</DropdownMenuItem>
                     ) : promptsData?.data?.length === 0 ? (
-                        <DropdownMenuItem disabled>No Prompts found</DropdownMenuItem>
+                        <DropdownMenuItem disabled>{t('ai.prompt.no_prompts')}</DropdownMenuItem>
                     ) : (
                         <>
                             <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">
-                                시스템 프롬프트
+                                {t('ai.prompt.system_prompt')}
                             </div>
                             {groupedPrompts.system.map(prompt => (
                                 <DropdownMenuItem key={prompt.id} onClick={() => setSelectedPrompt(prompt)}>
                                     <div className="py-[2px] px-2 flex items-center justify-between w-full">
-                                        <span>{prompt.name || 'Untitled'}</span>
+                                        <span>{prompt.name || t('ai.prompt.untitled')}</span>
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -140,12 +142,12 @@ export const PromptSettings = () => {
                                 </DropdownMenuItem>
                             ))}
                             <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground mt-2">
-                                유저 프롬프트
+                                {t('ai.prompt.user_prompt')}
                             </div>
                             {groupedPrompts.user.map(prompt => (
                                 <DropdownMenuItem key={prompt.id} onClick={() => setSelectedPrompt(prompt)}>
                                     <div className="py-[2px] px-2 flex items-center justify-between w-full">
-                                        <span>{prompt.name || 'Untitled'}</span>
+                                        <span>{prompt.name || t('ai.prompt.untitled')}</span>
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -171,7 +173,7 @@ export const PromptSettings = () => {
                             value={editingName}
                             onChange={e => setEditingName(e.target.value)}
                             className="bg-transparent w-full text-center text-xl font-semibold focus:outline-none border-b border-transparent hover:border-border focus:border-gray-300 transition-colors"
-                            placeholder="Untitled Prompt"
+                            placeholder={t('ai.prompt.untitled')}
                         />
                         <Edit2 className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                     </DialogTitle>
@@ -187,7 +189,7 @@ export const PromptSettings = () => {
                             onClick={() => setEditingPrompt(null)}
                             disabled={updatePrompt.isPending}
                         >
-                            취소
+                            {t('common.cancel')}
                         </Button>
                         <Button onClick={handleSave} disabled={updatePrompt.isPending} size="lg">
                             {updatePrompt.isPending ? (
@@ -195,7 +197,7 @@ export const PromptSettings = () => {
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                                 </div>
                             ) : (
-                                '저장'
+                                t('common.save')
                             )}
                         </Button>
                     </div>
@@ -205,7 +207,7 @@ export const PromptSettings = () => {
             <Dialog open={!!selectedPrompt} onOpenChange={() => setSelectedPrompt(null)}>
                 <DialogContent className="p-0">
                     <DialogHeader>
-                        <DialogTitle>{selectedPrompt?.name || 'Untitled Prompt'}</DialogTitle>
+                        <DialogTitle>{selectedPrompt?.name || t('ai.prompt.untitled')}</DialogTitle>
                     </DialogHeader>
                     <div className="overflow-auto p-[18px] pt-0">
                         <div className="whitespace-pre-wrap text-sm">{selectedPrompt?.contents?.join('\n')}</div>

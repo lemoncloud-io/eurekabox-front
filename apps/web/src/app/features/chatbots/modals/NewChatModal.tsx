@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
-
+import { useTranslation } from 'react-i18next';
 
 import type { ChatUserProfile, ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
 import { useStartMyChat } from '@eurekabox/chatbots';
 import { Button } from '@eurekabox/lib/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@eurekabox/lib/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/lib/components/ui/dialog';
 import { Input } from '@eurekabox/lib/components/ui/input';
 import { Label } from '@eurekabox/lib/components/ui/label';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
@@ -21,14 +15,14 @@ export const CHAT_MODELS = [
     {
         id: 'gpt-4o',
         name: 'GPT-4o',
-        description: '가장 강력한 AI 모델로 복잡한 작업에 최적화',
+        descriptionKey: 'chatModels.gpt4o.description',
         pricing: { input: 0.15, cachedInput: 0.075, output: 0.6 },
         isActive: false,
     },
     {
         id: 'gpt-4o-mini',
         name: 'GPT-4o Mini',
-        description: '빠르고 효율적인 일상 업무용 AI 모델',
+        descriptionKey: 'chatModels.gpt4oMini.description',
         pricing: { input: 0.075, cachedInput: 0.0375, output: 0.3 },
         isActive: true,
     },
@@ -37,10 +31,11 @@ export const CHAT_MODELS = [
 interface NewChatModalProps {
     open: boolean;
     onOpenChange: (value: boolean) => void;
-    onChatCreated: (chat: ChatView) => void; // 새로 추가
+    onChatCreated: (chat: ChatView) => void;
 }
 
 export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModalProps) => {
+    const { t } = useTranslation();
     const { profile } = useWebCoreStore();
     const startMyChat = useStartMyChat();
 
@@ -57,7 +52,7 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
 
     const handleCreateChat = async () => {
         if (!chatName.trim()) {
-            toast({ title: '채팅명을 입력해주세요.' });
+            toast({ title: t('newChatModal.enter_chat_name') });
             return;
         }
 
@@ -76,12 +71,12 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
                 profile$,
             });
 
-            toast({ title: '새 채팅이 생성되었습니다.' });
+            toast({ title: t('newChatModal.chat_created_success') });
             onChatCreated(newChat);
             onOpenChange(false);
         } catch (error) {
             console.error('Failed to create chat:', error);
-            toast({ title: '채팅 생성에 실패했습니다.' });
+            toast({ title: t('newChatModal.chat_created_failed') });
         } finally {
             setIsCreating(false);
         }
@@ -98,11 +93,11 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="p-0">
                 <DialogHeader>
-                    <DialogTitle>새 채팅 만들기</DialogTitle>
+                    <DialogTitle>{t('newChatModal.create_new_chat')}</DialogTitle>
                 </DialogHeader>
                 <div className="px-[18px] space-y-6">
                     <div className="space-y-2">
-                        <Label className="text-sm font-medium">채팅 모델</Label>
+                        <Label className="text-sm font-medium">{t('newChatModal.chat_model')}</Label>
                         <div className="space-y-[10px] max-h-[300px] overflow-auto">
                             {CHAT_MODELS.map(model => (
                                 <div
@@ -120,14 +115,17 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
                                                 <span className="text-base font-medium">{model.name}</span>
                                                 {model.isActive && (
                                                     <span className="text-xs bg-[#7932FF] text-white px-2 py-1 rounded-full">
-                                                        추천
+                                                        {t('newChatModal.recommended')}
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="text-sm text-text-600 mt-1">{model.description}</div>
+                                            <div className="text-sm text-text-600 mt-1">{t(model.descriptionKey)}</div>
                                             <div className="text-xs text-dim mt-2">
-                                                input ${model.pricing.input} / Cached input ${model.pricing.cachedInput}{' '}
-                                                / Output ${model.pricing.output}
+                                                {t('newChatModal.pricing', {
+                                                    input: model.pricing.input,
+                                                    cachedInput: model.pricing.cachedInput,
+                                                    output: model.pricing.output,
+                                                })}
                                             </div>
                                         </div>
                                         {selectedModelId === model.id && (
@@ -142,11 +140,11 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="chatName" className="text-sm font-medium">
-                            채팅명
+                            {t('newChatModal.chat_name')}
                         </Label>
                         <Input
                             id="chatName"
-                            placeholder="채팅명을 입력하세요"
+                            placeholder={t('newChatModal.enter_chat_name_placeholder')}
                             value={chatName}
                             onChange={e => setChatName(e.target.value)}
                             onKeyDown={handleKeyDown}
@@ -158,11 +156,11 @@ export const NewChatModal = ({ open, onOpenChange, onChatCreated }: NewChatModal
                 <div className="flex items-center justify-center gap-2 pt-7 pb-6 mt-auto bg-popup">
                     <DialogClose asChild>
                         <Button variant="outline" size="lg" disabled={isCreating}>
-                            취소
+                            {t('common.cancel')}
                         </Button>
                     </DialogClose>
                     <Button size="lg" onClick={handleCreateChat} disabled={!chatName.trim() || isCreating}>
-                        {isCreating ? '생성 중...' : '생성'}
+                        {isCreating ? t('newChatModal.creating') : t('common.create')}
                     </Button>
                 </div>
             </DialogContent>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import { Check, ChevronRight, ChevronUp, Copy, PencilLine, X } from 'lucide-react';
@@ -23,6 +24,7 @@ interface MessageItemProps {
 }
 
 export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
+    const { t } = useTranslation();
     const { isDarkTheme } = useTheme();
     const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
     const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
@@ -53,8 +55,8 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
             console.error('Copy failed:', error);
             setCopyState('error');
             toast({
-                title: '복사 실패',
-                description: '텍스트 복사에 실패했습니다.',
+                title: t('message.copy_failed'),
+                description: t('message.copy_failed_description'),
             });
             setTimeout(() => setCopyState('idle'), 1000);
         }
@@ -63,13 +65,13 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
     const getCopyTooltipText = () => {
         switch (copyState) {
             case 'copying':
-                return '복사 중';
+                return t('message.copying');
             case 'copied':
-                return '복사됨';
+                return t('message.copied');
             case 'error':
-                return '복사 실패';
+                return t('message.copy_failed');
             default:
-                return '복사';
+                return t('message.copy');
         }
     };
 
@@ -105,7 +107,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                 >
                     {message.content}
                     {message['isError'] && (
-                        <div className="text-xs text-red-600 dark:text-red-400 mt-1">전송 실패 - 다시 시도해주세요</div>
+                        <div className="text-xs text-red-600 dark:text-red-400 mt-1">{t('message.send_failed')}</div>
                     )}
                 </div>
             </div>
@@ -118,7 +120,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                 <div className="flex items-center gap-[9px]">
                     <img
                         src={isDarkTheme ? Images.chatBotDark : Images.chatBot}
-                        alt="chatbot image"
+                        alt={t('message.chatbot_image_alt')}
                         className="w-6 h-6"
                     />
                     <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-hidden">
@@ -131,7 +133,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                             className="flex items-center gap-1 pl-[3px] mb-1 cursor-pointer"
                             onClick={() => setIsDocumentsOpen(!isDocumentsOpen)}
                         >
-                            <div className="text-[#007AFF] text-xs">관련문서</div>
+                            <div className="text-[#007AFF] text-xs">{t('message.related_documents')}</div>
                             <ChevronUp
                                 className={`text-[#007AFF] w-[13px] h-[13px] transform transition-transform duration-200 ${
                                     isDocumentsOpen ? 'rotate-0' : 'rotate-180'
@@ -161,33 +163,39 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                 <Dialog open={!!selectedDocId} onOpenChange={handleCloseDialog}>
                     <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                         <DialogHeader>
-                            <DialogTitle>참고문서 상세</DialogTitle>
+                            <DialogTitle>{t('message.document_detail')}</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4">
                             {isDocumentLoading ? (
                                 <div className="flex items-center gap-2 justify-center py-8">
                                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                                    <span className="text-sm text-text-500">문서를 불러오는 중...</span>
+                                    <span className="text-sm text-text-500">{t('message.loading_document')}</span>
                                 </div>
                             ) : selectedDocument ? (
                                 <div className="space-y-3">
                                     <div className="border-b border-border pb-2">
-                                        <div className="font-semibold text-sm text-text-700">문서명</div>
-                                        <div className="text-sm">{selectedDocument.name || '제목 없음'}</div>
+                                        <div className="font-semibold text-sm text-text-700">
+                                            {t('message.document_name')}
+                                        </div>
+                                        <div className="text-sm">{selectedDocument.name || t('message.untitled')}</div>
                                     </div>
                                     <div className="border-b border-border pb-2">
-                                        <div className="font-semibold text-sm text-text-700">문서 ID</div>
+                                        <div className="font-semibold text-sm text-text-700">
+                                            {t('message.document_id')}
+                                        </div>
                                         <div className="text-xs font-mono text-text-500">{selectedDocument.id}</div>
                                     </div>
                                     <div>
-                                        <div className="font-semibold text-sm text-text-700 mb-2">내용</div>
+                                        <div className="font-semibold text-sm text-text-700 mb-2">
+                                            {t('message.content')}
+                                        </div>
                                         <div className="whitespace-pre-wrap text-sm leading-relaxed bg-[#F8F9FA] dark:bg-[#2A2D31] p-4 rounded-lg border">
-                                            {selectedDocument.content || '내용이 없습니다.'}
+                                            {selectedDocument.content || t('message.no_content')}
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-center py-8 text-text-500">문서를 찾을 수 없습니다.</div>
+                                <div className="text-center py-8 text-text-500">{t('message.document_not_found')}</div>
                             )}
                         </div>
                     </DialogContent>
@@ -232,7 +240,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent className="dark:bg-[#787878] p-1">
-                                <p className="dark:text-white">편집</p>
+                                <p className="dark:text-white">{t('message.edit')}</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
@@ -242,7 +250,7 @@ export const MessageItem = ({ message, onEdit }: MessageItemProps) => {
                     <UpdatedContentCard
                         content={message.updatedContent}
                         onMaximize={() => onEdit?.(message.id || '')}
-                        title="질문 요약"
+                        title={t('message.question_summary')}
                     />
                 )}
             </div>

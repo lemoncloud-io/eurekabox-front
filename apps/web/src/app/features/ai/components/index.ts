@@ -5,3 +5,4 @@ export * from './ChatbotSettings';
 export * from './ChatCard';
 export * from './ChatInput';
 export * from './PromptSettings';
+export * from './PromptDetailDialog';

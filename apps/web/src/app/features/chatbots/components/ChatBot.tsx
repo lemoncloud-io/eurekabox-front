@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { motion } from 'framer-motion';
 
@@ -23,6 +24,7 @@ interface ChatBotProps {
 }
 
 export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
+    const { t } = useTranslation();
     const { isDarkTheme } = useTheme();
     const chatState = useChatState({ initialChat });
 
@@ -168,7 +170,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
             ) : (
                 <div className="w-[484px] min-h-[350px] max-h-[800px] shadow-[0px_0px_10px_0px_rgba(0,0,0,0.06)] bg-chatbot-card border border-[#EAEAEC] dark:border-[#3A3C40] rounded-2xl flex flex-col overflow-hidden">
                     <ChatHeader
-                        modelName={chatState.currentChat?.name || 'New Chat'}
+                        modelName={chatState.currentChat?.name || t('ai.chat.untitled')}
                         onClose={onClose}
                         onNewChat={() => setNewChatModalOpen(true)}
                         onTestChat={() => setTestChatSelectModalOpen(true)}
@@ -183,7 +185,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                                     alt="chatbot image"
                                     className="w-9 h-9"
                                 />
-                                <div className="text-base font-medium mt-[3px]">무엇을 도와드릴까요?</div>
+                                <div className="text-base font-medium mt-[3px]">{t('ai.chatbot.greeting')}</div>
                             </div>
                         ) : (
                             <>
@@ -204,7 +206,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                                                 <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce [animation-delay:-0.1s]"></div>
                                                 <div className="w-1 h-1 bg-[#9FA2A7] rounded-full animate-bounce"></div>
                                             </div>
-                                            <span>응답을 생성하고 있습니다</span>
+                                            <span>{t('ai.chatbot.generating_response')}</span>
                                         </div>
                                     </div>
                                 )}
@@ -216,7 +218,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                                             alt="chatbot image"
                                             className="w-6 h-6"
                                         />
-                                        <div className="text-[#9FA2A7]">메시지를 불러오고 있습니다...</div>
+                                        <div className="text-[#9FA2A7]">{t('ai.chatbot.loading_messages')}</div>
                                     </div>
                                 )}
                             </>

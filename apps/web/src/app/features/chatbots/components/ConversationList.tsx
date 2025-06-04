@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { usePinnedConversations } from '../hooks';
 import { ConversationItem } from './ConversationItem';
 import type { MyChatView } from '../types';
@@ -17,6 +19,7 @@ export const ConversationList = ({
     currentChatId,
     isDisabled = false,
 }: ConversationListProps) => {
+    const { t } = useTranslation();
     const { pinnedConversations, recentConversations, togglePin, isPinned } = usePinnedConversations(conversations);
 
     return (
@@ -40,7 +43,9 @@ export const ConversationList = ({
 
             {recentConversations.length > 0 && (
                 <>
-                    {pinnedConversations.length > 0 && <div className="text-xs py-[9px]">최근</div>}
+                    {pinnedConversations.length > 0 && (
+                        <div className="text-xs py-[9px]">{t('conversation.latest')}</div>
+                    )}
                     <ul className="flex flex-col space-y-[3px] px-[3px]">
                         {recentConversations.map(conversation => (
                             <ConversationItem

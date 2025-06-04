@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Check, Ellipsis } from 'lucide-react';
 
@@ -44,6 +45,7 @@ export const ConversationItem = ({
     isDisabled = false,
     isPinned,
 }: ConversationItemProps) => {
+    const { t } = useTranslation();
     const { isDarkTheme } = useTheme();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -91,7 +93,7 @@ export const ConversationItem = ({
                             textOverflow: 'ellipsis',
                         }}
                     >
-                        {conversation.name || '새 대화'}
+                        {conversation.name || t('conversation.new_chat')}
                     </div>
 
                     {isCurrentChat && <Check className="w-4 h-4 text-[#7932FF] dark:text-[#8F19F6] shrink-0" />}
@@ -105,11 +107,11 @@ export const ConversationItem = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="px-3 bg-chatbot-card">
                         <DropdownMenuItem className="text-xs" onClick={onTogglePin}>
-                            {isPinned ? '고정해제' : '고정'}
+                            {isPinned ? t('conversation.unpin') : t('conversation.pin')}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
                         <DropdownMenuItem className="text-xs text-destructive" onClick={handleDeleteClick}>
-                            삭제
+                            {t('common.delete')}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -118,14 +120,14 @@ export const ConversationItem = ({
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>채팅을 삭제하시겠습니까?</AlertDialogTitle>
+                        <AlertDialogTitle>{t('conversation.delete_confirmation_title')}</AlertDialogTitle>
                     </AlertDialogHeader>
                     <AlertDialogDescription className="text-center">
-                        삭제한 채팅은 복구가 불가합니다.
+                        {t('conversation.delete_confirmation_description')}
                     </AlertDialogDescription>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>취소</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleConfirmDelete}>삭제</AlertDialogAction>
+                        <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmDelete}>{t('common.delete')}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 
@@ -7,6 +9,8 @@ interface NewMessageBadgeProps {
 }
 
 export const NewMessageBadge = ({ show, onClick }: NewMessageBadgeProps) => {
+    const { t } = useTranslation();
+
     return (
         <AnimatePresence>
             {show && (
@@ -27,7 +31,7 @@ export const NewMessageBadge = ({ show, onClick }: NewMessageBadgeProps) => {
                         className="relative flex items-center gap-2 bg-[#7932FF] hover:bg-[#6028E0] text-white px-4 py-2 rounded-full shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105 active:scale-95"
                     >
                         <MessageCircle className="w-4 h-4" />
-                        <span className="text-sm font-medium">새 메시지</span>
+                        <span className="text-sm font-medium">{t('message.new_message')}</span>
                         <motion.div animate={{ y: [0, -2, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
                             <ChevronDown className="w-4 h-4" />
                         </motion.div>
