@@ -38,7 +38,7 @@ i18n.use(ChainedBackend)
                     prefix: `i18next_res_${I18N_VERSION}_`,
                     expirationTime: isDevelopment
                         ? 5 * 60 * 1000 // 개발: 5분
-                        : 24 * 60 * 60 * 1000, // 프로덕션: 24시간
+                        : 60 * 60 * 1000, // 프로덕션: 1시간
                     versions: {
                         en: I18N_VERSION,
                         ko: I18N_VERSION,

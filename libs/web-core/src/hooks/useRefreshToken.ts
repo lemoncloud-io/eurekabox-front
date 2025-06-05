@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-
 import { useProfile } from './useProfile';
 import { refreshAuthToken } from '../api';
 import { useWebCoreStore } from '../stores';
@@ -23,6 +22,7 @@ export const useRefreshToken = () => {
         const initialize = async () => {
             if (!initializationRef.current) {
                 try {
+                    await refreshAuthToken();
                     await fetchProfile();
                     initializationRef.current = true;
                 } catch (error) {
