@@ -30,3 +30,7 @@ export interface PaginationType<T> {
     total: number | undefined;
     data: T;
 }
+
+export declare type Params = {
+    [key: string]: any;
+};

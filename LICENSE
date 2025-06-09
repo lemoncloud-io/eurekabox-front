@@ -1,21 +1,33 @@
-MIT License
+# EurekaBox Proprietary License
 
-Copyright (c) LEMONCLOUD
+Copyright (c) 2025 LemonCloud Inc. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## License Grant
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This repository ("EurekaBox") is provided by LemonCloud Inc. ("Licensor") and may only be used in accordance with the following terms:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. **Viewing Rights**: The public may view and fork this repository for evaluation purposes only.
+
+2. **Usage Rights**: Only active subscribers of the EurekaCodes service are granted a non-exclusive, non-transferable license to use, modify, and integrate EurekaBox into their applications.
+
+3. **Commercial Restrictions**: Commercial use of EurekaBox is strictly limited to active EurekaCodes subscribers. Non-subscribers are not permitted to use EurekaKit in any commercial applications, products, or services.
+
+4. **Distribution Restrictions**: Redistribution of EurekaBox code, in whole or in part, is prohibited without express written permission from the Licensor.
+
+5. **Subscription Termination**: Upon termination of an EurekaCodes subscription, all rights to use EurekaBox in commercial applications cease immediately.
+
+## Intellectual Property
+
+All intellectual property rights in EurekaBox, including copyrights, patents, trade secrets, and trademarks, are owned exclusively by the Licensor.
+
+## Warranty Disclaimer
+
+EUREKAKIT IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+## Limitation of Liability
+
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH EUREKAKIT OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Governing Law
+
+This license shall be governed by and construed in accordance with the laws of the Republic of Korea.

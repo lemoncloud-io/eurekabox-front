@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { YooEditor } from '@yoopta/editor';
 import { html, markdown } from '@yoopta/exports';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import {
     contentsKeys,
@@ -56,11 +56,11 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     const elementTrackerRef = useRef<ElementTracker>({});
     const contentRef = useRef<ContentView>(null);
     const fetchedRef = useRef<string | null>(null);
-    const loadingRef = useRef(false);
+    const isLoadingRef = useRef(false);
 
     useEffect(() => {
         return () => {
-            loadingRef.current = false;
+            isLoadingRef.current = false;
             editor.setEditorValue({});
             elementTrackerRef.current = {};
             contentRef.current = null;
@@ -70,12 +70,12 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
     const loadContent = useCallback(
         async (id: string) => {
             // 이미 로딩 중이면 중복 로드 방지
-            if (loadingRef.current) {
+            if (isLoadingRef.current) {
                 return;
             }
 
             try {
-                loadingRef.current = true;
+                isLoadingRef.current = true;
                 setLoading(true);
                 const content = await fetchContentById(id);
                 // unmount됐거나 contentId가 변경됐다면 로드 중단
@@ -125,7 +125,7 @@ export const useEditorContent = (contentId: string | undefined, editor: YooEdito
                 setError(err as Error);
                 return null;
             } finally {
-                loadingRef.current = false;
+                isLoadingRef.current = false;
                 setLoading(false);
             }
         },

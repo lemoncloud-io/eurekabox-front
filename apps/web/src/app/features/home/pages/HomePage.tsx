@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { FileText } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { useContents } from '@eurekabox/contents';
 import { Button } from '@eurekabox/lib/components/ui/button';

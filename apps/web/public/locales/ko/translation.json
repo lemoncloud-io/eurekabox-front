@@ -101,5 +101,235 @@
     },
     "pageLeave": {
         "unsavedChanges": "저장되지 않은 변경사항이 있습니다. 페이지를 나가시겠습니까?"
+    },
+    "common": {
+        "workspace": "워크스페이스",
+        "project": "프로젝트",
+        "loading": "로딩 중...",
+        "cancel": "취소",
+        "save": "저장",
+        "retry": "다시 시도",
+        "create": "생성",
+        "delete": "삭제"
+    },
+    "ai": {
+        "prompt": {
+            "load_error": "프롬프트 목록을 불러오는데 실패했습니다",
+            "update_success": "프롬프트가 수정되었습니다",
+            "update_error": "프롬프트 수정에 실패했습니다",
+            "reload": "프롬프트 다시 불러오기",
+            "title": "프롬프트",
+            "no_prompts": "프롬프트가 없습니다",
+            "system_prompt": "시스템 프롬프트",
+            "user_prompt": "유저 프롬프트",
+            "untitled": "제목 없음"
+        },
+        "model": {
+            "dialog_title": "모델 조합 선택",
+            "embedding": {
+                "title": "임베딩 모델",
+                "description": "텍스트를 벡터로 변환하여 의미를 수치화하는 모델입니다. 문서 검색 및 유사도 분석에 사용됩니다."
+            },
+            "chat": {
+                "title": "채팅 모델",
+                "description": "사용자의 질문에 답변을 생성하는 대화형 AI 모델입니다. GPT와 같은 언어 모델을 포함합니다."
+            },
+            "system_prompt": {
+                "title": "시스템 프롬프트",
+                "description": "AI의 동작 방식과 응답 스타일을 정의하는 프롬프트입니다."
+            },
+            "user_prompt": {
+                "title": "유저 프롬프트",
+                "description": "사용자의 질문과 관련 문서를 포함하여 AI에 요청하는 프롬프트입니다. 질문의 문맥을 강화하고 정확한 답변을 유도합니다."
+            },
+            "combinations": "선택된 조합",
+            "cancel": "취소",
+            "create": "생성",
+            "success_message": "채팅 그룹이 성공적으로 생성되었습니다."
+        },
+        "chatbot": {
+            "strategy": "전략",
+            "strategy_placeholder": "전략 선택",
+            "edit": "수정",
+            "delete": "삭제",
+            "cancel": "취소",
+            "edit_chat": "채팅 수정",
+            "name": "이름",
+            "name_placeholder": "채팅 이름을 입력하세요",
+            "embedding_model": "임베딩 모델",
+            "embedding_placeholder": "임베딩 모델을 선택하세요",
+            "chat_type": "채팅 타입",
+            "chat_type_placeholder": "채팅 타입을 선택하세요",
+            "prompt": "프롬프트",
+            "prompt_placeholder": "프롬프트를 선택하세요",
+            "input_placeholder": "어떤 도움이 필요하세요?",
+            "reference_documents": "참고문서",
+            "no_messages": "아직 메시지가 없습니다",
+            "greeting": "무엇을 도와드릴까요?",
+            "generating_response": "응답을 생성하고 있습니다",
+            "loading_messages": "메시지를 불러오고 있습니다...",
+            "new_chat": "새 채팅",
+            "test_chat": "채팅 테스트",
+            "pricing": "비용 안내",
+            "chat_input_placeholder": "AI에게 무엇이든 물어보세요"
+        },
+        "chat": {
+            "title": "AI 채팅",
+            "load_error": "채팅 목록을 불러오는데 실패했습니다",
+            "load_error_message": "채팅 목록을 불러오는데 실패했습니다. 다시 시도해주세요.",
+            "create_success": "새로운 채팅이 생성되었습니다",
+            "delete_success": "채팅이 삭제되었습니다",
+            "delete_error": "채팅 삭제에 실패했습니다",
+            "list_title": "채팅 리스트",
+            "no_chats": "채팅이 없습니다",
+            "untitled": "제목 없는 채팅",
+            "create_title": "새로운 채팅 만들기",
+            "name_label": "채팅방 이름",
+            "name_placeholder": "채팅방 이름을 입력하세요",
+            "delete_title": "채팅 삭제",
+            "delete_confirm": "정말로 이 채팅을 삭제하시겠습니까?",
+            "send_error": "메시지 전송에 실패했습니다",
+            "compare_title": "{{name}} 메세지 비교",
+            "compare_description": "{{count}}개의 AI 응답을 비교해보세요",
+            "select_chat": "채팅을 선택해주세요",
+            "select_chat_description": "왼쪽 사이드바에서 기존 채팅을 선택하거나\n새로운 채팅을 만들어주세요",
+            "delete_confirmation": "정말로 이 채팅을 삭제하시겠습니까?"
+        },
+        "agent": {
+            "title": "AI 에이전트"
+        }
+    },
+    "conversation": {
+        "new_chat": "새 대화",
+        "pin": "고정",
+        "unpin": "고정해제",
+        "delete_confirmation_title": "채팅을 삭제하시겠습니까?",
+        "delete_confirmation_description": "삭제한 채팅은 복구가 불가합니다.",
+        "pinned_icon_alt": "고정 아이콘",
+        "latest": "최근"
+    },
+    "help": {
+        "tabs": {
+            "faq": "자주 하는 질문",
+            "chat_history": "채팅 내역"
+        },
+        "faq": {
+            "what_is_eurekabox": "유레카박스란 무엇인가요?",
+            "difference_between_eurekacause_and_eurekabox": "유레카코즈와 유레카박스의 차이는 무엇인가요?"
+        }
+    },
+    "message": {
+        "edit_title": "메시지 편집",
+        "saving": "저장 중...",
+        "complete_edit": "수정 완료",
+        "edit_placeholder": "메시지를 수정하세요...",
+        "has_changes": "변경사항이 있습니다",
+        "no_changes": "변경사항이 없습니다",
+        "keyboard_shortcuts": "Ctrl+Enter로 저장, Esc로 취소",
+        "copy_failed": "복사 실패",
+        "copy_failed_description": "텍스트 복사에 실패했습니다.",
+        "copying": "복사 중",
+        "copied": "복사됨",
+        "copy": "복사",
+        "send_failed": "전송 실패 - 다시 시도해주세요",
+        "chatbot_image_alt": "챗봇 이미지",
+        "related_documents": "관련문서",
+        "document_detail": "참고문서 상세",
+        "loading_document": "문서를 불러오는 중...",
+        "document_name": "문서명",
+        "untitled": "제목 없음",
+        "document_id": "문서 ID",
+        "content": "내용",
+        "no_content": "내용이 없습니다.",
+        "document_not_found": "문서를 찾을 수 없습니다.",
+        "edit": "편집",
+        "question_summary": "질문 요약",
+        "new_message": "새 메세지"
+    },
+    "updatedContent": {
+        "question_summary": "질문 요약",
+        "copy_failed": "복사 실패",
+        "copy_failed_description": "텍스트 복사에 실패했습니다.",
+        "copying": "복사 중",
+        "copied": "복사됨",
+        "copy": "복사",
+        "edit": "편집하기"
+    },
+    "chat": {
+        "new_chat_with_time": "새 채팅 {{time}}",
+        "send_message_failed": "메시지 전송에 실패했습니다.",
+        "create_new_chat_failed": "새 채팅 생성에 실패했습니다.",
+        "delete_chat_success": "채팅이 삭제되었습니다.",
+        "delete_chat_failed": "채팅 삭제에 실패했습니다."
+    },
+    "chatModels": {
+        "gpt4o": {
+            "description": "가장 강력한 AI 모델로 복잡한 작업에 최적화"
+        },
+        "gpt4oMini": {
+            "description": "빠르고 효율적인 일상 업무용 AI 모델"
+        }
+    },
+    "newChatModal": {
+        "enter_chat_name": "채팅명을 입력해주세요.",
+        "chat_created_success": "새 채팅이 생성되었습니다.",
+        "chat_created_failed": "채팅 생성에 실패했습니다.",
+        "create_new_chat": "새 채팅 만들기",
+        "chat_model": "채팅 모델",
+        "recommended": "추천",
+        "pricing": "input ${{input}} / Cached input ${{cachedInput}} / Output ${{output}}",
+        "chat_name": "채팅명",
+        "enter_chat_name_placeholder": "채팅명을 입력하세요",
+        "creating": "생성 중..."
+    },
+    "pricing": {
+        "title": "Pricing Information",
+        "tabs": {
+            "billing": "Billing Cost",
+            "conversation": "Cost per Conversation"
+        },
+        "billing": {
+            "agent_model": "Agent Model",
+            "base_fee": "Base Fee",
+            "realtime_fee": "Real-time Fee",
+            "realtime_token_usage": "Real-time Token Usage",
+            "cumulative_fee": "Cumulative Fee",
+            "cumulative_token_usage": "Cumulative Token Usage",
+            "total_cost": "Total Cost"
+        },
+        "conversation": {
+            "question_name": "Question Name",
+            "token_usage": "Token Usage",
+            "billing_fee": "Billing Fee",
+            "question_title_display": "Question Title Display"
+        }
+    },
+    "testChatModal": {
+        "title": "테스트 모델 조합 선택",
+        "description_line1": "에이전트를 직접 조합한 후에",
+        "description_line2": "채팅 테스트를 진행해 보세요",
+        "embedding_model": {
+            "title": "임베딩 모델",
+            "description_line1": "컴퓨터가 이해할 수 있도록 데이터를 숫자로",
+            "description_line2": "이루어진 배열로 바꾸는 모델"
+        },
+        "system_prompt": {
+            "title": "시스템 프롬프트",
+            "description": "AI 행동 방식, 말투, 역할과 같은 페르소나"
+        },
+        "chat_model": {
+            "title": "채팅 모델",
+            "description": "인공지능 모델"
+        },
+        "user_prompt": {
+            "title": "사용자 프롬프트",
+            "description": "사용자의 질문과 관련 문서를 포함하여 AI에게 요청"
+        },
+        "no_combinations_line1": "선택된 조합이 없습니다.",
+        "no_combinations_line2": "위 4가지 유형에서 조합할 항목을 선택해주세요.",
+        "selected_combinations": "선택된 조합 ({{count}})",
+        "chat_group_created_success": "채팅 그룹이 성공적으로 생성되었습니다.",
+        "chat_creation_failed": "채팅 생성 실패",
+        "chat_creation_error": "채팅 생성 중 오류가 발생했습니다."
     }
 }

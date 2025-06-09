@@ -1,4 +1,4 @@
-import type { ContentActivityParam, ContentBody, ElementBody } from '@lemoncloud/lemon-contents-api';
+import type { ContentActivityParam, ContentBody, ElementBody } from '@lemoncloud/eureka-contents-api';
 
 export type CreateContentDTO = ContentBody;
 

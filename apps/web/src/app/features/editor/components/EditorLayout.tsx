@@ -7,10 +7,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import i18n from 'i18next';
 import { Download, EllipsisVertical, LogOut, Menu, Save, Star, Trash2 } from 'lucide-react';
 
-import type { ContentView } from '@lemoncloud/lemon-contents-api';
+import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
 import { Images } from '@eurekabox/assets';
-import { contentsKeys, useContent, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
+import { contentsKeys, useDeleteContent, useUpdateActivity } from '@eurekabox/contents';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -43,11 +43,12 @@ interface EditorLayoutProps {
     isLoading: boolean;
     handleSave?: () => void;
     handleExport?: (type: 'markdown' | 'html') => void;
+    content: ContentView | null;
 }
 
 export const EditorLayout = ({
     children,
-    contentId,
+    content,
     title,
     isLoading = false,
     handleSave,
@@ -56,8 +57,6 @@ export const EditorLayout = ({
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-
-    const { data: content, isLoading: isContentLoading } = useContent(contentId);
 
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -150,7 +149,7 @@ export const EditorLayout = ({
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
             <div className="h-screen flex flex-col">
                 <div
-                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-[999] ${
+                    className={`transition-all duration-300 ease-in-out fixed top-0 bottom-0 left-0 z-50 ${
                         sidebarOpen ? 'w-[248px]' : 'w-0'
                     } overflow-hidden`}
                 >

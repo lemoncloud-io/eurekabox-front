@@ -1,5 +1,143 @@
 # Changelog
 
+## [2025-06-09] - root@0.25.1, @eurekabox/web@0.25.1
+
+### Features
+
+-   (i18n) implement i18n versioning and cache busting
+-   (core) refresh token on app initialization
+
+### Bug Fixes
+
+-   (auth) retry profile fetch on 403 error
+-   enhance editor value conversion and normalization
+
+## [2025-06-04] - root@0.25.0, @eurekabox/web@0.25.0
+
+### Features
+
+-   add locales for ai
+-   add locales for ai
+-   add locales for ai chatbot
+
+### Bug Fixes
+
+-   (dialog) prevent focus trap on close
+
+## [2025-06-04] - root@0.24.1, @eurekabox/web@0.24.1
+
+### Refactor
+
+-   input style
+-   select focus style
+
+## [2025-05-30] - root@0.24.0, @eurekabox/web@0.24.0
+
+### Features
+
+-   implement pinned conversations using Zustand
+-   (editor) pass content to EditorLayout
+-   (editor) refactor export logic to utils
+-   (editor) update content cache util
+-   save and restore focus after save
+-   (editor) add error alert component
+-   (editor) wrap yoopta editor in component
+-   (editor) add useKeyboardShortcuts hook
+-   (editor) add useEditorNotifications hook
+-   (pricing) close modal on button click
+
+### Bug Fixes
+
+-   (editor) retain focus after block insertion
+-   prevent duplicate content loading
+-   reset title when content is empty
+
+### Refactor
+
+-   improve save content logic
+-   group title input handlers
+
+## [2025-05-30] - root@0.23.1, @eurekabox/web@0.23.1
+
+### Refactor
+
+-   chat detail style
+-   text color
+
+## [2025-05-29] - root@0.23.0, @eurekabox/web@0.23.0
+
+### Features
+
+-   add chatbots api and hooks
+-   (types) add Params type
+-   (toast) update toast to accept title object
+-   add chatbots components
+-   (chatbot) add edit functionality to messages
+-   (chatbots) implement chat creation modal
+-   update chatbot api
+-   (auth) implement token refresh logic
+-   implement retry logic for API calls
+-   implement agent bot
+-   add useAutoScroll, useNewMessageBadge
+-   (chatbot) improve conversation interaction
+-   (chatbot) reuse existing chat if available
+-   update ChatBot component to delete chat
+-   (chatbot) enable message editing
+-   (chat) add clear pending message functionality
+-   update ai test
+-   (chat) add updated content to messages
+-   (chat) add textarea and send button
+-   (ui) improve chatbot settings layout
+-   (chat) improve layout of child chats
+-   navigate to chat after creation
+
+### Bug Fixes
+
+-   (dialog) prevent focus issue on close
+
+### Documentation
+
+-   update license to EurekaBox Proprietary
+
+### Refactor
+
+-   refactor chatbot components
+-   remove unused code
+
+### Chores
+
+-   (types) move types to shared directory
+-   update dependencies
+
+## [2025-05-26] - root@0.22.2, @eurekabox/web@0.22.2
+
+### Refactor
+
+-   test chatbot page style
+-   add copy tooltip style
+
+## [2025-05-26] - root@0.22.1, @eurekabox/web@0.22.1
+
+### Refactor
+
+-   chatbot page style
+
+## [2025-03-05] - root@0.22.0, @eurekabox/web@0.22.0
+
+### Features
+
+-   add jsdoc comments for web-core
+
+### Documentation
+
+-   update READMEs for libs and root
+
+## [2025-03-05] - root@0.21.1, @eurekabox/web@0.21.1
+
+### Refactor
+
+-   darkmode loader, selection color
+
 ## [2025-03-05] - root@0.21.0, @eurekabox/web@0.21.0
 
 ### Features
