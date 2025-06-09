@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -5,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 
 import { useAgent, useAgents } from '@eurekabox/agents';
 
-import { usePagination } from '../../../shared';
+import { usePageHeader, usePagination } from '../../../shared';
 import { AgentForm, AgentList } from '../components';
 
 export const AgentPage = () => {
@@ -13,6 +14,7 @@ export const AgentPage = () => {
     const { id: agentId } = useParams<{ id: string }>();
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { setPageHeader, clearPageHeader } = usePageHeader();
 
     const isCreateMode = searchParams.get('mode') === 'create';
     const searchQuery = searchParams.get('search') || '';
@@ -35,6 +37,11 @@ export const AgentPage = () => {
 
     const isFormVisible = Boolean(agentId) || isCreateMode;
     const formMode = agentId ? 'edit' : 'create';
+
+    useEffect(() => {
+        setPageHeader(t('agent.header'));
+        return () => clearPageHeader();
+    }, [setPageHeader, clearPageHeader, t]);
 
     const handleAgentSelect = (selectedAgentId: string) => {
         const currentParams = new URLSearchParams(searchParams);

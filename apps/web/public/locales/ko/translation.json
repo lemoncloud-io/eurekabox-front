@@ -335,6 +335,7 @@
     },
     "agent": {
         "title": "AI 에이전트",
+        "header": "에이전트 설정",
         "page": {
             "emptyState": {
                 "title": "에이전트를 선택하거나 추가해보세요",
