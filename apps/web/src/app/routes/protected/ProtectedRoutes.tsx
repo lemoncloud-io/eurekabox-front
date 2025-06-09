@@ -1,6 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { AgentsRoutes } from '../../features/agents';
 import { AIRoutes } from '../../features/ai';
 import { ChatBotButton } from '../../features/chatbots';
 import { EditorRoutes } from '../../features/editor';
@@ -27,7 +26,8 @@ export const ProtectedRoutes = [
             { path: 'home', element: <HomeRoutes /> },
             { path: 'styling/*', element: <StylingRoutes /> },
             { path: 'ai/*', element: <AIRoutes /> },
-            { path: 'agents/*', element: <AgentsRoutes /> },
+            // TODO: add AI Agents
+            // { path: 'agents/*', element: <AgentsRoutes /> },
             { path: '*', element: <EditorRoutes /> },
         ],
     },

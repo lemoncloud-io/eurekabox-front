@@ -44,10 +44,10 @@ export const ChatHeader = ({ modelName, onClose, onNewChat, onTestChat, onPricin
                         {/*<DropdownMenuItem onClick={onPricing} className="text-xs">*/}
                         {/*    {t('ai.chatbot.pricing')}*/}
                         {/*</DropdownMenuItem>*/}
-                        <DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />
-                        <DropdownMenuItem onClick={onAgents} className="text-xs">
-                            {t('ai.agent.title')}
-                        </DropdownMenuItem>
+                        {/*<DropdownMenuSeparator className="bg-[#F4F5F5] dark:bg-[#53555B] h-px mx-0 my-[2px]" />*/}
+                        {/*<DropdownMenuItem onClick={onAgents} className="text-xs">*/}
+                        {/*    {t('ai.agent.title')}*/}
+                        {/*</DropdownMenuItem>*/}
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <Button variant="ghost" className="h-auto p-[2px] group" onClick={onClose}>
