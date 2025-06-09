@@ -27,6 +27,8 @@ body {
 
 @layer base {
     :root {
+        --point: 203 100% 28%;
+
         --background: 0 0% 100%;
         --foreground: 222.2 84% 4.9%;
 
@@ -72,6 +74,8 @@ body {
     }
 
     .dark {
+        --point: 196 85% 35%;
+
         --background: 218 73% 3%;
         --foreground: 210 40% 98%;
 
@@ -248,4 +252,23 @@ body {
 
 .yoo-image-flex {
     max-width: 100% !important;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    height: 24px;
+    width: 24px;
+    background: hsl(var(--point));
+    border-radius: 50%;
+    border: 6px solid #abcde6;
+    cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    background: hsl(var(--point));
+    border-radius: 50%;
+    border: 6px solid #abcde6;
+    cursor: pointer;
 }

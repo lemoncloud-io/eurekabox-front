@@ -2046,10 +2046,10 @@
     axios "^1.7.2"
     crypto-js "^4.2.0"
 
-"@lemoncloud/ssocio-chatbots-api@^0.25.407-g":
-  version "0.25.407-g"
-  resolved "https://registry.yarnpkg.com/@lemoncloud/ssocio-chatbots-api/-/ssocio-chatbots-api-0.25.407-g.tgz#abe73797e0b103b4c9dc9efe676a998d3eca5f9e"
-  integrity sha512-RAmuWrK2meiwCAPhsJQT7B1bKrw01lCEQ+do7988ELmT6/62FXEq4lymLW8oJlYdMU2me89EEYYIGlJrKKTy+g==
+"@lemoncloud/ssocio-chatbots-api@^0.25.604":
+  version "0.25.604"
+  resolved "https://registry.yarnpkg.com/@lemoncloud/ssocio-chatbots-api/-/ssocio-chatbots-api-0.25.604.tgz#4a82e9ebdcdae64699aa6a1ccdebc42725a7f3ea"
+  integrity sha512-eh7F0e3NFeN2fBN/jgZPumRWk1zBGTzK+FIiFfBwUNXnD3XcgSm5oWK9haXEolNPxdUz/9fzaim5OGcECvFCLA==
   dependencies:
     lemon-model "^1.0.2"
 

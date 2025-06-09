@@ -23,54 +23,6 @@ import type {
 const CHATBOTS_ENDPOINT = import.meta.env.VITE_CHATBOTS_API_ENDPOINT.toLowerCase();
 
 export const startMyChat = async (createBody: CreateChatDTO): Promise<ChatView> => {
-    // return {
-    //     "id": "1000016",
-    //     "createdAt": 1748414693030,
-    //     "updatedAt": 1748414693030,
-    //     "deletedAt": 0,
-    //     "name": "user chat",
-    //     "stereo": "root",
-    //     "role": "user",
-    //     "strategy": "md3",
-    //     "agentId": "1000001",
-    //     "agent$": {
-    //         "id": "1000001"
-    //     },
-    //     "brainId": "1000003",
-    //     "brain$": {
-    //         "id": "1000003",
-    //         "name": "gpt-4-turbo",
-    //         "stereo": "llm",
-    //         "model": "gpt-4-turbo"
-    //     },
-    //     "promptId": "1000003",
-    //     "prompt$": {
-    //         "id": "1000003",
-    //         "name": "prompt3",
-    //         "stereo": "system"
-    //     },
-    //     "userPromptId": "1000004",
-    //     "userPrompt$": {
-    //         "id": "1000004",
-    //         "name": "prompt1",
-    //         "stereo": "user"
-    //     },
-    //     "embeddingId": "lg3",
-    //     "embedding$": {
-    //         "id": "lg3",
-    //         "name": "text-embedding-3-large",
-    //         "model": "lg3"
-    //     },
-    //     "profile$": {
-    //         "sid": "T0000277",
-    //         "uid": "T1000049",
-    //         "dong": "101동",
-    //         "ho": "101",
-    //         "gender": "female",
-    //         "name": "루이세대주"
-    //     }
-    // } as ChatView;
-
     const response = await webCore
         .buildSignedRequest({
             method: 'POST',
@@ -271,18 +223,6 @@ export const fetchBrains = async (params: Params): Promise<ListResult<BrainView>
         })
         .setParams({ stereo: 'llm', ...params })
         .execute<ListResult<BrainView>>();
-
-    return response.data;
-};
-
-export const fetchPrompts = async (params: Params): Promise<ListResult<PromptView>> => {
-    const response = await webCore
-        .buildSignedRequest({
-            method: 'GET',
-            baseURL: `${CHATBOTS_ENDPOINT}/prompts`,
-        })
-        .setParams({ ...params })
-        .execute<ListResult<PromptView>>();
 
     return response.data;
 };

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
 
@@ -27,6 +28,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
     const { t } = useTranslation();
     const { isDarkTheme } = useTheme();
     const chatState = useChatState({ initialChat });
+    const navigate = useNavigate();
 
     // Modal states
     const [newChatModalOpen, setNewChatModalOpen] = useState(false);
@@ -78,6 +80,11 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
 
     const handleEditMessage = (messageId: string) => {
         setEditingMessageId(messageId);
+    };
+
+    const handleNavigateAgents = () => {
+        navigate('agents');
+        onClose?.();
     };
 
     const handleSaveEdit = useCallback(
@@ -175,6 +182,7 @@ export const ChatBot = ({ onClose, initialChat }: ChatBotProps) => {
                         onNewChat={() => setNewChatModalOpen(true)}
                         onTestChat={() => setTestChatSelectModalOpen(true)}
                         onPricing={() => setPricingModalOpen(true)}
+                        onAgents={handleNavigateAgents}
                     />
 
                     <main ref={containerRef} onScroll={handleScroll} className="px-4 w-full overflow-auto flex-1">

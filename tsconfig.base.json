@@ -15,6 +15,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@eurekabox/agents": ["libs/agents/src/index.ts"],
             "@eurekabox/assets": ["assets/src/index.ts"],
             "@eurekabox/chatbots": ["libs/chatbots/src/index.ts"],
             "@eurekabox/contents": ["libs/contents/src/index.ts"],
