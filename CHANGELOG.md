@@ -1,5 +1,17 @@
 # Changelog
 
+## [2025-06-09] - root@0.25.1, @eurekabox/web@0.25.1
+
+### Features
+
+-   (i18n) implement i18n versioning and cache busting
+-   (core) refresh token on app initialization
+
+### Bug Fixes
+
+-   (auth) retry profile fetch on 403 error
+-   enhance editor value conversion and normalization
+
 ## [2025-06-04] - root@0.25.0, @eurekabox/web@0.25.0
 
 ### Features
