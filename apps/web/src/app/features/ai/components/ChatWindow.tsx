@@ -366,7 +366,7 @@ export const ChatWindow = ({ chat, onScroll, index, isSending }: ChatWindowProps
                 ) : null}
                 {(isFetching || isFetchingNextPage || isSending) && (
                     <div className="text-center text-sm text-muted-foreground p-2">
-                        {isSending ? 'Sending message...' : 'Loading messages...'}
+                        {isSending ? t('ai.chatbot.sending_message') : t('ai.chatbot.loading_messages')}
                     </div>
                 )}
             </div>
