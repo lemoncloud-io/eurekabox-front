@@ -22,13 +22,14 @@ import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 import { SideBar, ThemeToggle } from '../components';
 import { useContentCache, usePageHeader } from '../hooks';
+import { useUIStore } from '../stores';
 
 export const DefaultLayout = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useUIStore();
 
     const { headerContent } = usePageHeader();
     const { prependContentToCache } = useContentCache();

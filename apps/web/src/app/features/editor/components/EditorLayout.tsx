@@ -35,6 +35,7 @@ import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 import { SideBar, ThemeToggle } from '../../../shared';
 import { useContentCache } from '../../../shared';
+import { useUIStore } from '../../../shared/stores';
 
 interface EditorLayoutProps {
     children: ReactNode;
@@ -59,7 +60,7 @@ export const EditorLayout = ({
     const navigate = useNavigate();
 
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useUIStore();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
