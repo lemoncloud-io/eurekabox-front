@@ -177,36 +177,129 @@ export const extractContent = (htmlString: string) => {
     return mainElement.outerHTML;
 };
 
+export const generateBlockId = (elementId: string, suffix?: string): string => {
+    return suffix ? `${elementId}-${suffix}` : `block-${elementId}-${Date.now()}`;
+};
+
+export const isValidTextNode = (node: any): boolean => {
+    return typeof node === 'object' && 'text' in node;
+};
+
+export const isValidElementNode = (node: any): boolean => {
+    return node && typeof node === 'object' && Array.isArray(node.children);
+};
+
+export const createDefaultTextNode = (): { text: string } => ({ text: '' });
+
+const createDefaultBlockContent = (id: string, type: string, text = '') => ({
+    id: `${id}-content`,
+    type: type.toLowerCase().replace('list', '') || 'paragraph',
+    children: [{ text }],
+    props: { nodeType: 'block' },
+});
+
+// 노드 정규화
+export const normalizeSlateNode = (node: any): any => {
+    if (isValidTextNode(node)) {
+        return { ...node, text: node.text || '' };
+    }
+
+    if (isValidElementNode(node)) {
+        const children = node.children.map(normalizeSlateNode).filter(child => {
+            // 빈 링크 노드 제거
+            return !(child.type === 'link' && !child.children?.length);
+        });
+
+        return {
+            ...node,
+            children: children.length ? children : [createDefaultTextNode()],
+        };
+    }
+
+    return node;
+};
+
+// 블록 정규화
+export const normalizeYooptaBlock = (block: YooptaBlockData): YooptaBlockData => {
+    if (!Array.isArray(block.value)) {
+        return block;
+    }
+
+    const normalizedValue = block.value.map(normalizeSlateNode).filter(node => {
+        // 완전히 빈 노드 제거
+        return node.children?.length || node.text !== undefined;
+    });
+
+    if (!normalizedValue.length) {
+        normalizedValue.push(createDefaultBlockContent(block.id, block.type, ''));
+    }
+
+    return { ...block, value: normalizedValue };
+};
+
+// 폴백 블록 생성
+const createFallbackBlock = (element: ElementStructure, order: number): YooptaBlockData => {
+    const fallbackId = generateBlockId(element.id, 'fallback');
+    const cleanText = element.text?.replace(/<[^>]*>/g, '') || '';
+
+    return {
+        id: fallbackId,
+        type: 'Paragraph',
+        value: [createDefaultBlockContent(fallbackId, 'paragraph', cleanText)],
+        meta: {
+            depth: element.depth || 0,
+            order,
+            elementId: element.id,
+            align: 'left',
+        },
+    } as YooptaBlockData;
+};
+
+export const convertSingleElement = (
+    editor: YooEditor,
+    element: ElementStructure,
+    index: number
+): Record<string, YooptaBlockData> => {
+    try {
+        const editorBlocks = html.deserialize(editor, element.text || '');
+        const result: Record<string, YooptaBlockData> = {};
+
+        Object.entries(editorBlocks).forEach(([blockId, block]) => {
+            const normalizedBlock = normalizeYooptaBlock(block as YooptaBlockData);
+
+            result[blockId] = {
+                ...normalizedBlock,
+                meta: {
+                    ...normalizedBlock.meta,
+                    depth: element.depth || 0,
+                    order: index,
+                    elementId: element.id,
+                },
+            };
+        });
+
+        return result;
+    } catch (error) {
+        console.warn(`Failed to convert element ${element.id}:`, error);
+        const fallbackBlock = createFallbackBlock(element, index);
+        return { [fallbackBlock.id]: fallbackBlock };
+    }
+};
+
 export const convertElementToEditorValue = (
     editor: YooEditor,
     elements: ElementStructure[] = []
 ): { value: YooptaContentValue } => {
-    const value: YooptaContentValue = {};
-
-    if (!elements || elements.length === 0) {
-        return { value };
+    if (!elements?.length) {
+        return { value: {} };
     }
 
-    // element$$ 탐색 없이 flat하게 변환
-    elements
+    const value = elements
         .filter(element => !element.deletedAt)
-        .forEach((element, index) => {
-            // HTML -> editor value 변환
-            const editorBlocks = html.deserialize(editor, element.text || '');
-
-            // 모든 블록을 처리
-            Object.entries(editorBlocks).forEach(([blockId, block]) => {
-                value[blockId] = {
-                    ...block,
-                    meta: {
-                        ...block.meta,
-                        depth: element.depth || 0,
-                        order: index,
-                        elementId: element.id,
-                    },
-                } as YooptaBlockData;
-            });
-        });
+        .reduce((acc, element, index) => {
+            const convertedBlocks = convertSingleElement(editor, element, index);
+            return { ...acc, ...convertedBlocks };
+        }, {} as YooptaContentValue);
 
     return { value };
 };

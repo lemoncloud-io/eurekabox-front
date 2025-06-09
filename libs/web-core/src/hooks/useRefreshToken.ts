@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-
 import { useProfile } from './useProfile';
 import { refreshAuthToken } from '../api';
 import { useWebCoreStore } from '../stores';
@@ -27,7 +26,6 @@ export const useRefreshToken = () => {
                     initializationRef.current = true;
                 } catch (error) {
                     console.error('Initialization failed:', error);
-                    window.location.href = '/auth/logout';
                 }
             }
         };

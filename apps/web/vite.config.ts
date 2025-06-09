@@ -11,7 +11,13 @@ export default defineConfig({
 
     define: {
         'process.env': {},
-        ...(process.env.NODE_ENV === 'development' ? { global: 'window' } : {}),
+        'process.env.I18N_VERSION': JSON.stringify(Date.now().toString()),
+        ...(process.env.NODE_ENV === 'development'
+            ? {
+                  global: 'window',
+                  'process.env.I18N_VERSION': JSON.stringify('dev'),
+              }
+            : {}),
     },
 
     resolve: {
