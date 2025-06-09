@@ -1,5 +1,11 @@
 # Changelog
 
+## [2025-06-09] - No version updates
+
+### Chores
+
+-   (ui) remove unused AgentsRoutes
+
 ## [2025-06-09] - root@0.25.1, @eurekabox/web@0.25.1
 
 ### Features
