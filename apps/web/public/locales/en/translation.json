@@ -332,5 +332,156 @@
         "chat_group_created_success": "Chat group has been successfully created.",
         "chat_creation_failed": "Failed to create chat",
         "chat_creation_error": "An error occurred while creating the chat."
+    },
+    "agent": {
+        "title": "AI Agent",
+        "page": {
+            "emptyState": {
+                "title": "Select or add an agent",
+                "description": "You can select an agent from the left list or add a new agent."
+            }
+        },
+        "list": {
+            "header": "Agent List",
+            "actions": {
+                "addAgent": "Add Agent"
+            },
+            "search": {
+                "placeholder": "Search agent name"
+            },
+            "states": {
+                "empty": "Try adding an agent.",
+                "loading": "Loading agents..."
+            }
+        },
+        "listItem": {
+            "labels": {
+                "embeddingModel": "Embedding Model",
+                "modelType": "Model Type"
+            },
+            "states": {
+                "noName": "No Name",
+                "noRole": "No Role Information",
+                "noGoal": "No Goal Information",
+                "notAvailable": "N/A"
+            },
+            "actions": {
+                "deleteMenuItem": "Delete Agent"
+            },
+            "messages": {
+                "deleteSuccess": {
+                    "title": "Agent Deleted Successfully",
+                    "description": "Agent \"{{agentName}}\" has been deleted."
+                },
+                "deleteError": {
+                    "title": "Delete Failed",
+                    "description": "An error occurred while deleting the agent."
+                }
+            },
+            "dialog": {
+                "title": "Delete Agent",
+                "description": "Are you sure you want to delete agent <strong>\"{{agentName}}\"</strong>?",
+                "warning": "Deleted agents cannot be recovered.",
+                "actions": {
+                    "cancel": "Cancel",
+                    "delete": "Delete"
+                }
+            }
+        },
+        "form": {
+            "tabs": {
+                "basic": "Basic Settings",
+                "advanced": "Advanced Settings",
+                "api": "API Integration"
+            },
+            "actions": {
+                "save": "Save",
+                "create": "Create"
+            },
+            "messages": {
+                "createSuccess": "New agent has been created.",
+                "updateSuccess": "Agent has been updated."
+            },
+            "placeholders": {
+                "apiIntegration": "API Integration Settings (Coming Soon)"
+            },
+            "basic": {
+                "fields": {
+                    "model": "Model Selection",
+                    "embedding": "Embedding Model",
+                    "name": "Name",
+                    "age": "Age",
+                    "role": "Role (Occupation)",
+                    "goal": "Goal",
+                    "personality": "Personality",
+                    "hobbies": "Hobbies (Things you like)",
+                    "tone": "Speaking Style",
+                    "greeting": "Greeting",
+                    "introduction": "Self Introduction",
+                    "fallback": "Fallback Message Response",
+                    "abuse": "Abuse Message Response",
+                    "thanks": "Thank You Expression"
+                },
+                "placeholders": {
+                    "model": "Select model",
+                    "embedding": "Select embedding model",
+                    "name": "Enter agent name",
+                    "age": "Enter birth date or age",
+                    "role": "Enter counselor, student, etc.",
+                    "goal": "Empathize with all concerns and provide solutions.",
+                    "personality": "Relaxed yet caring, instills trust.",
+                    "hobbies": "Enjoys watching documentary programs and feels fulfilled participating in volunteer activities.",
+                    "tone": "Maintain a concise yet friendly conversational tone, and if you've resolved a customer's request, ask if there's anything else you can help with.",
+                    "greeting": "Hello. How can I help you? I'll provide you with the information you need quickly and accurately.",
+                    "introduction": "I am an AI counselor who delivers necessary information concisely and clearly. Please feel free to ask if you have any questions.",
+                    "fallback": "I'm having difficulty understanding exactly what you're asking for. Do you have more specific information? If not, I'll guide you more accurately.",
+                    "abuse": "Sorry, but I cannot answer that question. Please feel free to ask if you have any other questions.",
+                    "thanks": "Thank you, please come back anytime you need help. I'll assist you promptly."
+                },
+                "states": {
+                    "loading": "Loading data...",
+                    "noData": "Cannot load data",
+                    "required": "*",
+                    "loadError": "Load Error"
+                }
+            },
+            "advanced": {
+                "prompts": {
+                    "systemPrompt": "System Prompt",
+                    "userPrompt": "User Prompt",
+                    "options": {
+                        "directInput": "Direct Input"
+                    },
+                    "placeholders": {
+                        "selectSystemPrompt": "Select system prompt",
+                        "selectUserPrompt": "Select user prompt",
+                        "emptyPrompt": "Content will be displayed when a prompt is selected.",
+                        "systemPromptDefault": "Please check the input method\n・For titles, enter \"#title\" followed by content. For subtitles, enter \"##subtitle\" followed by content.\n\n[Example]\n#Guidelines\n- Use everyday, easy-to-understand expressions.\n- If the text is not long enough or lacks sufficient context to properly call search, request the necessary information from the user.\n\n##Output Format\n- Always include the final response when delivering to the user.\n- Provide sensitive information only when based on information provided in documents, and do not answer questions that go beyond this scope.",
+                        "userPromptDefault": "Please provide accurate and friendly answers to user questions based on the information below.\n・User's question: \"{input}\"\n・Reference information: \"{similarityDocs}\"\n・User's question: \"{datetime}\""
+                    },
+                    "descriptions": {
+                        "directInputMode": "Direct input mode: Write a new prompt below.",
+                        "existingMode": "This is the content of the selected prompt. To create a new prompt, select \"Direct Input\".",
+                        "userPromptNote": "If you want to modify, please include the three prompts \"{input}\", \"{similarityDocs}\", \"{datetime}\" as required."
+                    },
+                    "names": {
+                        "customSystem": "Custom System Prompt",
+                        "customUser": "Custom User Prompt"
+                    }
+                },
+                "settings": {
+                    "temperature": {
+                        "label": "Response Generation (Creativity)",
+                        "description": "Higher values generate more creative and diverse responses.\nLower values generate more consistent and predictable responses.",
+                        "maxLabel": "Max 1.0"
+                    },
+                    "maxTokens": {
+                        "label": "Maximum Response Tokens",
+                        "description": "The set number of tokens will be applied to the model's response.\n1 token is approximately 4 characters in English alphabet.",
+                        "maxLabel": "Max"
+                    }
+                }
+            }
+        }
     }
 }

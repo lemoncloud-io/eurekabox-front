@@ -23,6 +23,7 @@ module.exports = {
         },
         extend: {
             colors: {
+                point: 'hsl(var(--point))',
                 text: 'hsl(var(--text))',
                 dim: 'hsl(var(--dim))',
                 'text-700': 'hsl(var(--text-700))',
