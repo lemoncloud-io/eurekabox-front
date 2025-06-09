@@ -6,7 +6,7 @@ import { ChevronDown, Edit2, ScrollText } from 'lucide-react';
 
 import type { PromptView } from '@lemoncloud/ssocio-chatbots-api';
 
-import { promptKeys, usePrompts, useUpdatePrompt } from '@eurekabox/chatbots';
+import { promptKeys, usePrompts, useUpdatePrompt } from '@eurekabox/agents';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { useGlobalLoader } from '@eurekabox/shared';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';

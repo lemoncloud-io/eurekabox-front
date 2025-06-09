@@ -8,7 +8,6 @@ import type {
     DocumentSyncPullResult,
     DocumentView,
     EmbeddingView,
-    PromptView,
 } from '@lemoncloud/ssocio-chatbots-api';
 
 import { toast } from '@eurekabox/lib/hooks/use-toast';
@@ -26,13 +25,11 @@ import {
     fetchDocumentById,
     fetchEmbeddings,
     fetchMyChats,
-    fetchPrompts,
     fetchRootChats,
     sendMessage,
     startMyChat,
     updateChat,
     updateDocument,
-    updatePrompt,
 } from '../api';
 import type {
     BulkCreateChildBotsBody,
@@ -40,7 +37,6 @@ import type {
     SendMessageDTO,
     UpdateChatDTO,
     UpdateDocumentDTO,
-    UpdatePromptDTO,
 } from '../types';
 import { generateUUID } from '../utils';
 
@@ -52,7 +48,6 @@ export const chatKeys = createQueryKeys('chatKeys');
 export const strategyKeys = createQueryKeys('strategies');
 export const embeddingKeys = createQueryKeys('embeddings');
 export const brainKeys = createQueryKeys('brains');
-export const promptKeys = createQueryKeys('prompts');
 export const docsKeys = createQueryKeys('docs');
 
 export const MY_CHAT_PARAMS = { stereo: 'root', view: 'mine', name: '!' };
@@ -272,14 +267,6 @@ export const useUpdateChat = () => {
     });
 };
 
-export const useUpdatePrompt = () => {
-    return useCustomMutation((dto: UpdatePromptDTO) => updatePrompt(dto), {
-        onError: error => {
-            toast({ title: error instanceof Error ? error.message : 'An unknown error occurred' });
-        },
-    });
-};
-
 export const useEmbeddings = (params: Params) =>
     useQuery<PaginationType<EmbeddingView[]>>({
         queryKey: embeddingKeys.list(params ?? {}),
@@ -299,18 +286,6 @@ export const useBrains = (params: Params) =>
             const result = await fetchBrains(params);
             return { ...result, data: result.list.filter(data => !data.deletedAt) || [] } as PaginationType<
                 BrainView[]
-            >;
-        },
-        refetchOnWindowFocus: false,
-    });
-
-export const usePrompts = (params: Params) =>
-    useQuery<PaginationType<PromptView[]>>({
-        queryKey: promptKeys.list(params ?? {}),
-        queryFn: async () => {
-            const result = await fetchPrompts(params);
-            return { ...result, data: result.list.filter(data => !data.deletedAt) || [] } as PaginationType<
-                PromptView[]
             >;
         },
         refetchOnWindowFocus: false,

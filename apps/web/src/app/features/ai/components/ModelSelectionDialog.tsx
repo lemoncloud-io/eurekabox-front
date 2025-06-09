@@ -8,7 +8,8 @@ import { HelpCircle, Info } from 'lucide-react';
 import { createAsyncDelay } from '@lemoncloud/lemon-web-core';
 import type { BrainView, ChatBody, EmbeddingView, PromptView } from '@lemoncloud/ssocio-chatbots-api';
 
-import { chatbotsKeys, useBrains, useCreateChildChats, useEmbeddings, usePrompts } from '@eurekabox/chatbots';
+import { usePrompts } from '@eurekabox/agents';
+import { chatbotsKeys, useBrains, useCreateChildChats, useEmbeddings } from '@eurekabox/chatbots';
 import type { BulkCreateChildBotsBody } from '@eurekabox/chatbots';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Badge } from '@eurekabox/ui-kit/components/ui/badge';
