@@ -1,5 +1,12 @@
 # Changelog
 
+## [2025-06-10] - root@0.25.2, @eurekabox/web@0.25.2
+
+### Refactor
+
+-   agent page style
+-   commented agents route
+
 ## [2025-06-09] - No version updates
 
 ### Chores
