@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 
 import type { AgentView, PromptView } from '@lemoncloud/ssocio-chatbots-api';
 
-import type { AgentFormData} from '@eurekabox/agents';
+import type { AgentFormData } from '@eurekabox/agents';
 import { useAgent, useCreateAgent, useCreatePrompt, useUpdateAgent } from '@eurekabox/agents';
 import { usePrompts } from '@eurekabox/agents';
 import { toSelectOptions, viewToFormData } from '@eurekabox/agents';
@@ -177,7 +177,7 @@ export const AgentForm = ({ mode, agentData, agentId, onFormSuccess }: AgentForm
                 </div>
                 <Button
                     size="sm"
-                    className="w-[52px] h-[26px] text-xs disabled:text-white"
+                    className="w-[52px] h-[26px] text-xs dark:bg-point disabled:text-white"
                     onClick={handleSave}
                     disabled={isLoading || !isFormValid || isDataLoading}
                 >

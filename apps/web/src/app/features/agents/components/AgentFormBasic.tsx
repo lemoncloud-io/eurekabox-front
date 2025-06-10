@@ -6,7 +6,6 @@ import { Input } from '@eurekabox/ui-kit/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@eurekabox/ui-kit/components/ui/select';
 import { Textarea } from '@eurekabox/ui-kit/components/ui/textarea';
 
-
 interface FormFieldProps {
     label: string;
     children: React.ReactNode;
@@ -149,7 +148,7 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
         );
 
         return (
-            <div className="flex-1 grid grid-cols-2 max-xs:grid-cols-1 gap-x-4 gap-y-5 h-full overflow-auto p-4">
+            <div className="flex-1 grid grid-cols-2 max-sm:grid-cols-1 gap-x-4 gap-y-5 h-full overflow-auto p-4">
                 <FormField label={t('agent.form.basic.fields.model')} required>
                     <Select
                         value={formData.brainId || ''}
@@ -248,7 +247,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.role')} required>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.role')}
-                        className="h-[106px] resize-none"
                         value={formData.role || ''}
                         onChange={handleRoleChange}
                         disabled={isLoading}
@@ -258,7 +256,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.goal')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.goal')}
-                        className="h-[106px] resize-none"
                         value={formData.goal || ''}
                         onChange={handleGoalChange}
                         disabled={isLoading}
@@ -268,7 +265,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.personality')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.personality')}
-                        className="h-[106px] resize-none"
                         value={formData.mind || ''}
                         onChange={handleMindChange}
                         disabled={isLoading}
@@ -278,7 +274,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.hobbies')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.hobbies')}
-                        className="h-[106px] resize-none"
                         value={formData.like || ''}
                         onChange={handleLikeChange}
                         disabled={isLoading}
@@ -288,7 +283,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.tone')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.tone')}
-                        className="h-[106px] resize-none"
                         value={formData.tone || ''}
                         onChange={handleToneChange}
                         disabled={isLoading}
@@ -298,7 +292,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.greeting')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.greeting')}
-                        className="h-[106px] resize-none"
                         value={formData.greet || ''}
                         onChange={handleGreetChange}
                         disabled={isLoading}
@@ -308,7 +301,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.introduction')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.introduction')}
-                        className="h-[106px] resize-none"
                         value={formData.intro || ''}
                         onChange={handleIntroChange}
                         disabled={isLoading}
@@ -318,7 +310,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.fallback')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.fallback')}
-                        className="h-[106px] resize-none"
                         value={formData.back || ''}
                         onChange={handleBackChange}
                         disabled={isLoading}
@@ -328,7 +319,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.abuse')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.abuse')}
-                        className="h-[106px] resize-none"
                         value={formData.abuse || ''}
                         onChange={handleAbuseChange}
                         disabled={isLoading}
@@ -338,7 +328,6 @@ export const AgentFormBasic = React.memo<AgentFormBasicProps>(
                 <FormField label={t('agent.form.basic.fields.thanks')}>
                     <Textarea
                         placeholder={t('agent.form.basic.placeholders.thanks')}
-                        className="h-[106px] resize-none"
                         value={formData.thank || ''}
                         onChange={handleThankChange}
                         disabled={isLoading}

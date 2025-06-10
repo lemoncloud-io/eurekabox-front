@@ -10,7 +10,6 @@ import { Textarea } from '@eurekabox/ui-kit/components/ui/textarea';
 
 import type { PromptState } from '../types';
 
-
 export interface AgentFormAdvancedRef {
     getPromptCreationData: () => {
         systemPrompt?: CreatePromptDTO;
@@ -270,19 +269,19 @@ export const AgentFormAdvanced = React.memo(
                         </Select>
 
                         {promptState.mode === 'create' && (
-                            <div className="text-xs text-blue-600 mb-2">
+                            <div className="text-[#007AFF] mb-2 pl-[6px]">
                                 {t('agent.form.advanced.prompts.descriptions.directInputMode')}
                             </div>
                         )}
 
                         {promptState.mode === 'existing' && (
-                            <div className="text-xs text-gray-500 mb-2">
+                            <div className="text-[#9FA2A7] mb-2 pl-[6px]">
                                 {t('agent.form.advanced.prompts.descriptions.existingMode')}
                             </div>
                         )}
 
                         <Textarea
-                            className={`${isSystem ? 'h-[300px]' : 'h-[109px]'} resize-none`}
+                            className={`${isSystem ? 'h-[300px]' : 'h-[125px]'} resize-none`}
                             placeholder={
                                 promptState.mode === 'create'
                                     ? defaultPlaceholder
@@ -298,7 +297,7 @@ export const AgentFormAdvanced = React.memo(
                         />
 
                         {!isSystem && (
-                            <div className="text-[#007AFF] font-medium mt-[6px] text-sm">
+                            <div className="text-[#007AFF] font-medium mt-[6px] text-sm pl-[6px]">
                                 {t('agent.form.advanced.prompts.descriptions.userPromptNote')}
                             </div>
                         )}
@@ -331,7 +330,7 @@ export const AgentFormAdvanced = React.memo(
                             <label className="inline-block text-base font-medium text-text mb-[5px]">
                                 {t('agent.form.advanced.settings.temperature.label')}
                             </label>
-                            <div className="text-sm text-[#9FA2A7] dark:text-[#9FA2A7] mb-4">
+                            <div className="text-sm text-[#9FA2A7] mb-4 whitespace-pre-line">
                                 {t('agent.form.advanced.settings.temperature.description')}
                             </div>
                             <div className="w-full px-[6px]">
@@ -377,7 +376,7 @@ export const AgentFormAdvanced = React.memo(
                             <label className="inline-block text-base font-medium text-text mb-[5px]">
                                 {t('agent.form.advanced.settings.maxTokens.label')}
                             </label>
-                            <div className="text-sm text-[#9FA2A7] dark:text-[#9FA2A7] mb-4">
+                            <div className="text-sm text-[#9FA2A7] dark:text-[#9FA2A7] mb-4 whitespace-pre-line">
                                 {t('agent.form.advanced.settings.maxTokens.description')}
                             </div>
                             <div className="w-full px-[6px]">
