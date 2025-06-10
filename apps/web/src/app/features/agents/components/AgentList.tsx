@@ -60,10 +60,11 @@ export const AgentList = ({
                 <div className="font-medium">{t('agent.list.header')}</div>
                 <Button
                     variant="outline"
-                    className="border-point gap-1 rounded-[6px] py-1 pr-2 pl-[6px] text-xs h-[26px]"
+                    className="dark:border-point dark:bg-[#222325] gap-1 rounded-[6px] py-1 pr-2 pl-[6px] text-xs h-[26px] text-text font-medium"
                     onClick={onCreateNew}
                 >
-                    <Plus className="w-[18px] h-[18px]" /> {t('agent.list.actions.addAgent')}
+                    <Plus className="w-[18px] h-[18px] text-text" />
+                    {t('agent.list.actions.addAgent')}
                 </Button>
             </div>
 

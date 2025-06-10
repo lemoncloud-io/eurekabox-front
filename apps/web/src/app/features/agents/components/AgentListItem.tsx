@@ -80,8 +80,8 @@ export const AgentListItem = ({ agent, isSelected, onSelect }: AgentListItemProp
     return (
         <>
             <li
-                className={`relative border border-chatbot-line py-[9px] px-[13px] rounded-xl cursor-pointer hover:border-text transition-colors ${
-                    isSelected ? 'bg-[#f4f5f5] dark:bg-[#222325]' : 'bg-white dark:bg-[#1C1C1D]'
+                className={`relative border border-chatbot-line py-[9px] px-[13px] bg-[#f4f5f5] dark:bg-[#222325] rounded-xl cursor-pointer hover:border-text transition-colors ${
+                    isSelected ? 'border-text' : ''
                 } ${isDeleting ? 'pointer-events-none' : ''}`}
                 onClick={isDeleting ? undefined : onSelect}
                 aria-busy={isDeleting}
@@ -120,7 +120,7 @@ export const AgentListItem = ({ agent, isSelected, onSelect }: AgentListItemProp
                     <br />
                     {agent.meta$?.goal || t('agent.listItem.states.noGoal')}
                 </div>
-                <hr className="my-[10px] w-full h-[1px] bg-[#F0F0F0] dark:bg-white" />
+                <div className="my-[10px] w-full h-[1px] bg-[#F0F0F0] dark:bg-white"></div>
                 <div className="space-y-[10px]">
                     <div className="flex items-center justify-between font-medium">
                         <div>{t('agent.listItem.labels.embeddingModel')}</div>
