@@ -1,6 +1,6 @@
 {
     "name": "@eurekabox/source",
-    "version": "0.25.1",
+    "version": "0.26.0",
     "scripts": {
         "clean:cache": "(rm -rf ./node_modules/.vite ./node_modules/.cache || true) && (rm -rf ./.nx || true)",
         "prepare": "husky",
@@ -22,7 +22,7 @@
     "private": true,
     "dependencies": {
         "@hookform/resolvers": "^3.9.1",
-        "@lemoncloud/lemon-web-core": "^1.2.9",
+        "@lemoncloud/lemon-web-core": "^1.4.1",
         "@radix-ui/react-accordion": "^1.2.1",
         "@radix-ui/react-alert-dialog": "^1.1.2",
         "@radix-ui/react-avatar": "^1.1.1",
@@ -99,7 +99,7 @@
         "@commitlint/config-conventional": "^19.6.0",
         "@eslint/js": "^9.8.0",
         "@lemoncloud/eureka-contents-api": "^0.25.224",
-        "@lemoncloud/ssocio-chatbots-api": "^0.25.407-g",
+        "@lemoncloud/ssocio-chatbots-api": "^0.25.604",
         "@nx/eslint": "20.1.4",
         "@nx/eslint-plugin": "20.1.4",
         "@nx/jest": "20.1.4",

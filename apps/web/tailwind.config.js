@@ -23,10 +23,13 @@ module.exports = {
         },
         extend: {
             colors: {
+                point: 'hsl(var(--point))',
                 text: 'hsl(var(--text))',
                 dim: 'hsl(var(--dim))',
+                'text-400': 'hsl(var(--text-400))',
                 'text-700': 'hsl(var(--text-700))',
                 'text-800': 'hsl(var(--text-800))',
+                'chatbot-line': 'hsl(var(--chatbot-line))',
                 sidebar: 'hsl(var(--sidebar))',
                 'sidebar-hover': 'hsl(var(--sidebar-hover))',
                 placeholder: 'hsl(var(--placeholder))',

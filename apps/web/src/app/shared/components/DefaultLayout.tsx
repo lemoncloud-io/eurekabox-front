@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import i18n from 'i18next';
-import { EllipsisVertical, FileUp, LogOut, Menu } from 'lucide-react';
+import { ChevronLeft, EllipsisVertical, FileUp, LogOut, Menu } from 'lucide-react';
 
 import type { ContentView } from '@lemoncloud/eureka-contents-api';
 
@@ -21,15 +21,17 @@ import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { toast } from '@eurekabox/ui-kit/hooks/use-toast';
 
 import { SideBar, ThemeToggle } from '../components';
-import { useContentCache } from '../hooks';
+import { useContentCache, usePageHeader } from '../hooks';
+import { useUIStore } from '../stores';
 
 export const DefaultLayout = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [language, setLanguage] = useState<string>(i18n.language || 'en');
 
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useUIStore();
 
+    const { headerContent } = usePageHeader();
     const { prependContentToCache } = useContentCache();
     const createContent = useCreateContent();
 
@@ -83,6 +85,10 @@ export const DefaultLayout = () => {
         event.target.value = '';
     }, [toast]);
 
+    const goBack = () => {
+        navigate(-1);
+    };
+
     return (
         <div className="min-h-screen bg-background text-foreground overflow-hidden">
             <div className="h-screen flex flex-col">
@@ -109,6 +115,20 @@ export const DefaultLayout = () => {
                                 <Menu className="h-4 w-4" />
                                 <span className="sr-only">Toggle sidebar</span>
                             </Button>
+                            {headerContent && (
+                                <>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={goBack}
+                                        className={`${sidebarOpen ? 'hidden' : ''}`}
+                                    >
+                                        <ChevronLeft className="h-4 w-4" />
+                                        <span className="sr-only">go back</span>
+                                    </Button>
+                                    <span className="text-sm font-medium ml-2">{headerContent}</span>
+                                </>
+                            )}
                         </div>
                         <div className="flex items-center gap-2">
                             <DropdownMenu>

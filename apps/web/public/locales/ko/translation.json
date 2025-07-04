@@ -110,7 +110,8 @@
         "save": "저장",
         "retry": "다시 시도",
         "create": "생성",
-        "delete": "삭제"
+        "delete": "삭제",
+        "confirm": "확인"
     },
     "ai": {
         "prompt": {
@@ -331,5 +332,157 @@
         "chat_group_created_success": "채팅 그룹이 성공적으로 생성되었습니다.",
         "chat_creation_failed": "채팅 생성 실패",
         "chat_creation_error": "채팅 생성 중 오류가 발생했습니다."
+    },
+    "agent": {
+        "title": "AI 에이전트",
+        "header": "에이전트 설정",
+        "page": {
+            "emptyState": {
+                "title": "에이전트를 선택하거나 추가해보세요",
+                "description": "왼쪽 목록에서 에이전트를 선택하거나 새로운 에이전트를 추가할 수 있습니다."
+            }
+        },
+        "list": {
+            "header": "에이전트 목록",
+            "actions": {
+                "addAgent": "에이전트 추가"
+            },
+            "search": {
+                "placeholder": "에이전트 이름 검색"
+            },
+            "states": {
+                "empty": "에이전트를 추가해 보세요.",
+                "loading": "에이전트 로딩 중..."
+            }
+        },
+        "listItem": {
+            "labels": {
+                "embeddingModel": "임베딩 모델",
+                "modelType": "모델 타입"
+            },
+            "states": {
+                "noName": "이름 없음",
+                "noRole": "역할 정보 없음",
+                "noGoal": "목표 정보 없음",
+                "notAvailable": "N/A"
+            },
+            "actions": {
+                "deleteMenuItem": "에이전트 삭제"
+            },
+            "messages": {
+                "deleteSuccess": {
+                    "title": "에이전트 삭제 완료",
+                    "description": "\"{{agentName}}\" 에이전트가 삭제되었습니다."
+                },
+                "deleteError": {
+                    "title": "삭제 실패",
+                    "description": "에이전트 삭제 중 오류가 발생했습니다."
+                }
+            },
+            "dialog": {
+                "title": "에이전트 삭제",
+                "description": "<strong>\"{{agentName}}\"</strong> 에이전트를 삭제하시겠습니까?",
+                "warning": "삭제된 에이전트는 복구할 수 없습니다.",
+                "actions": {
+                    "cancel": "취소",
+                    "delete": "삭제"
+                }
+            }
+        },
+        "form": {
+            "tabs": {
+                "basic": "기본 설정",
+                "advanced": "고급 설정",
+                "api": "API 연동"
+            },
+            "actions": {
+                "save": "저장",
+                "create": "생성"
+            },
+            "messages": {
+                "createSuccess": "새로운 에이전트가 생성되었습니다.",
+                "updateSuccess": "에이전트가 업데이트되었습니다."
+            },
+            "placeholders": {
+                "apiIntegration": "API 연동 설정 (구현 예정)"
+            },
+            "basic": {
+                "fields": {
+                    "model": "모델 선택",
+                    "embedding": "임베딩 모델",
+                    "name": "이름",
+                    "age": "나이",
+                    "role": "역할(직업)",
+                    "goal": "목표",
+                    "personality": "성격",
+                    "hobbies": "취미(좋아하는 것)",
+                    "tone": "말투",
+                    "greeting": "인사말",
+                    "introduction": "자기소개",
+                    "fallback": "폴백 메시지 대응",
+                    "abuse": "욕설 메시지 대응",
+                    "thanks": "감사합니다 표현"
+                },
+                "placeholders": {
+                    "model": "모델 선택",
+                    "embedding": "임베딩 모델 선택",
+                    "name": "에이전트 이름을 입력",
+                    "age": "생년월일 또는 나이를 입력",
+                    "role": "상담사, 학생 등 입력",
+                    "goal": "모든 고민에 공감하고, 해결책을 제공해준다.",
+                    "personality": "여유있으면서 배려심 있고, 신뢰감을 준다.",
+                    "hobbies": "다큐멘터리 프로그램을 즐겨보고, 봉사활동에 참여하는 것에 성취감을 느낀다.",
+                    "tone": "간결하면서도 친근한 대화형 톤을 유지하고, 고객의 요청을 해결했다면, 추가로 도와드릴 수 있는 부분이있는지 물어본다.",
+                    "greeting": "안녕하세요. 무엇을 도와드릴까요? 필요한 정보를 빠르고 정확하게 안내해 드릴게요.",
+                    "introduction": "저는 AI 상담사로 필요한 정보를 간결하고 명확하게 전달드리며, 궁금하신 내용이 있다면 언제든지 말씀해 주세요.",
+                    "fallback": "현재 요청하신 내용은 제가 정확히 파악하기 어렵습니다. 좀 더 구체적인 정보가 있나요? 없다면 보다 정확하게 안내해 드릴게요.",
+                    "abuse": "죄송하지만 해당 질문에 대해 답변드릴 수 없습니다 다른 궁금하신 내용이 있다면 언제든지 말씀해 주세요.",
+                    "thanks": "감사합니다, 언제든 필요하실 떄 다시 찾아주세요. 신속히 도와드리겠습니다."
+                },
+                "states": {
+                    "loading": "데이터 로딩 중...",
+                    "noData": "데이터를 불러올 수 없습니다",
+                    "required": "*",
+                    "loadError": "데이터 로드 에러"
+                }
+            },
+            "advanced": {
+                "prompts": {
+                    "systemPrompt": "System Prompt",
+                    "userPrompt": "User Prompt",
+                    "options": {
+                        "directInput": "직접 입력"
+                    },
+                    "placeholders": {
+                        "selectSystemPrompt": "시스템 프롬프트 선택",
+                        "selectUserPrompt": "사용자 프롬프트 선택",
+                        "emptyPrompt": "프롬프트를 선택하면 내용이 표시됩니다.",
+                        "systemPromptDefault": "입력 방법을 확인해 주세요\n・타이틀은 \"#타이틀\"로 입력 후 내용을 입력해 주세요. 서브 타이틀은 \"##서브타이틀\"로 입력 후 내용을 입력해 주세요.\n\n[예시]\n#지침\n- 용어는 일상적이고 쉬운 표현으로 사용하세요.\n- 검색을 제대로 호출할 만큼 장문이 구체적이지 않거나 맥락을 충분히 갖추기 못한 경우에는, 사용자에게 필요한 정보를 요청하세요.\n\n##출력 형식\n- 사용자에게 항상 마지막 응답을 포함해 전달하세요.\n- 민감한 정보는 문서에서 제공된 정보를 기반으로 하는 경우에만 제공하고, 이 범위를 벗어나는 질문에는 답변하지 마세요.",
+                        "userPromptDefault": "아래 정보를 기반으로 사용자 질문에 대한 정확하고 친절한 답변을 제공하세요.\n・사용자의 질문 : \"{input}\"\n・참고 정보 : \"{similarityDocs}\"\n・사용자의 질문 : \"{datetime}\""
+                    },
+                    "descriptions": {
+                        "directInputMode": "직접 입력 모드: 아래에 새 프롬프트를 작성하세요.",
+                        "existingMode": "선택된 프롬프트의 내용입니다. 새 프롬프트를 작성하려면 \"직접 입력\"을 선택하세요.",
+                        "userPromptNote": "수정하고자 하는 경우, \"{input}\", \"{similarityDocs}\", \"{datetime}\" 3가지 프롬프트를 필수로 작성해 주세요."
+                    },
+                    "names": {
+                        "customSystem": "Custom System Prompt",
+                        "customUser": "Custom User Prompt"
+                    }
+                },
+                "settings": {
+                    "temperature": {
+                        "label": "답변 생성(창의성)",
+                        "description": "높을수록 더 창의적이고 다양한 답변을 생성합니다.\n낮을수록 더 일관되고 예측 가능한 답변을 생성합니다.",
+                        "maxLabel": "최대 1.0"
+                    },
+                    "maxTokens": {
+                        "label": "최대 응답 토큰 수",
+                        "description": "설정한 토큰 수 만큼 모델의 응답에 적용됩니다.\n1토큰은 대략 영어 알파벳 기준 4자입니다.",
+                        "maxLabel": "최대"
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 
-import { refreshAuthToken } from '../api';
 import { LANGUAGE_KEY, webCore } from '../core';
-import { MAX_RETRIES, withRetry } from '../utils';
 
 export type UserProfile = never;
 export type UserView = never;
@@ -48,21 +46,10 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
      */
     initialize: async () => {
         set({ isInitialized: false, error: null });
-        return withRetry(
-            async () => {
-                await webCore.init();
-                await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
-                const isAuthenticated = await webCore.isAuthenticated();
-
-                if (isAuthenticated) {
-                    await refreshAuthToken();
-                }
-
-                set({ isInitialized: true, isAuthenticated });
-            },
-            MAX_RETRIES,
-            'App initialization'
-        );
+        await webCore.init();
+        await webCore.setUseXLemonLanguage(true, LANGUAGE_KEY);
+        const isAuthenticated = await webCore.isAuthenticated();
+        set({ isInitialized: true, isAuthenticated });
     },
 
     /**
@@ -97,10 +84,14 @@ export const useWebCoreStore = create<WebCoreStore>()(set => ({
      * Updates username and related profile information
      * @param user - Updated user view data
      */
-    updateUserName: (user: UserView) =>
+    updateUser: (user: UserView) =>
         set(state => {
+            if (!state.profile) {
+                return state;
+            }
+
             const profile = { ...state.profile, $user: user };
-            const userName = user['name'];
+            const userName = user.name;
             return { ...state, profile, userName };
         }),
 }));

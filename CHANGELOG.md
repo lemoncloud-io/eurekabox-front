@@ -1,5 +1,28 @@
 # Changelog
 
+## [2025-07-04] - root@0.26.0, @eurekabox/web@0.26.0
+
+### Features
+
+-   update refresh token
+
+### Refactor
+
+-   restructure routes with protected layout
+
+## [2025-06-10] - root@0.25.2, @eurekabox/web@0.25.2
+
+### Refactor
+
+-   agent page style
+-   commented agents route
+
+## [2025-06-09] - No version updates
+
+### Chores
+
+-   (ui) remove unused AgentsRoutes
+
 ## [2025-06-09] - root@0.25.1, @eurekabox/web@0.25.1
 
 ### Features

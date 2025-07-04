@@ -6,7 +6,8 @@ import { MonitorSmartphone, MoreVertical, Pencil, Trash } from 'lucide-react';
 
 import type { ChatView } from '@lemoncloud/ssocio-chatbots-api';
 
-import { chatbotsKeys, useBrains, useEmbeddings, usePrompts, useUpdateChat } from '@eurekabox/chatbots';
+import { usePrompts } from '@eurekabox/agents';
+import { chatbotsKeys, useBrains, useEmbeddings, useUpdateChat } from '@eurekabox/chatbots';
 import { toast } from '@eurekabox/lib/hooks/use-toast';
 import { Button } from '@eurekabox/ui-kit/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@eurekabox/ui-kit/components/ui/card';

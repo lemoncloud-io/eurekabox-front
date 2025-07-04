@@ -15,6 +15,7 @@ import type {
     PromptView,
 } from '@lemoncloud/ssocio-chatbots-api';
 
+import { usePrompts } from '@eurekabox/agents';
 import type { BulkCreateChildBotsBody } from '@eurekabox/chatbots';
 import {
     chatbotsKeys,
@@ -23,7 +24,6 @@ import {
     useCreateChildChats,
     useCreateRootChat,
     useEmbeddings,
-    usePrompts,
 } from '@eurekabox/chatbots';
 import { Button } from '@eurekabox/lib/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@eurekabox/lib/components/ui/dialog';
