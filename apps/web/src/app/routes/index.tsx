@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route, RouterProvider, Routes, createBrowserRouter } from 'react-router-dom';
+import { Navigate, Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { AuthGuard } from './guards';
 import { AIRoutes } from '../features/ai';
@@ -18,31 +18,28 @@ const AppLayout = () => {
         </>
     );
 };
-export const ProtectedRoutes = () => {
+
+const ProtectedLayout = () => {
     return (
-        <Routes>
-            <Route path="/" element={<AppLayout />}>
-                <Route index element={<Navigate to="/home" replace />} />
-                <Route path="home" element={<HomeRoutes />} />
-                <Route path="styling/*" element={<StylingRoutes />} />
-                <Route path="ai/*" element={<AIRoutes />} />
-                {/* TODO: add AI Agents */}
-                {/* <Route path="agents/*" element={<AgentsRoutes />} /> */}
-                <Route path="*" element={<EditorRoutes />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
+        <AuthGuard>
+            <AppLayout />
+        </AuthGuard>
     );
 };
 
 const router = createBrowserRouter([
     {
-        path: '/*',
-        element: (
-            <AuthGuard>
-                <ProtectedRoutes />
-            </AuthGuard>
-        ),
+        path: '/',
+        element: <ProtectedLayout />,
+        children: [
+            { index: true, element: <Navigate to="/home" replace /> },
+            { path: 'home', element: <HomeRoutes /> },
+            { path: 'styling/*', element: <StylingRoutes /> },
+            { path: 'ai/*', element: <AIRoutes /> },
+            // TODO: add AI Agents
+            // { path: 'agents/*', element: <AgentsRoutes /> },
+            { path: '*', element: <EditorRoutes /> },
+        ],
     },
     {
         path: '/auth/*',
