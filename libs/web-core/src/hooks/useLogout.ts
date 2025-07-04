@@ -29,11 +29,14 @@ export const useLogout = (handleSuccessEvent?: HandleSuccessEventFunc, handleErr
 
     return useMutation({
         mutationKey: ['LOGOUT_USER'],
-        mutationFn: async () => await logout(),
-        onSuccess(data) {
-            handleSuccessEvent && handleSuccessEvent(data);
+        mutationFn: async () => {
+            await logout();
+            return;
         },
-        onError(error) {
+        onSuccess: () => {
+            handleSuccessEvent && handleSuccessEvent();
+        },
+        onError: (error: Error) => {
             handleErrorEvent && handleErrorEvent(error);
         },
     });
