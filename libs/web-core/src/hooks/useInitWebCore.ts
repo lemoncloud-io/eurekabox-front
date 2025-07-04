@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useWebCoreStore } from '../stores';
 
@@ -10,18 +10,31 @@ import { useWebCoreStore } from '../stores';
  * @returns {boolean} Initialization status
  */
 export const useInitWebCore = () => {
-    const initializeCore = useWebCoreStore(state => state.initialize);
-    const isInitialized = useWebCoreStore(state => state.isInitialized);
+    const { initialize, isInitialized } = useWebCoreStore();
+    const [localInitState, setLocalInitState] = useState<'idle' | 'initializing' | 'completed'>('idle');
     const hasInitialized = useRef(false);
 
     useEffect(() => {
-        if (hasInitialized.current) {
+        if (hasInitialized.current || localInitState !== 'idle') {
             return;
         }
 
         hasInitialized.current = true;
-        initializeCore();
-    }, [initializeCore]);
+        setLocalInitState('initializing');
 
-    return isInitialized;
+        const runInitialization = async () => {
+            try {
+                await initialize();
+                setLocalInitState('completed');
+            } catch (error) {
+                console.error('❌ WebCore initialization failed:', error);
+                // TODO: error fallback
+                setLocalInitState('completed');
+            }
+        };
+
+        runInitialization();
+    }, [initialize]);
+
+    return isInitialized && localInitState === 'completed';
 };

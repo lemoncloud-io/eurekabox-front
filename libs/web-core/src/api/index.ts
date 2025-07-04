@@ -1,7 +1,8 @@
 import type { LemonOAuthToken, RefreshTokenBody } from '@lemoncloud/lemon-web-core';
 
 import { OAUTH_ENDPOINT, webCore } from '../core';
-import { MAX_RETRIES, withRetry } from '../utils';
+import type { UserProfile } from '../stores';
+import { MAX_RETRIES, validateTokenResponse, withRetry } from '../utils';
 
 /**
  * Creates authentication credentials using OAuth provider
@@ -41,15 +42,30 @@ export const refreshAuthToken = async () => {
                 .setBody({ ...body })
                 .execute<LemonOAuthToken>();
 
-            const refreshToken = {
-                ...response.data.Token,
-                identityToken: response.data.identityToken || originToken.identityToken || '',
-                identityPoolId: response.data.identityPoolId || originToken.identityPoolId || '',
+            const tokenData = {
+                identityPoolId: originToken.identityPoolId,
+                ...(response.data.Token ? response.data.Token : response.data),
             };
-
-            await webCore.buildCredentialsByToken(refreshToken);
+            const validatedToken: LemonOAuthToken = validateTokenResponse(tokenData);
+            await webCore.buildCredentialsByToken(validatedToken);
         },
         MAX_RETRIES,
         'Token refresh'
+    );
+};
+
+export const fetchProfile = async () => {
+    return await withRetry(
+        async () => {
+            const { data } = await webCore
+                .buildSignedRequest({
+                    method: 'GET',
+                    baseURL: `${OAUTH_ENDPOINT}/users/0/profile`,
+                })
+                .execute<UserProfile>();
+            return data;
+        },
+        MAX_RETRIES,
+        'Profile fetch'
     );
 };

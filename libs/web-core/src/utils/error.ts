@@ -6,17 +6,30 @@ export enum ErrorType {
     UNKNOWN = 'unknown', // 기타
 }
 
-interface ErrorClassification {
+export interface ErrorClassification {
     type: ErrorType;
     shouldRetry: boolean;
     shouldLogout: boolean;
     message: string;
 }
 
+export const MAX_RETRIES = 2;
+
+const DEFAULT_ERROR_MESSAGE = '알 수 없는 오류가 발생했습니다';
+
 export const classifyError = (error: any): ErrorClassification => {
     const status = error?.status || error?.response?.status || error?.statusCode;
+    const message = error?.message || '';
 
-    // 403 인증 에러
+    if (message.includes('INVALID_TOKEN') || message.includes('Token validation failed')) {
+        return {
+            type: ErrorType.AUTHENTICATION,
+            shouldRetry: false,
+            shouldLogout: true,
+            message: '토큰이 유효하지 않습니다',
+        };
+    }
+
     if (status === 403) {
         return {
             type: ErrorType.AUTHENTICATION,
@@ -26,7 +39,6 @@ export const classifyError = (error: any): ErrorClassification => {
         };
     }
 
-    // 네트워크 연결 에러 감지
     if (isNetworkError(error)) {
         return {
             type: ErrorType.NETWORK,
@@ -36,7 +48,6 @@ export const classifyError = (error: any): ErrorClassification => {
         };
     }
 
-    // 서버 에러 (5xx)
     if (status >= 500 && status < 600) {
         return {
             type: ErrorType.SERVER,
@@ -46,7 +57,6 @@ export const classifyError = (error: any): ErrorClassification => {
         };
     }
 
-    // 클라이언트 에러 (4xx, 403 제외)
     if (status >= 400 && status < 500) {
         return {
             type: ErrorType.CLIENT,
@@ -83,4 +93,51 @@ const isNetworkError = (error: any): boolean => {
     }
 
     return false;
+};
+
+export const extractErrorMessage = (error: any): string => {
+    if (!error) {
+        return DEFAULT_ERROR_MESSAGE;
+    }
+
+    if (error.message) {
+        return error.message;
+    }
+
+    if (error.status || error.statusText) {
+        return `${error.status || ''} ${error.statusText || ''}`.trim();
+    }
+
+    if (typeof error === 'string') {
+        return error;
+    }
+
+    if (error.toString && error.toString() !== '[object Object]') {
+        return error.toString();
+    }
+
+    if (error.response?.data) {
+        if (error.response.data.error) {
+            return error.response.data.error;
+        }
+        if (error.response.data.message) {
+            return error.response.data.message;
+        }
+    }
+
+    return DEFAULT_ERROR_MESSAGE;
+};
+
+export const handleAuthError = (error: any, shouldLogout: boolean, message?: string): never => {
+    console.error(message || 'Authentication error:', error);
+    const errorMessage = extractErrorMessage(error);
+
+    if (shouldLogout) {
+        alert(`인증 오류: ${errorMessage}`);
+        window.location.href = '/auth/logout';
+    } else {
+        console.error(`요청 오류: ${errorMessage}`);
+    }
+
+    throw error;
 };

@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorFallback, GlobalLoader, LoadingFallback } from '@eurekabox/shared';
 import { ThemeProvider } from '@eurekabox/theme';
 import { Toaster } from '@eurekabox/ui-kit/components/ui/toaster';
-import { useInitWebCore, useRefreshToken } from '@eurekabox/web-core';
+import { useInitWebCore, useTokenRefresh, useWebCoreStore } from '@eurekabox/web-core';
 
 import { Router } from './routes';
 import i18n from '../i18n';
@@ -23,10 +23,12 @@ export function App() {
         },
     });
 
-    const isInitialized = useInitWebCore();
-    useRefreshToken();
+    const isWebCoreReady = useInitWebCore();
+    const { isAuthenticated } = useWebCoreStore();
+    const { isInitialized: isTokenInitialized } = useTokenRefresh(isWebCoreReady);
+    const canRenderApp = isWebCoreReady && (!isAuthenticated || isTokenInitialized);
 
-    if (!isInitialized) {
+    if (!canRenderApp) {
         return <LoadingFallback />;
     }
 
