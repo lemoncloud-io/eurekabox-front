@@ -1,6 +1,6 @@
 {
     "name": "@eurekabox/source",
-    "version": "0.25.2",
+    "version": "0.26.0",
     "scripts": {
         "clean:cache": "(rm -rf ./node_modules/.vite ./node_modules/.cache || true) && (rm -rf ./.nx || true)",
         "prepare": "husky",
