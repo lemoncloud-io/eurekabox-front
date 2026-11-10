@@ -166,10 +166,10 @@ jobs:
                   chmod +x scripts/deploy-${{ matrix.project }}.sh
                   yarn ${{ matrix.project }}:deploy:prod
 
-    notity-slack:
+    notify-dou:
         needs: [changes, get-version, build-and-deploy]
         if: ${{ fromJson(needs.changes.outputs.projects)[0] != null }}
-        name: Notify Slack
+        name: Notify DoU
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -184,16 +184,10 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Convert notes to slack body
-              id: slack-body
-              uses: LoveToKnow/slackify-markdown-action@v1.0.2
-              with:
-                  text: ${{ steps.release-drafted.outputs.body }}
-
-            - name: Prepare Slack message
-              id: slack-message
+            - name: Prepare deploy message
+              id: deploy-message
               run: |
-                  BASE_MESSAGE=":eurekabox: *EurekaBox 운영 환경 배포 완료*\n\n"
+                  BASE_MESSAGE="*EurekaBox 운영 환경 배포 완료*\n\n"
                   DEPLOY_MESSAGE=""
 
                   if [[ "${{ needs.changes.outputs.web }}" == "true" ]]; then
@@ -202,32 +196,15 @@ jobs:
                       DEPLOY_MESSAGE="변경사항이 없습니다."
                   fi
 
-                  echo "text=${BASE_MESSAGE}${DEPLOY_MESSAGE}" >> $GITHUB_OUTPUT
+                  { echo 'text<<EOF'; printf '%b\n' "${BASE_MESSAGE}${DEPLOY_MESSAGE}"; echo 'EOF'; } >> "$GITHUB_OUTPUT"
 
-            - name: Post to a Slack channel
-              id: post-slack
-              uses: slackapi/slack-github-action@v1.25.0
+            - name: Notify DoU
+              uses: lemoncloud-io/actions/notify-dou@v1
               with:
-                  channel-id: ${{ secrets.EUREKACODES_CHANNEL }}
-                  payload: |
-                      {
-                          "text": "EUREKABOX 운영 배포 알림",
-                          "blocks": [
-                      		  {
-                                  "type": "section",
-                                  "text": {
-                                      "type": "mrkdwn",
-                                      "text": "${{ steps.slack-message.outputs.text }}"
-                                  }
-                              },
-                              {
-                                  "type": "section",
-                                  "text": {
-                                      "type": "mrkdwn",
-                                      "text": "${{ steps.slack-body.outputs.text }}"
-                                  }
-                              }
-                          ]
-                      }
-              env:
-                  SLACK_BOT_TOKEN: ${{ secrets.RELEASE_BOT_TOKEN }}
+                  url: ${{ secrets.DOU_WEBHOOK_URL }}
+                  token: ${{ secrets.DOU_WEBHOOK_TOKEN }}
+                  channel-id: ${{ secrets.DOU_CHANNEL_ID }}
+                  status: success
+                  stage: prod
+                  text: ${{ steps.deploy-message.outputs.text }}
+                  release-notes: ${{ steps.release-drafted.outputs.body }}
